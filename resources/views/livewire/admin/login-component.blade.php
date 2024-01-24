@@ -11,9 +11,10 @@
   <!-- <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css"> -->
   <!-- Theme style -->
   <!-- <link rel="stylesheet" href="dist/css/adminlte.min.css"> -->
-  <link rel="stylesheet" href="admin/backend_assets/plugins/fontawesome-free/css/all.min.css">
-  <link rel="stylesheet" href="admin/backend_assets/css/adminlte.min.css">
-  <link rel="stylesheet" href="admin/backend_assets/css/style.css">
+  
+  <link rel="stylesheet" href="{{url('backend_assets/plugins/fontawesome-free/css/all.min.css')}}">
+  <link rel="stylesheet" href="{{url('backend_assets/css/adminlte.min.css')}}">
+  <!-- <link rel="stylesheet" href="{{url('backend_assets/css/style.css')}}"> -->
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -59,15 +60,7 @@
         </div>
       </form>
 
-      <div class="social-auth-links text-center mb-3">
-        <p>- OR -</p>
-        <a href="#" class="btn btn-block btn-primary">
-          <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
-        </a>
-        <a href="#" class="btn btn-block btn-danger">
-          <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
-        </a>
-      </div>
+   
       <!-- /.social-auth-links -->
 
       <p class="mb-1">
@@ -83,10 +76,15 @@
 <!-- /.login-box -->
 
 <!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
+ <!-- Bootstrap 4 -->
+ <!-- AdminLTE App -->
+ 
+
+
+<script src="{{url('backend_assets/js/jquery.min.js')}}"></script>
 <!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{url('backend_assets/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.min.js"></script>
+<script src="{{url('backend_assets/js/adminlte.min.js')}}"></script>
 </body>
 </html>
