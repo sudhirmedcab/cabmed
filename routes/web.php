@@ -42,4 +42,5 @@ use App\Http\Controllers\TestController;
     Route::get('/emplist', EmpList::class);
     Route::get('/page1', HomeComponent::class);
     Route::get('/booking', HelloWorld::class);
+    Route::get('/login', LoginComponent::class);
     Route::get('/admin/login', LoginComponent::class);

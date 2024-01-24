@@ -32,6 +32,7 @@ public $sortDirection = 'asc';
         // return view('livewire.emp-list',[
         //     'employees' => Employee::paginate(4),
         // ])->layout('livewire.admin.layouts.base');
+
         $employee = Employee::where('name', 'like', '%' . $this->search . '%')
                     ->orderBy('id','DESC')
                     ->paginate(5);
@@ -41,6 +42,7 @@ public $sortDirection = 'asc';
             'search' => $this->search
         ])->layout('livewire.admin.layouts.base');
     }
+    
     public function create()
     {
         // dd('Data:: ',$this);
