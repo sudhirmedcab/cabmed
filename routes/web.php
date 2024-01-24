@@ -7,6 +7,7 @@ use App\Livewire\EmpList;
 use App\Livewire\HelloWorld;
 use App\Livewire\HomeComponent;
 use App\Livewire\Admin\LoginComponent;
+use App\Livewire\Admin\DriverComponent;
 use App\Http\Controllers\TestController;
 
 
@@ -44,3 +45,4 @@ use App\Http\Controllers\TestController;
     Route::get('/booking', HelloWorld::class);
     Route::get('/login', LoginComponent::class);
     Route::get('/admin/login', LoginComponent::class);
+    Route::get('/driver', DriverComponent::class);
