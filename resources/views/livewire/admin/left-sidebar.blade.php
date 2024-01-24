@@ -150,10 +150,19 @@
                 <a href="/booking" wire:navigate class="nav-link active0">
                   <i class="nav-icon fas fa-file-contract"></i>
                   <p>Dashboard</p>
-                </a><li class="nav-item">
+                </a>
+                
+                <li class="nav-item">
                   <a href="test"  wire:navigate class="nav-link active0">
                     <i class="nav-icon fas fa-file-contract"></i>
                     <p>test</p>
+                  </a>
+              </li>
+
+              <li class="nav-item">
+                  <a wire:click="logout"  wire:confirm="Are you sure you want to Logout this Account ?" class="nav-link active0">
+                    <i class="nav-icon fas fa-file-contract"></i>
+                    <p>Logout</p>
                   </a>
               </li>
             </ul>
