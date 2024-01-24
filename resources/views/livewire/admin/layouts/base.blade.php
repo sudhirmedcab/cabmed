@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="backend_assets/plugins/fontawesome-free/css/all.min.css">
   <link rel="stylesheet" href="backend_assets/css/adminlte.min.css">
   <link rel="stylesheet" href="backend_assets/css/style.css">
+  <link rel="stylesheet" href="backend_assets/css/customStyle.css">
   <!-- <link rel="stylesheet" href="https://cdn.tailwindcss.com/3.4.1"> -->
 
 </head>

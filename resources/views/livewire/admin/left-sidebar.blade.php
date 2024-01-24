@@ -24,11 +24,114 @@
                 <a href="#" class="nav-link active">
                   <i class="nav-icon fas fa-file-contract"></i>
                   <p>
-                    Pages
+                    Ambulance
                     <i class="right fas fa-angle-left"></i>
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Air Ambulance</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Animal</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Pink</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Bulk</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Rent</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Vehicle</p>
+                    </a>
+                  </li>
+            
+                  <li class="nav-item menu-open">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-file-contract"></i>
+                  <p>
+                    Driver
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                      <p>Add</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/driver" wire:navigate class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                      <p>List</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                      <p>Devision</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                      <p>District</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Rent</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Vehicle</p>
+                    </a>
+                  </li>
+               
+                  
+                </ul>
+              </li>
+
+
+
+
+
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Partner</p>
+                    </a>
+                  </li> 
+                  <li class="nav-item">
+                    <a href="/page1" wire:navigate class="nav-link">
+                      <i class="nav-icon fas fa-hand-point-up"></i>
+                      <p>Emergency</p>
+                    </a>
+                  </li>
                   <li class="nav-item">
                     <a href="/emplist" wire:navigate class="nav-link active0">
                       <i class="nav-icon fas fa-file-contract"></i>

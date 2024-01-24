@@ -12,10 +12,9 @@
 
             
             <div class="card">
-           
               <div class="card-header">
                 <h3 class="card-title">
-                <button wire:click="create()" class="mb-2 btn btn-sm btn-primary">Create Employee</button>
+                <button wire:click="create()" class="mb-2 btn btn-sm btn-primary"><i class="fa fa-plus"></i></button>
                 </h3>
 
                 <div class="card-tools">
@@ -34,24 +33,40 @@
                 <div class="card-body p-0">
                 <table class="table table-sm">
                 <tr>
-                    <th>ID</th>
+                    <th>Driver Id</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Employee code</th>
-                    <th>Position</th>
+                    <th>Created Date</th>
+                    <th>Created By</th>
+                    <th>Driver Status</th>
+                    <!-- <th>Remark Details</th> -->
+                    <th>City</th>
+                    <th>RC No.</th>
+                    <!-- <th>DL No.</th> -->
                     <th>Action</th>
                 </tr>
-                @foreach ($employees as $employee)
+                @foreach ($drivers as $driver)
                     <tr>
-                        <td>{{ $employee->id }}</td>
-                        <td>{{ $employee->name }}</td>
-                        <td>{{ $employee->email }}</td>
-                        <td>{{ $employee->employee_id }}</td>
-                        <td>{{ $employee->position }}</td>
+                        <td>{{ $driver->driver_id }}</td>
+                        <td>{{ $driver->driver_name.' '.$driver->driver_last_name }}</td>
+                        <td>{{ $driver->created_at }}</td>
                         <td>
-                            <button wire:click="edit({{ $employee->id }})" class="btn btn-sm btn-primary">Edit</button>
+                        @if($driver->driver_created_by=='0')
+												 Self Created
+												 @else
+												 Partner Created
+                                                 @endif
+                        </td>
+                        <td>{{ $driver->driver_mobile }}</td>
+                        <td>{{ $driver->driver_mobile }}</td>
+                        <td>{{ $driver->driver_mobile }}</td>
+                        <!-- <td>{{ $driver->driver_mobile }}</td>
+                        <td>{{ $driver->driver_mobile }}</td>
+                        <td>{{ $driver->driver_mobile }}</td>
+                        <td>{{ $driver->driver_mobile }}</td> -->
+                        <td class="action__btn lbtn-group">
+                            <button wire:click="edit({{ $driver->driver_id }})" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
                             <button wire:confirm="Are you sure you want to delete this post?"
-                                wire:click="delete({{ $employee->id }})" class="btn btn-sm btn-danger">Delete</button>
+                                wire:click="delete({{ $driver->driver_id }})" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                         </td>
                     </tr>
                 @endforeach
@@ -60,7 +75,7 @@
             </div>
           
           <div class="card-footer clearfix">
-                        {!! $employees->links() !!}
+                        {!! $drivers->links() !!}
             </div>
             
     </div>

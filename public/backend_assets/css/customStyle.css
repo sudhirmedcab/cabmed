@@ -1,0 +1,13 @@
+.table td, .table th {
+    vertical-align: middle;
+    font-size: 10px;
+}
+.action__btn>td{
+    padding: 1px !important;
+}
+.action__btn button{
+    padding: 0px 6px;
+}
+.action__btn button .fa{
+    font-size: 11px;
+}
