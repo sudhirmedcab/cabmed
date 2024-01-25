@@ -11,3 +11,10 @@
 .action__btn button .fa{
     font-size: 11px;
 }
+ul.custom__nav__tab li a{
+border: none !important;
+font-size: 12px;
+}
+.text-danger{
+    font-size: small !important;
+}

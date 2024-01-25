@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" wire:init="livewire.admin.DriverComponent">
     <div class="container-fluid">
         @if ($isOpen)
             @include('livewire.employee-form')
@@ -9,7 +9,46 @@
             <div class="alert alert-success">{{ session('message') }}</div>
         @endif
          {{ $search }}
+         <div class="card text-center">
+          <div class="card-header pt-1 pb-3">
+            <ul class="nav nav-tabs custom__nav__tab  card-header-tabs">
+              <li class="nav-item">
+                <a class="nav-link fs-1 active" href="/driver" wire:navigate >All </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-1" href="/manage-driver" wire:navigate class="nav-link" >Add</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-1" href="#">Devision</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-1" href="#">District</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-1" href="#">Under Reg.</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-1" href="#">Under FRC</a>
+              </li><li class="nav-item">
+                <a class="nav-link fs-1" href="#">Active</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-1" href="#">On Duty</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-1" href="#">Off Duty</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-1" href="#">Verify By driver</a>
+              </li>
 
+              <li class="nav-item">
+                <a class="nav-link fs-1" href="#">Verify By Partner</a>
+              </li>
+            </ul>
+          </div>
+        
+        </div>
             
             <div class="card">
               <div class="card-header">
@@ -54,7 +93,7 @@
 												 Self Created
 												 @else
 												 Partner Created
-                                                 @endif
+                        @endif
                         </td>
                         <td>{{ $driver->driver_mobile }}</td>
                         <td>{{ $driver->driver_mobile }}</td>

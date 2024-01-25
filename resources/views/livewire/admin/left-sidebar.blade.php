@@ -76,7 +76,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="/page1" wire:navigate class="nav-link">
+                    <a href="/manage-driver" wire:navigate class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                       <p>Add</p>
                     </a>
