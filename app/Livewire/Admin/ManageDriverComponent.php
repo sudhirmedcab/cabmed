@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 
 class ManageDriverComponent extends Component
 {
-    public $status, $data, $id, $create_for, $driver_name, $driver_mobile, $partner_id, $vehicle_rc_no, $driver_first_name, $driver_last_name, $employee_id;
+    public $driverDataStep1, $addDriver, $status, $data, $id, $create_for, $driver_name, $driver_mobile, $partner_id, $vehicle_rc_no, $driver_first_name, $driver_last_name, $employee_id;
    
     public function partners(){
         $partners = DB::table('partner')
@@ -29,35 +29,44 @@ class ManageDriverComponent extends Component
             'isPartner' => false
         ]);
     }
-    public function store(){
  
-        $this->validate([
-            'driver_first_name' => 'required',
-            'driver_last_name' => 'required',
-            'driver_mobile' => [
-                'required',
-                'numeric',
-                'digits:10',
-                Rule::unique('driver','driver_mobile')
-            ],
-            'vehicle_rc_no' => 'required',
-            'partner_id' => $this->create_for == 1 ? 'required' : 'nullable'
-        ]);
+    public function store()
+    {
+    $validatedData = $this->validate([
+        'driver_first_name' => 'required',
+        'driver_last_name' => 'required',
+        'driver_mobile' => [
+            'required',
+            'numeric',
+            'digits:10',
+            Rule::unique('driver', 'driver_mobile'),
+        ],
+        'vehicle_rc_no' => 'required',
+        'partner_id' => $this->create_for == 1 ? 'required' : 'nullable',
+    ]);
 
-        $data = [
-            'driver_created_by' => $this->create_for,
-            'driver_name' => $this->driver_first_name,
-            'driver_last_name' => $this->driver_last_name,
-            'driver_mobile' => $this->driver_mobile,
-            'driver_created_partner_id' => $this->create_for == 1 ? $this->partner_id : 0,
-        ];
+    $data = [
+        'driver_created_by' => $this->create_for,
+        'driver_name' => $validatedData['driver_first_name'],
+        'driver_last_name' => $validatedData['driver_last_name'],
+        'driver_mobile' => $validatedData['driver_mobile'],
+        'driver_created_partner_id' => $this->create_for == 1 ? $this->partner_id : 0,
+    ];
+
+    try {
         $status = DB::table('driver')->insert($data);
-         if($status){
-            session()->flash('message', 'Driver Created Successfully.');
-        } else{
-            session()->flash('message', 'somethingwent wrong !!');
+        $insertedId = DB::table('driver')->insertGetId($data);
+
+        if ($insertedId) {
+            session()->flash('message', 'Driver Created Successfully..'.$insertedId);
+            $this->addDriver = true;
+            $insertedRecord = DB::table('driver')->where('driver_id', $insertedId)->first();
+            $this->driverDataStep1=$insertedRecord;
+         } else {
+            session()->flash('message', 'Something went wrong!!');
         }
-
-
+    } catch (\Exception $e) {
+        session()->flash('message', 'Error: ' . $e->getMessage());
     }
+}
 }

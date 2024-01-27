@@ -6,10 +6,14 @@
     padding: 1px !important;
 }
 .action__btn button{
-    padding: 0px 6px;
+    padding: 0px 8px 3px 8px;
+    
 }
 .action__btn button .fa{
-    font-size: 11px;
+    font-size: 8px;
+}
+.action__btn button{
+    border-radius: 3px !important;
 }
 ul.custom__nav__tab li a{
 border: none !important;
@@ -17,4 +21,12 @@ font-size: 12px;
 }
 .text-danger{
     font-size: small !important;
+}
+table.custom__table td{
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+.custom__pagination li.page-item .page-link {
+    padding: 6px 10px;
+    font-size: 13px;
 }

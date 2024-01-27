@@ -70,7 +70,7 @@
               </div>
             <!-- <table class="table table-bordered table-sm table-responsive-sm mt-2"> -->
                 <div class="card-body p-0">
-                <table class="table table-sm">
+                <table class="table custom__table table-bordered table-sm">
                 <tr>
                     <th>Driver Id</th>
                     <th>Name</th>
@@ -103,9 +103,9 @@
                         <td>{{ $driver->driver_mobile }}</td>
                         <td>{{ $driver->driver_mobile }}</td> -->
                         <td class="action__btn lbtn-group">
-                            <button wire:click="edit({{ $driver->driver_id }})" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
+                            <button wire:click="edit({{ $driver->driver_id }})" class="pt-0 pl-2 pr-2 pb-1 btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
                             <button wire:confirm="Are you sure you want to delete this post?"
-                                wire:click="delete({{ $driver->driver_id }})" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                wire:click="delete({{ $driver->driver_id }})" class="pt-0 pl-2 pr-2 pb-1 btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                         </td>
                     </tr>
                 @endforeach
@@ -113,7 +113,7 @@
             </div>
             </div>
           
-          <div class="card-footer clearfix">
+          <div class="custom__pagination card-footer__ clearfix">
                         {!! $drivers->links() !!}
             </div>
             

@@ -64,9 +64,21 @@
 
           <!-- /.card-header -->
           <div class="card-body"> 
+          @if($addDriver)
+        <div class="callout callout-info">
+        <h5>Driver info</h5><hr>
+        <h6>Name</h6>
+                   <p>{{ $driverDataStep1->driver_name ?? $driverDataStep1->driver_name}} {{ $driverDataStep1->driver_last_name ?? $driverDataStep1->driver_last_name}}</p>
+                   <h6>Mobile no.</h6>
+                   <p>{{ $driverDataStep1->driver_mobile ?? $driverDataStep1->driver_mobile }} </p>
+                </div>
+                @endif
+
         @if (session()->has('message'))
             <div class="alert alert-success">{{ session('message') }}</div>
         @endif
+       
+
           <form>
             <div class="row">
                 <div class="col-3">
@@ -127,19 +139,25 @@
                         @error('vehicle_rc_no') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     </div>
-                     
+                    Loading:: <div wire:loading.delay>Loading..</div>
             </div>
                     <!-- <input type="hidden" wire:model="id"> -->
                     <div class="row">
                     <div class="col-2">
                     <div class="form-group">
-                      <button wire:click.prevent="store()" class="rounded-0 form-control form-control-sm btn-primary">Save</button>
+                      <button 
+                       wire:click.prevent="store()"
+                       wire:loading.attr="disabled" 
+                       class="rounded-0 form-control form-control-sm btn-primary">Save
+                       <div wire:loading.delay.longer>Saving..</div>
+                      </button>
                       </div>
                     </div>
                     </div>
                 </form>
             <!-- /.row -->
- 
+ {{$isPartner ? 'isPartner' : 'noisPartner'}}
+  {{$addDriver}}
             <!-- /.row -->
           </div>
           <!-- /.card-body -->
