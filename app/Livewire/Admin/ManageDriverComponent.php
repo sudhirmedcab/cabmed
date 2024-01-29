@@ -14,7 +14,7 @@ class ManageDriverComponent extends Component
                     ->select('partner_id','partner_f_name','partner_l_name','partner_mobile')
                     ->where(['partner_status' => 1])
                     ->get();
-    return $partners;
+       return $partners;
     }
     public function render()
     {
@@ -69,4 +69,6 @@ class ManageDriverComponent extends Component
         session()->flash('message', 'Error: ' . $e->getMessage());
     }
 }
+
+
 }

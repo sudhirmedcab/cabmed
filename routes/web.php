@@ -11,7 +11,12 @@ use App\Livewire\Admin\DriverComponent;
 use App\Livewire\Admin\ManageDriverComponent;
 
 use App\Http\Controllers\TestController;
+use App\Livewire\Admin\ConsumerComponent;
 
+
+###### ..............Sukhi Liveware Components  ..................#####
+use App\Livewire\Admin\PartnerComponent;
+use App\Livewire\Admin\RoadAmbulanceComponent;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,23 +29,6 @@ use App\Http\Controllers\TestController;
 |
 */
 
-    // Route::get('/', function () {
-    //     return view('welcome');
-    // });
-    // Route::view('emp', 'empManagement');
-    // Route::view('emplist', 'empData');
-
-    Route::get('/', HomeComponent::class)->name('app.home');
-  
-
-    // Route::group(['middleware' => 'admin.auth'], function () {
-    //     // Your admin-only routes go here
-    //     Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
-    //     Route::get('/emplist', EmpList::class);
-    //     Route::get('/page1', HomeComponent::class);
-    //     Route::get('/booking', HelloWorld::class);
-    // });
-     
     Route::get('/', LoginComponent::class);
 
     Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
@@ -51,3 +39,10 @@ use App\Http\Controllers\TestController;
     Route::get('/driver', DriverComponent::class);
     Route::get('/manage-driver', ManageDriverComponent::class);
 
+    Route::get('/consumer', ConsumerComponent::class);
+
+
+    ## ............... Sukhi Routes for the Partner Componet ...................##
+
+    Route::get('/all-partner', PartnerComponent::class);
+    Route::get('/roadAmbulance', RoadAmbulanceComponent::class);
