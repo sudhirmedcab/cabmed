@@ -17,7 +17,7 @@
 }
 ul.custom__nav__tab li a{
 border: none !important;
-font-size: 12px;
+font-size: 11px;
 }
 .text-danger{
     font-size: small !important;
@@ -29,4 +29,18 @@ table.custom__table td{
 .custom__pagination li.page-item .page-link {
     padding: 6px 10px;
     font-size: 13px;
+}
+.custom__nav__btn{
+    border-radius: 0px !important;
+    cursor: pointer;
+}
+.custom__nav__tab li a{
+    padding: 0.3rem 0.6rem !important;
+}
+.custom__label{
+    font-size: 12px !important;
+    margin-bottom: 0rem !important;
+}
+.custom__input__field{
+height: 30px !important;
 }
