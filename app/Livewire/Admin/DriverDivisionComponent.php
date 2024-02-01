@@ -42,6 +42,7 @@ public function mount(){
 
     public function render()
     {
+        dd('asdfghj');
         $state = DB::table('state')
         ->leftJoin('division', 'state.state_id', '=', 'division.division_state_id')
         ->leftJoin('city', 'division.division_id', '=', 'city.city_division')
