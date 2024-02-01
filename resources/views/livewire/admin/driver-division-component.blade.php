@@ -1,126 +1,5 @@
 <div class="content">
-  <style>
-    .loader{
-    width: 150px;
-    height: 150px;
-    margin: 40px auto;
-    transform: rotate(-45deg);
-    font-size: 0;
-    line-height: 0;
-    animation: rotate-loader 5s infinite;
-    padding: 25px;
-    border: 1px solid #8a474d1f;
-}
-.loader .loader-inner{
-    position: relative;
-    display: inline-block;
-    width: 50%;
-    height: 50%;
-}
-.loader .loading{
-    position: absolute;
-    background: #dcdee5;
-}
-.loader .one{
-    width: 100%;
-    bottom: 0;
-    height: 0;
-    animation: loading-one 1s infinite;
-}
-.loader .two{
-    width: 0;
-    height: 100%;
-    left: 0;
-    animation: loading-two 1s infinite;
-    animation-delay: 0.25s;
-}
-.loader .three{
-    width: 0;
-    height: 100%;
-    right: 0;
-    animation: loading-two 1s infinite;
-    animation-delay: 0.75s;
-}
-.loader .four{
-    width: 100%;
-    top: 0;
-    height: 0;
-    animation: loading-one 1s infinite;
-    animation-delay: 0.5s;
-}
-@keyframes loading-one {
-    0% {
-        height: 0;
-        opacity: 1;
-    }
-    12.5% {
-        height: 100%;
-        opacity: 1;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        height: 100%;
-        opacity: 0;
-    }
-}
-@keyframes loading-two {
-    0% {
-        width: 0;
-        opacity: 1;
-    }
-    12.5% {
-        width: 100%;
-        opacity: 1;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        width: 100%;
-        opacity: 0;
-    }
-}
-@keyframes rotate-loader {
-    0% {
-        transform: rotate(-45deg);
-    }
-    20% {
-        transform: rotate(-45deg);
-    }
-    25% {
-        transform: rotate(-135deg);
-    }
-    45% {
-        transform: rotate(-135deg);
-    }
-    50% {
-        transform: rotate(-225deg);
-    }
-    70% {
-        transform: rotate(-225deg);
-    }
-    75% {
-        transform: rotate(-315deg);
-    }
-    95% {
-        transform: rotate(-315deg);
-    }
-    100% {
-        transform: rotate(-405deg);
-    }
-}
-  </style>
     <div class="container-fluid">
-        @if ($isOpen)
-            @include('livewire.employee-form')
-        @endif
-        @if (session()->has('message') && session()->has('type') == 'delete')
-            <div class="alert alert-danger">{{ session('message') }}</div>
-        @elseif (session()->has('message') && session()->has('type') == 'store')
-            <div class="alert alert-success">{{ session('message') }}</div>
-        @endif
          @include('livewire.admin.driver-nav-component')
             
             <div class="card">
@@ -230,101 +109,50 @@
                       </div>
               </div>
             <!-- <table class="table table-bordered table-sm table-responsive-sm mt-2"> -->
-                <div  wire:loading.remove wire:target="filterCondition" class="card-body p-2">
+                <div class="card-body p-0">
                 <table class="table custom__table table-bordered table-sm">
                 <tr>
-                    <th>Sr.</th>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Mobile</th>
-                    <th>Wallet</th>
-                    <th>Created At</th>
-                    <th>Created By</th>
-                    <th>Bonus</th>
-                    <th>Duty</th>
-                    <th>Booking</th>
-                    <!-- <th>Remark Details</th> -->
-                    <th>City</th>
-                    <th> State</th>
-                    <th>RC No.</th>
-                    <!-- <th>DL No.</th> -->
-                    <th>Action</th>
+                    <th>Sr.NO.</th>
+                    <th>Division Name </th>
+                    <th>Total Driver ({{ $sumDriverCountsByDivision}})</th>
+                    <th>On Duty Driver</th>
+                    <th>OFF Duty Driver</th>
+                    <th>State Name</th>
                 </tr>
-@php
-$srno = 1
-@endphp
-                @foreach ($drivers as $driver)
+                @php
+                    $srno = 1
+                @endphp
                     <tr>
-                        <td>{{ $srno }}</td>
-                        <td>{{ $driver->driver_id }}</td>
-                        <td>{{ $driver->driver_name.' '.$driver->driver_last_name }}</td>
-                        <td>{{ $driver->driver_mobile }}</td>
-                        <td>{{ $driver->driver_wallet_amount }}</td>
-                        <td>{{ $driver->created_at }}</td>
-                        <td>
-                        @if($driver->driver_created_by=='0')
-												 Self
-												 @else
-												 Partner
-                        @endif
-                        </td>
-                        <td>
-                        {{ $driver->join_bonus_status ==1 ? 'Yes' : 'No' }}
-
-                        </td>
-                        <td>
-                          {{ $driver->driver_duty_status }}
-                          <!-- Booking Status: {{ $driver->driver_on_booking_status == 0 ? 'Free' : 'In Booking' }} -->
-                        </td>
-                        
-                        <td>{{ $driver->driver_on_booking_status == 0 ? 'Free' : 'Ongoing' }}</td>
-                        <td>{{ $driver->city_name }}</td>
-                        <td>{{ $driver->state_name }}</td>
-                        <td>{{ $driver->vehicle_rc_number }}</td>
-                        <td class="action__btn lbtn-group">
-                            <button wire:click="edit({{ $driver->driver_id }})" class="pt-0 pl-2 pr-2 pb-1 btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
-                            <button wire:confirm="Are you sure you want to delete this post?"
-                                wire:click="delete({{ $driver->driver_id }})" class="pt-0 pl-2 pr-2 pb-1 btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
-                        </td>
+                    @if(!empty($results))
+                        @foreach($results as $key)
+                        <tr>
+                            <td class="table-plus">{{$srno}}</td>
+                            <td>{{$key->division_name}}</td>
+                            <td>{{$key->total_driver_count}}</td>
+                                <td>{{$key->on_duty_count}}</td>
+                            <td>{{$key->off_duty_count}}</td>
+                            <td>{{$key->state_name}}</td>
+                        </tr>
+                        @php
+                        $srno++
+                        @endphp
+                        @endforeach
+                    @endif
+                  
                     </tr>
-                    @php
-                    $srno++
-                    @endphp
-                @endforeach
+                   
 
             </table>
-            <!-- <span wire:loadingf wire:target="filterCondition">Loading...</span> -->
-            <div class="custom__pagination pt-1 card-footer__ clearfix">
-                        {!! $drivers->links() !!}
-            </div>
+            <div style="text-align:center;" wire:loading wire:target="selectedDate" wire:key="selectedDate"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i>loading</div>
+
             </div>
             </div>
           
-            <div class="container">
-    <div class="row" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
-        <div class="col">
-            <div class="loader">
-                <div class="loader-inner">
-                    <div class="loading one"></div>
-                </div>
-                <div class="loader-inner">
-                    <div class="loading two"></div>
-                </div>
-                <div class="loader-inner">
-                    <div class="loading three"></div>
-                </div>
-                <div class="loader-inner">
-                    <div class="loading four"></div>
-                </div>
+          <div class="custom__pagination card-footer__ clearfix">
+              {!! $results->links() !!}
             </div>
-        </div>
-    </div>
-</div>
-             <!-- <div style="text-align:center !important; display:block !important" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i>Processing..</div> -->
-
+            
     </div>
     </div>
 </div>
-
-
 
