@@ -4,8 +4,9 @@
             
             <div class="card">
               <div class="card-header">
-               
                 <div class="row">
+                @if($this->activeTab != 'division')
+                    
                     <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                       <div class="form-group">
                           <label class="custom__label" for="fromDate">From </label>
@@ -18,6 +19,31 @@
                         <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
                       </div>
                     </div>
+                @endif
+                @if($this->activeTab == 'division')
+                <div class="col">
+                  <div class="form-group">
+
+                        <label class="custom__label" for="vehicle_rc_no">Export Datatest</label>
+                      <button style="line-height:0" class="custom__input__field form-control btn btn-primary rounded-0 form-control-sm"> Export </button>
+                    </div>
+                  </div>
+                <div class="col">
+                  <div class="form-group">
+                        <label class="custom__label" for="vehicle_rc_no">State</label>
+                        <select wire:model.live.debounce.150ms="division_state" wire:loading.attr="disabled" wire:target="division_state" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+                            @forelse ($state as $list)
+                                <option value="{{ $list->state_id }}">{{ $list->state_name }}</option>
+                            @empty
+                                <option value="" disabled>No state available</option>
+                            @endforelse
+                        </select>
+                        @error('driver_city') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                  </div>
+                
+                  @endif
+                  @if($this->activeTab != 'division')
                     <div class="col -{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                           <label class="custom__label">Select</label>
@@ -30,6 +56,7 @@
                         </select>
                         </div>
                     </div>
+                    @endif
                     @if($this->activeTab == 'UnderVerificationBySelf')
                     <div class="col __col-3">
                         <div class="form-group">
@@ -123,8 +150,7 @@
                     $srno = 1
                 @endphp
                     <tr>
-                    @if(!empty($results))
-                        @foreach($results as $key)
+                         @foreach($results as $key)
                         <tr>
                             <td class="table-plus">{{$srno}}</td>
                             <td>{{$key->division_name}}</td>
@@ -137,8 +163,7 @@
                         $srno++
                         @endphp
                         @endforeach
-                    @endif
-                  
+                   
                     </tr>
                    
 
@@ -149,7 +174,7 @@
             </div>
           
           <div class="custom__pagination card-footer__ clearfix">
-              {!! $results->links() !!}
+          {!! $results->links() !!}
             </div>
             
     </div>

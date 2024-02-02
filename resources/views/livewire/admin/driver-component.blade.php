@@ -127,6 +127,7 @@
               <div class="card-header">
                
                 <div class="row">
+                    
                     <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                       <div class="form-group">
                           <label class="custom__label" for="fromDate">From </label>
@@ -139,6 +140,7 @@
                         <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
                       </div>
                     </div>
+
                     <div class="col -{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                           <label class="custom__label">Select</label>
@@ -181,7 +183,7 @@
                     <div class="col __col-3">
                       <div class="form-group">
                           <label class="custom__label" for="toDate">Search</label>
-                          <input type="search" wire:model.live.debounce.150ms="search" class="custom__input__field form-control rounded-0 form-control-sm float-right" placeholder="Search">
+                          <input type="search" wire:model.live.debounce.50ms="search" class="custom__input__field form-control rounded-0 form-control-sm float-right" placeholder="Search">
                       </div>
                     </div>
                 </div>
@@ -229,6 +231,7 @@
                           </div>
                       </div>
               </div>
+
             <!-- <table class="table table-bordered table-sm table-responsive-sm mt-2"> -->
                 <div  wire:loading.remove wire:target="filterCondition" class="card-body p-2">
                 <table class="table custom__table table-bordered table-sm">
