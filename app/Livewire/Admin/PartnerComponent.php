@@ -4,112 +4,172 @@ namespace App\Livewire\Admin;
 use Illuminate\Support\Facades\DB; 
 use Livewire\Component;
 use Carbon\Carbon;
+use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
-use Illuminate\Validation\Rule;
-use Livewire\WithFileUploads;
+
 
 class PartnerComponent extends Component
 {
-    public $partner_id, $partner_f_name, $partner_l_name, $partner_mobile, $partner_dob ,$partner_gender,$partner_city_id,$partner_aadhar_no,$partner_referral ,$referral_referral_by,$partner_aadhar_back,$partner_aadhar_front,$partner_profile_img, $active,$new,$show,$fromdate ,$todate,$dateOption,$from_filter,$to_filter,$date_filter;
-
+    public $partner_id, $partner_f_name, $partner_l_name, $partner_mobile, $partner_dob ,$partner_gender,$partner_city_id,$partner_aadhar_no,$partner_referral ,$referral_referral_by,$partner_aadhar_back,$partner_aadhar_front,$partner_profile_img,$employees0,$selectedDate,$filterConditionl, 
+    $selectedFromDate,$selectedToDate, $fromDate=null, 
+    $toDate=null,$fromdate, $todate, $id, $name, $email,
+    $position, $employee_id, $partner_status=null,$partnerVerificationStatus,
+    
+    $activeTab;
+    
     public $isOpen = 0;
+    use WithoutUrlPagination;
     use WithPagination;
-    use WithFileUploads;
-
-
     protected $paginationTheme = 'bootstrap';
     // 
     public $search = '';
     public $sortBy = 'name';
     public $sortDirection = 'asc';
-    public $partner_filter = '';
- 
+
     #[Layout('livewire.admin.layouts.base')]    //......... add the layout dynamically for the all ...........//
 
-    public function render()
-    { 
-        $currentTimestamps = Carbon::now();
-        $firstDayOfMonths = Carbon::now()->startOfMonth();
-    
-        // Convert the input strings to Carbon date objects
-        $fromdate = $this->fromdate ? Carbon::createFromFormat('Y-m-d', $this->fromdate)->startOfDay() : null;
-        $todate = $this->todate ? Carbon::createFromFormat('Y-m-d', $this->todate)->endOfDay() : null;
-        $dateOption = $this->dateOption;
-    
-        // Check if "All" option is selected
-        if ($dateOption === 'all') {
-            $fromdate = null;
-            $todate = null;
-        } elseif (!empty($dateOption)) {
-            switch ($dateOption) {
-                case 'today':
-                    $fromdate = Carbon::today();
-                    $todate = Carbon::today()->endOfDay();
-                    break;
-                case 'yesterday':
-                    $fromdate = Carbon::yesterday();
-                    $todate = Carbon::yesterday()->endOfDay();
-                    break;
-                case 'week':
-                    $fromdate = Carbon::now()->subDays(7)->startOfDay();
-                    $todate = Carbon::now();
-                    break;
-                case 'month':
-                    $fromdate = Carbon::now()->startOfMonth();
-                    $todate = Carbon::now()->endOfMonth();
-                    break;
-                default:
-                    // Handle other cases if needed
-                    break;
+
+    public function activeDriver($value){
+
+    if($value=='Active'){
+        // $this->activeDriver = 1;
+        $this->activeTab=$value;
+        $this->partner_status=1;
+    }
+    if($value=='New'){
+        // $this->activeDriver = 1;
+    $this->partner_status=0;
+    $this->activeTab=$value;
+    }
+    if($value=='All'){
+    // $this->activeDriver = 1;
+    $this->partner_status=null;
+    $this->activeTab=$value;
+    }
+
+    }
+            public function resetFilters(){
+          
+                $this->partner_status=null;
+                $this->selectedDate=null;
             }
+
+            public function filterCondition($value){
+                $this->resetFilters();
+                    if($value=='Active'){
+                // $this->activeDriver = 1;
+            
+                    $this->activeTab=$value;
+                    $this->partner_status='1';
+                }
+            
+                if($value=='New'){
+                    // $this->activeDriver = 1;
+                    $this->partner_status='0';
+                    $this->activeTab=$value;
+                }
+                if($value=='All'){
+                    // $this->activeDriver = 1;
+                    $this->partner_status = 'null';
+                    $this->activeTab=$value;
+                }
+          
+    
         }
-    
-        $status = $this->show;
-    
+ 
+    public function render()
+    {
+
+        $currentTimestamps = Carbon::now();
+        $firstDayOfMonths = Carbon::now()->startOfMonth(); 
+ 
+        $partner_status = $this->partner_status ? $this->partner_status : null;
+
+        $partnerVerificationStatus = $this->partnerVerificationStatus ? $this->partnerVerificationStatus : null;
+        $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
+        $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+        if($this->selectedFromDate && $this->selectedToDate){
+            $this->selectedDate = null;     
+        }
+        if($this->selectedDate){
+            $this->selectedFromDate ='';
+            $this->selectedToDate ='';
+        }
+       
+     
+        switch ($this->selectedDate) {
+            case 'all':
+                $fromDate = null;
+                $toDate = null;
+                break;
+            case 'today':
+                $fromDate = Carbon::today();
+                $toDate = Carbon::today()->endOfDay();
+                break;
+            case 'yesterday':
+                $fromDate = Carbon::yesterday();
+                $toDate = Carbon::yesterday()->endOfDay();
+                break;
+            case 'thisWeek':
+                $fromDate = Carbon::now()->subDays(7)->startOfDay();
+                $toDate = Carbon::now();
+                break;
+            case 'thisMonth':
+                $fromDate = Carbon::now()->startOfMonth();
+                $toDate = Carbon::now()->endOfMonth();
+                break;
+            default:
+                $fromDate = $fromDate;
+                $toDate = $toDate;
+                break;
+        }
+       
+        // ...
+       
         $partners = DB::table('partner')
-            ->leftJoin('city', 'partner.partner_city_id', '=', 'city.city_id')
-            ->leftJoin('state', 'city.city_state', '=', 'state.state_id')
-            ->leftJoin('remark_data', 'partner.partner_id', '=', 'remark_data.remark_partner_id')
-            ->leftJoin('admin', 'admin.id', '=', 'remark_data.remark_type')
-            ->where('partner.partner_f_name', 'like', '%' . $this->search . '%')
-            ->orwhere('partner.partner_l_name', 'like', '%' . $this->search . '%')
-            ->when($fromdate && $todate, function ($query) use ($fromdate, $todate) {
-                return $query->whereBetween('partner.created_at', [$fromdate, $todate]);
-            })
-            ->when($status !== null, function ($query) use ($status) {
-                return $query->where('partner.partner_status', $status);
-            })
-            ->when($status === null, function ($query) {
-                return $query->whereIn('partner.partner_status', [1, 0]);
-            })
-            // ->where('partner.partner_name', 'like', '%' . $this->search . '%')
-            ->orderBy('partner.partner_id', 'desc')
-            ->where('partner.partner_status','<>','2')
-            ->select(
-                'partner.partner_id',
-                'partner.partner_f_name',
-                'partner.partner_l_name',
-                'partner.partner_mobile',
-                'partner.partner_wallet',
-                'partner.partner_status',
-                'admin.admin_name',
-                'state.state_name',
-                'city.city_name',
-                'partner.created_at',
-                'remark_data.remark_id',
-                'remark_data.remark_partner_id',
-                'remark_data.remark_text'
-            )
-            ->paginate(10); // Use get() instead of paginate(10) to retrieve all data at once
-    
+        ->leftJoin('city', 'partner.partner_city_id', '=', 'city.city_id')
+        ->leftJoin('state', 'city.city_state', '=', 'state.state_id')
+        ->leftJoin('remark_data', 'partner.partner_id', '=', 'remark_data.remark_partner_id')
+        ->leftJoin('admin', 'admin.id', '=', 'remark_data.remark_type')
+        ->where(function ($query) {
+            $query->where('partner.partner_f_name', 'like', '%' . $this->search . '%')
+                ->orWhere('partner.partner_l_name', 'like', '%' . $this->search . '%');
+        })
+        ->orderBy('partner.partner_id', 'desc')
+        ->where('partner.partner_status', '<>', '2')
+        ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+            return $query->whereBetween('partner.created_at', [$fromDate, $toDate]);
+        })
+         ->when($partnerVerificationStatus == 'AllVerification', function ($query) use ($partnerVerificationStatus) {
+            return $query
+                ->whereIn('partner.partner_status', [1,0]);
+        })
+        ->when($partnerVerificationStatus == 'NewVerification', function ($query) use ($partnerVerificationStatus) {
+            return $query
+                ->where('partner.partner_status', 0);
+        })
+        ->when($partnerVerificationStatus == 'ActiveVerification', function ($query) use ($partnerVerificationStatus) {
+            return $query
+                ->where('partner.partner_status', 1);
+        })
+        ->select(
+            'partner.partner_id',
+            'partner.partner_f_name',
+            'partner.partner_l_name',
+            'partner.partner_mobile',
+            'partner.partner_wallet',
+            'partner.partner_status',
+            'admin.admin_name',
+            'state.state_name',
+            'city.city_name',
+            'partner.created_at',
+            'remark_data.remark_id',
+            'remark_data.remark_partner_id',
+            'remark_data.remark_text'
+        )
+        ->paginate(10); // Use paginate(10) after setting all conditions and selections on the query
+       
         $data = [];
-    
-        if ($fromdate && $todate) {
-            $data['partner_filter'] = ($this->show == '1' ? 'Active' : ($this->show == '0' ? 'New' : 'All'))
-                . ' Partner Data From ' . $fromdate->format('j F H:i:s A') . ' To ' . $todate->format('j F H:i:s A');
-        } else {
-            $data['partner_filter'] = 'All '.($this->show == '1' ? 'Active Partner' : ($this->show == '0' ? ' New Partner' : 'Partner')). ' Data From ';
-        }
     
         $buckethlist = [];
                 foreach( $partners as $hkey){
@@ -166,18 +226,12 @@ class PartnerComponent extends Component
                     array_push($buckethlist, $datas);
                 }
 
-                $data['partners']  = $buckethlist; 
+                $data['partner']  = $buckethlist; 
 
-                $filterValue = $this->from_filter && $this->to_filter;
-                $notfilterValue = $this->date_filter;
-            
                 return view('livewire.admin.partner-component', [
                     'data' => $data,
-                    'filterValue' => $filterValue,
-                    'notfilterValue' => $notfilterValue,
                 ], compact('partners'));
-              
-     
+
     }
     public function create()
     {
@@ -284,11 +338,4 @@ class PartnerComponent extends Component
         session()->flash('message', 'Partner Deleted Successfully.');
         session()->flash('type', 'delete');
     }
-    public function showNested($value)
-    {
-    $this->show = $value;
-
-    }
-
-
 }
