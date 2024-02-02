@@ -4,99 +4,130 @@ namespace App\Livewire\Admin;
 use Illuminate\Support\Facades\DB; 
 use Livewire\Component;
 use Carbon\Carbon;
+use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
 class ConsumerComponent extends Component
 {
-    public $employees0, $id, $name, $email, $position, $employee_id,$show,$fromdate ,$todate,$dateOption,$from_filter,$to_filter,$date_filter;
+    public $partner_id, $partner_f_name, $partner_l_name, $partner_mobile, $partner_dob ,$partner_gender,$partner_city_id,$partner_aadhar_no,$partner_referral ,$referral_referral_by,$partner_aadhar_back,$partner_aadhar_front,$partner_profile_img,$employees0,$selectedDate,$filterConditionl, 
+    $selectedFromDate,$selectedToDate, $fromDate=null, 
+    $toDate=null,$fromdate, $todate, $id, $name, $email,
+    $position, $employee_id, $consumer_status,$consumerVerificationStatus,
+    
+    $activeTab;
+    
     public $isOpen = 0;
     use WithPagination;
+    use WithoutUrlPagination;
     protected $paginationTheme = 'bootstrap';
     // 
     public $search = '';
     public $sortBy = 'name';
     public $sortDirection = 'asc';
 
-    public $title = 'All Consumer...';
- 
     #[Layout('livewire.admin.layouts.base')]    //......... add the layout dynamically for the all ...........//
 
-    public function render()
-    {
-        $currentTimestamps = Carbon::now();
-        $firstDayOfMonths = Carbon::now()->startOfMonth();
-    
-        // Convert the input strings to Carbon date objects
-        $fromdate = $this->fromdate ? Carbon::createFromFormat('Y-m-d', $this->fromdate)->startOfDay() : null;
-        $todate = $this->todate ? Carbon::createFromFormat('Y-m-d', $this->todate)->endOfDay() : null;
-        $dateOption = $this->dateOption;
-    
-        // Check if "All" option is selected
-        if ($dateOption === 'all') {
-            $fromdate = null;
-            $todate = null;
-        } elseif (!empty($dateOption)) {
-            switch ($dateOption) {
-                case 'today':
-                    $fromdate = Carbon::today();
-                    $todate = Carbon::today()->endOfDay();
-                    break;
-                case 'yesterday':
-                    $fromdate = Carbon::yesterday();
-                    $todate = Carbon::yesterday()->endOfDay();
-                    break;
-                case 'week':
-                    $fromdate = Carbon::now()->subDays(7)->startOfDay();
-                    $todate = Carbon::now();
-                    break;
-                case 'month':
-                    $fromdate = Carbon::now()->startOfMonth();
-                    $todate = Carbon::now()->endOfMonth();
-                    break;
-                default:
-                    // Handle other cases if needed
-                    break;
+            public function resetFilters(){
+          
+                $this->consumer_status=null;
+                $this->selectedDate=null;
             }
+
+            public function filterCondition($value){
+                $this->resetFilters();
+                    if($value=='Active'){            
+                    $this->activeTab=$value;
+                    $this->consumer_status='1';
+                }
+            
+                if($value=='New'){
+                    $this->consumer_status='0';
+                    $this->activeTab=$value;
+                }
+                if($value=='All'){
+                    $this->consumer_status = 'null';
+                    $this->activeTab=$value;
+                }
+          
         }
  
-        $status = $this->show;
+    public function render()
+    {
 
+        $currentTimestamps = Carbon::now();
+        $firstDayOfMonths = Carbon::now()->startOfMonth(); 
+ 
+        $consumer_status = $this->consumer_status ? $this->consumer_status : null;
+        $consumerVerificationStatus = $this->consumerVerificationStatus ? $this->consumerVerificationStatus : null;
+        $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
+        $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+        if($this->selectedFromDate && $this->selectedToDate){
+            $this->selectedDate = null;     
+        }
+        if($this->selectedDate){
+            $this->selectedFromDate ='';
+            $this->selectedToDate ='';
+        }
+     
+        switch ($this->selectedDate) {
+            case 'all':
+                $fromDate = null;
+                $toDate = null;
+                break;
+            case 'today':
+                $fromDate = Carbon::today();
+                $toDate = Carbon::today()->endOfDay();
+                break;
+            case 'yesterday':
+                $fromDate = Carbon::yesterday();
+                $toDate = Carbon::yesterday()->endOfDay();
+                break;
+            case 'thisWeek':
+                $fromDate = Carbon::now()->subDays(7)->startOfDay();
+                $toDate = Carbon::now();
+                break;
+            case 'thisMonth':
+                $fromDate = Carbon::now()->startOfMonth();
+                $toDate = Carbon::now()->endOfMonth();
+                break;
+            default:
+                $fromDate = $fromDate;
+                $toDate = $toDate;
+                break;
+        }
+       
+        // ...
+       
         $data['consumers'] = DB::table('consumer')
         ->leftJoin('remark_data', 'consumer.consumer_id', '=', 'remark_data.remark_consumer_id')
         ->leftJoin('admin', 'admin.id', '=', 'remark_data.remark_type')  
         ->where('consumer.consumer_name', 'like', '%' . $this->search . '%')
-        ->when($fromdate && $todate, function ($query) use ($fromdate, $todate) {
-            return $query->whereBetween('consumer.created_at', [$fromdate, $todate]);
-        })        ->when($status !== null, function ($query) use ($status) {
-            return $query->where('consumer.consumer_status', $status);
+        ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+            return $query->whereBetween('consumer.created_at', [$fromDate, $toDate]);
+        })  
+        ->when($consumerVerificationStatus == 'AllVerification', function ($query) use ($consumerVerificationStatus) {
+            return $query
+                ->whereIn('consumer.consumer_status', [1,0]);
         })
-        ->when($status === null, function ($query) {
-            return $query->whereIn('consumer.consumer_status', [1, 0]);
+        ->when($consumerVerificationStatus == 'NewVerification', function ($query) use ($consumerVerificationStatus) {
+            return $query
+                ->where('consumer.consumer_status', 0);
+        })
+        ->when($consumerVerificationStatus == 'ActiveVerification', function ($query) use ($consumerVerificationStatus) {
+            return $query
+                ->where('consumer.consumer_status', 1);
         })
         ->select('consumer.*','remark_data.*','admin.*','consumer.created_at')
         ->where('consumer.consumer_status','<>','2')
         ->orderBy('consumer_id','desc')
         ->paginate(10);
 
-        if ($fromdate && $todate) {
-            $data['consumer_filter'] = ($this->show == '1' ? 'Active' : ($this->show == '0' ? 'New' : 'All'))
-                . ' Consumer Data From ' . $fromdate->format('j F H:i:s A') . ' To ' . $todate->format('j F H:i:s A');
-        } else {
-            $data['consumer_filter'] = 'All '.($this->show == '1' ? 'Active Consumer' : ($this->show == '0' ? ' New Consumer' : 'Consumer')). ' Data From ';
-        }
+        return view('livewire.admin.consumer-component',$data);
 
-        $filterValue = $this->from_filter && $this->to_filter;
-        $notfilterValue = $this->date_filter;
-
-        return view('livewire.admin.consumer-component',$data,[
-            'filterValue' => $filterValue,
-            'notfilterValue' => $notfilterValue,
-        ]);
 
     }
     public function create()
     {
-        // dd('Data:: ',$this);
         $this->resetInputFields();
         $this->openModal();
     }
@@ -115,28 +146,7 @@ class ConsumerComponent extends Component
     {
         $this->isOpen = false;
     }
-    public function store()
-    {
-
-        $this->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'employee_id' => 'required',
-            'position' => 'required',
-        ]);
-        // dd($this);
-        Employee::updateOrCreate(['id' => $this->id], [
-            'name' => $this->name,
-            'email' => $this->email,
-            'position' => $this->position,
-            'employee_id' => $this->employee_id
-        ]);
-
-        session()->flash('message', $this->employee_id ? 'Employee Updated Successfully.' : 'Employee Created Successfully.');
-        session()->flash('type', 'store');
-        $this->closeModal();
-        $this->resetInputFields();
-    }
+  
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
@@ -149,15 +159,9 @@ class ConsumerComponent extends Component
     }
     public function delete($id)
     {
-        $consumerDelete = DB::table('consumer')->where('consumer_id',$id)->update(['consumer_status'=>'2']);
+        $partnerDelete = DB::table('consumer')->where('consumer_id',$id)->update(['consumer_status'=>'2']);
 
-        session()->flash('message', 'Consumer Deleted Successfully.');
+        session()->flash('message', 'Consumer Data Deleted Successfully.');
         session()->flash('type', 'delete');
-    }
-
-    public function showNested($value)
-    {
-    $this->show = $value;
-
     }
 }
