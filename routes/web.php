@@ -17,6 +17,10 @@ use App\Livewire\Admin\ConsumerComponent;
 ###### ..............Sukhi Liveware Components  ..................#####
 use App\Livewire\Admin\PartnerComponent;
 use App\Livewire\Admin\RoadAmbulanceComponent;
+use App\Livewire\Admin\DriverDetailComponent;
+use App\Livewire\Admin\Ambulance\AmbulanceBookingComponent;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -34,12 +38,14 @@ use App\Livewire\Admin\RoadAmbulanceComponent;
     Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
     Route::get('/emplist', EmpList::class);
     Route::get('/page1', HomeComponent::class);
-    Route::get('/booking', HelloWorld::class);
+    Route::get('/booking', AmbulanceBookingComponent::class);
     Route::get('/login', LoginComponent::class);
     Route::get('/driver', DriverComponent::class);
+    Route::get('/driver-detail', DriverDetailComponent::class)->name('admin.driver-details-component');
     Route::get('/manage-driver', ManageDriverComponent::class);
 
     Route::get('/consumer', ConsumerComponent::class);
+
 
 
     ## ............... Sukhi Routes for the Partner Componet ...................##
