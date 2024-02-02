@@ -46,6 +46,11 @@
               Under Verification
               </a>
               </li>
+              <li class="nav-item">
+              <a class="custom__nav__btn nav-link fs-1 {{$this->activeTab == 'documentExpiry' ? 'btn-primary':''}}" wire:click="filterCondition('documentExpiry')">
+              Document Expiry
+              </a>
+              </li>
 
             </ul>
           </div>

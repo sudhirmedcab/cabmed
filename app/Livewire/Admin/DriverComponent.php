@@ -11,12 +11,13 @@ class DriverComponent extends Component
     public $employees0,$selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$fromdate, $todate, $id, $name, $email, $state=[],
-    $position, $employee_id, $driver_status=null, $driver_duty_status=null,$division_state_id=27,
+    $position, $employee_id, $driver_status=null, $driver_duty_status=null,$division_state_id=null,
     $driverUnderVerBySelf=null,
     $driverUnderVerByPartner=null,
     $activeTab,
     $division,
     $division_state,
+    $district_state,
     $walletBalanceFilter,
     $driverVerificationStatus = null,
     $sumDriverCountsByDivision;
@@ -62,13 +63,14 @@ class DriverComponent extends Component
                 $this->driver_duty_status=null;
                 $this->driverUnderVerBySelf=null;
                 $this->driverUnderVerByPartner=null;
+                $this->driverVerificationStatus=null;
                 $this->driver_status=null;
                 $this->driver_duty_status=null;
                 $this->selectedDate=null;
             }
             public function filterCondition($value){
                 $this->resetFilters();
-                    if($value=='Active'){
+                     if($value=='Active'){
                 // $this->activeDriver = 1;
                 $this->driver_duty_status=null;
                 $this->driverUnderVerBySelf=null;
@@ -133,15 +135,18 @@ class DriverComponent extends Component
                 $this->activeTab=$value;
                 $this->driver_status=null;
             }
-    
+            if($value=='documentExpiry'){
+                $this->activeTab=$value;
+            }
         }
  
     public function render()
     {
-// dd($this->activeDriver);
+// dd($this->activeTab);
         $division = $this->division ? $this->division : null;
         if($this->activeTab=='division'){
-        $division_state_id = $this->division_state ? $this->division_state : 27;
+        // $division_state_id = $this->division_state ? $this->division_state : 27;
+        $division_state_id = ($this->division_state || $this->division_state == 0) ? $this->division_state : 27;
         // dd('sdfghj',$division_state_id);
 
              $state = DB::table('state')
@@ -164,7 +169,7 @@ class DriverComponent extends Component
             ->leftJoin('city', 'city.city_division', '=', 'division.division_id')
             ->leftJoin('driver', 'driver.driver_city_id', '=', 'city.city_id')
             ->leftJoin('state', 'state.state_id', '=', 'division.division_state_id')
-            ->when($division_state_id !== 27, function ($query) use ($division_state_id) {
+            ->when($division_state_id !== null, function ($query) use ($division_state_id) {
                 return $query->where('state.state_id', $division_state_id);
             })
             ->where('division.division_name', 'like', '%' . $this->search . '%')
@@ -173,7 +178,7 @@ class DriverComponent extends Component
                         SUM(CASE WHEN driver.driver_duty_status = "ON" THEN 1 ELSE 0 END) as on_duty_count,
                         SUM(CASE WHEN driver.driver_duty_status = "OFF" THEN 1 ELSE 0 END) as off_duty_count')
             ->groupBy('state.state_name', 'division.division_name')
-            ->paginate(2);
+            ->paginate(10);
             $sumDriverCountsByDivision = $results->sum('total_driver_count');
             $state = DB::table('state')
             ->leftJoin('division', 'state.state_id', '=', 'division.division_state_id')
@@ -188,8 +193,45 @@ class DriverComponent extends Component
      
              $total_driver =  DB::table('driver')->get();   
         // ........
-        // dd('result',$results);
         return view('livewire.admin.driver-division-component',['results' => $results, 'total_driver'=>$total_driver,'state'=>$state,'sumDriverCountsByDivision'=>$sumDriverCountsByDivision])->layout('livewire.admin.layouts.base');
+
+        }
+
+        if($this->activeTab=='district'){
+
+            // $stateName = $request->input('state_id');
+            $district_state_id = ($this->district_state || $this->district_state == 0) ? $this->district_state : 27;
+            $results = DB::table('district_list')
+            ->leftJoin('city', 'city.city_district', '=', 'district_list.district_id')
+            ->leftJoin('driver', 'driver.driver_city_id', '=', 'city.city_id')
+            ->leftJoin('state', 'state.state_id', '=', 'district_list.d_state_id')
+             ->when($district_state_id !== null, function ($query) use ($district_state_id) {
+                return $query->where('state.state_id', $district_state_id);
+            })
+            ->where('district_list.district_name', 'like', '%' . $this->search . '%')
+            ->selectRaw('state.state_name, district_list.district_name, 
+                        COALESCE(COUNT(driver.driver_id), 0) as total_driver_count,
+                        SUM(CASE WHEN driver.driver_duty_status = "ON" THEN 1 ELSE 0 END) as on_duty_count,
+                        SUM(CASE WHEN driver.driver_duty_status = "OFF" THEN 1 ELSE 0 END) as off_duty_count')
+            ->groupBy('state.state_name', 'district_list.district_name')
+            ->orderBy('state.state_name', 'asc')
+            ->orderBy('district_list.district_name', 'asc')
+            ->paginate(10);
+
+            $sumDriverCountsByDistrict = $results->sum('total_driver_count');
+            $state = DB::table('state')
+            ->leftJoin('district_list', 'state.state_id', '=', 'district_list.d_state_id')
+            ->leftJoin('city', 'district_list.district_id', '=', 'city.city_district')
+            ->leftJoin('driver as drv', 'city.city_id', '=', 'drv.driver_city_id')
+            ->selectRaw('state.state_id,
+                         state.state_name, 
+                         COUNT(DISTINCT district_list.district_id) as district_count,
+                         COUNT(DISTINCT drv.driver_id) as total_driver_count')
+            ->groupBy('state.state_id', 'state.state_name')
+            ->get();
+            $total_driver =  DB::table('driver')->get();   
+
+        return view('livewire.admin.driver-district-component',['results' => $results, 'total_driver'=>$total_driver,'state'=>$state,'sumDriverCountsByDistrict'=>$sumDriverCountsByDistrict])->layout('livewire.admin.layouts.base');
 
         }
         $currentTimestamps = Carbon::now();
@@ -295,6 +337,9 @@ class DriverComponent extends Component
         ->when($walletBalanceFilter !==null && $walletBalanceFilter == 'positiveBalance', function ($query) use ($walletBalanceFilter){
             return $query->where('driver.driver_wallet_amount','>',0);
         })
+        ->when($selectDocumentExpiry == 'dl', function ($query) use ($selectDocumentExpiry){
+            return $query->where('driver_details.driver_details_dl_exp_date','>',0);
+        })
 
         // ->when($driverUnderVerByPartner !== null, function ($query) use ($driverUnderVerByPartner) {
         //     return $query
@@ -309,7 +354,7 @@ class DriverComponent extends Component
         ->when($driverVerificationStatus == 'UnderVerification', function ($query) use ($driverVerificationStatus) {
             return $query
                 ->where('driver.driver_status', 4)
-                ->where('driver_created_by', 0);
+                ->whereIn('driver_created_by', [0,1]);
         })
         ->when($driverVerificationStatus == 'UnderVerificationBySelf', function ($query) use ($driverVerificationStatus) {
             return $query

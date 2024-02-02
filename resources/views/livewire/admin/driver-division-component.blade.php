@@ -30,13 +30,11 @@
                   </div>
                 <div class="col">
                   <div class="form-group">
-                        <label class="custom__label" for="vehicle_rc_no">State</label>
+                        <label class="custom__label" for="vehicle_rc_no">Stateii</label>
                         <select wire:model.live.debounce.150ms="division_state" wire:loading.attr="disabled" wire:target="division_state" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
-                            @forelse ($state as $list)
-                                <option value="{{ $list->state_id }}">{{ $list->state_name }}</option>
-                            @empty
-                                <option value="" disabled>No state available</option>
-                            @endforelse
+                            @foreach ($state as $list)
+                                <option {{ $list->state_id === 27 ? 'selected' : ''}}  value="{{ $list->state_id }}">{{ $list->state_name }}</option>
+                            @endforeach
                         </select>
                         @error('driver_city') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
@@ -87,7 +85,7 @@
                     <div class="col __col-3">
                       <div class="form-group">
                           <label class="custom__label" for="toDate">Search</label>
-                          <input type="search" wire:model.live.debounce.150ms="search" class="custom__input__field form-control rounded-0 form-control-sm float-right" placeholder="Search">
+                          <input type="search" wire:model.live.debounce.150ms="search"  wire:loading.attr="disabled" wire:target="division_state" class="custom__input__field form-control rounded-0 form-control-sm float-right" placeholder="Search">
                       </div>
                     </div>
                 </div>

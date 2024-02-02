@@ -144,15 +144,29 @@
                     <div class="col -{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                           <label class="custom__label">Select</label>
-                          <select wire:model.live.debounce.150ms="selectedDate" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
-                          <option selected value="all">All</option>
-                          <option value="today">Today</option>
-                          <option value="yesterday">Yesterday</option>
-                          <option value="thisWeek">This Week</option>
-                          <option value="thisMonth">This Month</option>
-                        </select>
+                            <select wire:model.live.debounce.150ms="selectedDate" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
                         </div>
                     </div>
+                    @if($this->activeTab == 'documentExpiry')
+                    <div class="col">
+                        <div class="form-group">
+                          <label class="custom__label">Select</label>
+                            <select wire:model.live.debounce.150ms="selectDocumentExpiry" wire:mode.live="selectDocumentExpiry" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="selectDocumentExpiry">
+                                <option selected value="dl">DL</option>
+                                <option value="rcno">RC NO.</option>
+                                <option value="vehicleInsuarance">Vehicle Insuarance</option>
+                                <option value="vehiclePolution">Vehicle Polution</option>
+                                <option value="vehicleFitness">Vehicle Fitness</option>
+                            </select>
+                        </div>
+                    </div>
+                    @endif
                     @if($this->activeTab == 'UnderVerificationBySelf')
                     <div class="col __col-3">
                         <div class="form-group">
@@ -304,25 +318,25 @@ $srno = 1
             </div>
           
             <div class="container">
-    <div class="row" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
-        <div class="col">
-            <div class="loader">
-                <div class="loader-inner">
-                    <div class="loading one"></div>
-                </div>
-                <div class="loader-inner">
-                    <div class="loading two"></div>
-                </div>
-                <div class="loader-inner">
-                    <div class="loading three"></div>
-                </div>
-                <div class="loader-inner">
-                    <div class="loading four"></div>
+                <div class="row" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="filterCondition,selectedDate,Onduty,Offduty">
+                    <div class="col">
+                        <div class="loader">
+                            <div class="loader-inner">
+                                <div class="loading one"></div>
+                            </div>
+                            <div class="loader-inner">
+                                <div class="loading two"></div>
+                            </div>
+                            <div class="loader-inner">
+                                <div class="loading three"></div>
+                            </div>
+                            <div class="loader-inner">
+                                <div class="loading four"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
              <!-- <div style="text-align:center !important; display:block !important" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i>Processing..</div> -->
 
     </div>
