@@ -19,6 +19,7 @@ class DriverComponent extends Component
     $division_state,
     $district_state,
     $walletBalanceFilter,
+    $selectDocumentExpiry,
     $driverVerificationStatus = null,
     $sumDriverCountsByDivision;
     public $isOpen = 0;
@@ -33,6 +34,8 @@ class DriverComponent extends Component
     public function mount()
     {
         $driverVerificationStatus = $this->driverVerificationStatus ? $this->driverVerificationStatus : null;
+        $selectDocumentExpiry = $this->selectDocumentExpiry ? $this->selectDocumentExpiry : null;
+        
         $this->state = $this->stateList();
         
     }
@@ -246,7 +249,8 @@ class DriverComponent extends Component
         $driverUnderVerBySelf = $this->driverUnderVerBySelf ? $this->driverUnderVerBySelf : null;
         $driverVerificationStatus = $this->driverVerificationStatus ? $this->driverVerificationStatus : null;
         $walletBalanceFilter = $this->walletBalanceFilter ? $this->walletBalanceFilter : null;
-
+        $selectDocumentExpiry = $this->selectDocumentExpiry ? $this->selectDocumentExpiry : null;
+        
         // dd($driver_status,$driver_duty_status);
         $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
