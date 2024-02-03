@@ -27,11 +27,12 @@
                             <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
                         </div>
                     </div>
+                    @if($this->activeTab !== 'documentExpiry')
 
                     <div class="col -{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                             <label class="custom__label">Select</label>
-                            <select wire:model.live.debounce.150ms="selectedDate" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+                            <select wire:model.live.debounce.150ms="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
                                 <option selected value="all">All</option>
                                 <option value="today">Today</option>
                                 <option value="yesterday">Yesterday</option>
@@ -40,11 +41,12 @@
                             </select>
                         </div>
                     </div>
+                    @endif
                     @if($this->activeTab == 'documentExpiry')
                     <div class="col">
                         <div class="form-group">
                           <label class="custom__label">Select</label>
-                            <select wire:model.live.debounce.150ms="selectDocumentExpiry" wire:mode.live="selectDocumentExpiry" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="selectDocumentExpiry">
+                            <select wire:model.live.debounce.150ms="selectDocumentExpiry" wire:model.live="selectDocumentExpiry" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="selectDocumentExpiry">
                                 <option selected value="dl">DL</option>
                                 <option value="rcno">RC NO.</option>
                                 <option value="vehicleInsuarance">Vehicle Insuarance</option>
@@ -58,8 +60,9 @@
                     <div class="col __col-3">
                         <div class="form-group">
                             <label class="custom__label">Driver By Status</label>
-                            <select wire:model.live.debounce.150ms="driverVerificationStatus" wire:mode.live="driverVerificationStatus" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
-                                <option selected value="UnderVerification">Under Verification(All)</option>
+                            <select wire:model.live.debounce.150ms="driverVerificationStatus" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
+                                <option selected value="">Select Verification status</option>
+                                <option value="UnderVerification">Under Verification(All)</option>
                                 <option value="UnderVerificationBySelf">Under Verification(By Self)</option>
                                 <option value="UnderVerificationByPartner">Under Verification(By Partner)</option>
 
@@ -72,7 +75,7 @@
                     <div class="col __col-3">
                         <div class="form-group">
                             <label class="custom__label">Wallet Balance</label>
-                            <select wire:model.live.debounce.150ms="walletBalanceFilter" wire:mode.live="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
+                            <select wire:model.live.debounce.150ms="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
                                 <option value="positiveBalance">Positive Balance</option>
                                 <option value="zeroBalance">Zero Balance</option>
                                 <option value="negativeBalance">Negative Balance</option>
@@ -94,7 +97,7 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label class="custom__label">Wallet Balance</label>
-                        <select wire:model.live.debounce.150ms="walletBalanceFilter" wire:mode.live="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
+                        <select wire:model.live.debounce.150ms="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
                             <option value="positiveBalance">Positive Balance</option>
                             <option value="zeroBalance">Zero Balance</option>
                             <option value="negativeBalance">Negative Balance</option>
@@ -104,7 +107,7 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label class="custom__label">Wallet Balance</label>
-                        <select wire:model.live.debounce.150ms="walletBalanceFilter" wire:mode.live="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
+                        <select wire:model.live.debounce.150ms="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
                             <option value="positiveBalance">Positive Balance</option>
                             <option value="zeroBalance">Zero Balance</option>
                             <option value="negativeBalance">Negative Balance</option>
@@ -114,7 +117,7 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label class="custom__label">Wallet Balance</label>
-                        <select wire:model.live.debounce.150ms="walletBalanceFilter" wire:mode.live="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
+                        <select wire:model.live.debounce.150ms="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
                             <option value="positiveBalance">Positive Balance</option>
                             <option value="zeroBalance">Zero Balance</option>
                             <option value="negativeBalance">Negative Balance</option>
@@ -141,8 +144,12 @@
                         <th>Name</th>
                         <th>Mobile</th>
                         <th>Wallet</th>
+                        @if($this->activeTab !== 'documentExpiry')
                         <th>Created At</th>
+                        @endif
+                        @if($this->activeTab !== 'documentExpiry')
                         <th>Created By</th>
+                        @endif
                         <th>Bonus</th>
                         <th>Duty</th>
                         <th>Booking</th>
@@ -163,7 +170,10 @@
                         <td>{{ $driver->driver_name.' '.$driver->driver_last_name }}</td>
                         <td>{{ $driver->driver_mobile }}</td>
                         <td>{{ $driver->driver_wallet_amount }}</td>
+                        @if($this->activeTab !== 'documentExpiry')
                         <td>{{ $driver->created_at }}</td>
+                        @endif
+                        @if($this->activeTab !== 'documentExpiry')
                         <td>
                             @if($driver->driver_created_by=='0')
                             Self
@@ -171,6 +181,7 @@
                             Partner
                             @endif
                         </td>
+                        @endif
                         <td>
                             {{ $driver->join_bonus_status ==1 ? 'Yes' : 'No' }}
 
@@ -204,7 +215,7 @@
         </div>
 
         <div class="container h-100 w-100">
-            <div class="row w-100 h-100 d-flex align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">

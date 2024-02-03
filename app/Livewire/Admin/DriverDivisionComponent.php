@@ -18,7 +18,7 @@ class DriverDivisionComponent extends Component
     $activeTab,
     $division,
     $walletBalanceFilter,
-    $driverVerificationStatus = null;
+    $driverVerificationStatus = 'null';
 
     #[Layout('livewire.admin.layouts.base')]    //......... add the layout dynamically for the all ...........//
 public function mount(){

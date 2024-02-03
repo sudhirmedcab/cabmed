@@ -250,10 +250,11 @@ class DriverComponent extends Component
         $driverVerificationStatus = $this->driverVerificationStatus ? $this->driverVerificationStatus : null;
         $walletBalanceFilter = $this->walletBalanceFilter ? $this->walletBalanceFilter : null;
         $selectDocumentExpiry = $this->selectDocumentExpiry ? $this->selectDocumentExpiry : null;
-        
-        // dd($driver_status,$driver_duty_status);
-        $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
+            
+        // dd($driver_status,$driver_duty_status,$selectDocumentExpiry); 
+         $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+        // dd('test', $this->selectedFromDate->format('m-d-Y'),Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay());
         if($this->selectedFromDate && $this->selectedToDate){
             $this->selectedDate = null;     
         }
@@ -342,7 +343,7 @@ class DriverComponent extends Component
             return $query->where('driver.driver_wallet_amount','>',0);
         })
         ->when($selectDocumentExpiry == 'dl', function ($query) use ($selectDocumentExpiry){
-            return $query->where('driver_details.driver_details_dl_exp_date','>',0);
+            return $query->where('driver_details.driver_details_dl_exp_date','<',carbon::now());
         })
 
         // ->when($driverUnderVerByPartner !== null, function ($query) use ($driverUnderVerByPartner) {
@@ -350,7 +351,7 @@ class DriverComponent extends Component
         //         ->where('driver.driver_status', 4)
         //         ->where('driver_created_by', 1);
         // })
-        // ->when($driverUnderVerBySelf !== null, function ($query) use ($driverUnderVerBySelf) {
+// ->when($driverUnderVerBySelf !== null, function ($query) use ($driverUnderVerBySelf) {
         //     return $query
         //         ->where('driver.driver_status', 4)
         //         ->where('driver_created_by', 0);
