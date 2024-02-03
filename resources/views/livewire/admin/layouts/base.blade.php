@@ -27,7 +27,7 @@
   <!-- Navbar -->
 
 
-@livewire('admin.main-header');
+@livewire('admin.main-header')
   <!-- /.navbar -->
 
 
@@ -74,7 +74,7 @@
   <!-- /.control-sidebar -->
 
   <!-- Main Footer -->
-  @livewire('admin.layouts.footer');
+  @livewire('admin.layouts.footer')
 
 </div>
 <!-- ./wrapper -->
