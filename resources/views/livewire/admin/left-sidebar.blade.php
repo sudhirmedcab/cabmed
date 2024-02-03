@@ -96,7 +96,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" wire:navigate class="nav-link active1">
+            <a type="button" class="nav-link active1">
               <i class="nav-icon fas fa-file-contract"></i>
               <p>Pathology</p>
               <i class="right fas fa-angle-left"></i>

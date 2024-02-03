@@ -157,28 +157,28 @@
 
         <!-- @include('partner.partner_nav') --> <!----------- It partner nav bar no needs currently Date: 02/02/2024 ---->
 
-        <div class="card mt-2">
+        <div class="card mt-2 custom__filter__responsive">
             <div class="card-header custom__filter__select">
 
                 <div class="row">
-                    <div class="col __col-3">
+                    <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                             <label class="custom__label" for="fromDate">From </label>
                             <input wire:model.live="selectedFromDate" {{ !$isCustom ? 'disabled' : '' }} type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
                         </div>
                     </div>
-                    <div class="col __col-3">
+                    <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                             <label class="custom__label" for="toDate">To</label>
-                            <input wire:model.live="selectedToDate" max="<?=date('Y-m-d')?>" type="date" {{ !$isCustom ? 'disabled' : '' }} class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+                            <input wire:model.live="selectedToDate" max="<?= date('Y-m-d') ?>" type="date" {{ !$isCustom ? 'disabled' : '' }} class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
                         </div>
                     </div>
-                    <div class="col __col-3">
+                    <div class="col -{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                             <label class="custom__label">Select</label>
                             <select wire:model.live.debounce.150ms="selectedDate" wire:model="check_for" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
-                                
-                            <option selected value="">Select Filters</option>
+
+                                <option selected value="">Select Filters</option>
                                 <option selected value="all">All</option>
                                 <option value="today">Today</option>
                                 <option value="yesterday">Yesterday</option>
@@ -190,7 +190,7 @@
                     </div>
                     <div class="col __col-3">
                         <div class="form-group">
-                            <label class="custom__label">Partner By Status</label>
+                            <label class="custom__label">Status</label>
 
                             <select wire:model.live.debounce.150ms="partnerVerificationStatus" wire:mode.live="partnerVerificationStatus" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
                                 <option selected value="AllVerification">All Partner</option>
@@ -207,12 +207,15 @@
                             <input type="search" wire:model.live.debounce.150ms="search" class="custom__input__field form-control rounded-0 form-control-sm float-right" placeholder="Search">
                         </div>
                     </div>
-                    <div class="col-1 d-flex align-items-center justify-content-end">
-                        <button style="height:25px" class="btn-primary btn rounded w-100 submit__btn d-flex align-items-center justify-content-center" >
-                            <a class="custom__label text-white" wire:click="create()"><i class="fa fa-plus"></i> Add</a>
-                        </button>
+                    <div class="col ">
+                        <div class="form-group">
+                            <label class="custom__label">Partner</label>
+                            <button style="height:25px" class="w-100 mb-sm-2 mb-0 btn-primary btn rounded submit__btn d-flex align-items-center justify-content-center">
+                                <a class="custom__label text-white" wire:click="create()"><i class="fa fa-plus"></i> Add</a>
+                            </button>
+                        </div>
                     </div>
-                  
+
                 </div>
 
             </div>

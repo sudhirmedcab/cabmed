@@ -155,7 +155,7 @@
         </div>
         @endif
 
-        <div class="card mt-2">
+        <div class="card mt-2 custom__filter__responsive">
             <div class="card-header custom__filter__select">
                 <div class="row">
                 <div class="col __col-3">

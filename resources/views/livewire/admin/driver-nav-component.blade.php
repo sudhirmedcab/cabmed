@@ -1,7 +1,7 @@
 <div class="card my-2  text-center">
   <div class="card-header custom__driver__filter">
     <ul class="nav nav-tabs custom__nav__tab  card-header-tabs">
-      <li class="nav-item {{$this->activeTab == 'all' ? 'active':''}}">
+      <li class="nav-item {{$this->activeTab == null ? 'active':''}}">
         <a class="nav-link fs-1" href="/driver" wire:navigate>All </a>
       </li>
       <li class="nav-item {{$this->activeTab == 'add' ? 'active':''}}">

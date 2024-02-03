@@ -5,19 +5,19 @@
         <div class="card-header custom__filter__select ">
 
             <div class="row">
-                <div class="col">
+                <div class="col-6 col-sm-auto col-md-2">
                     <div class="form-group">
                         <label class="custom__label" for="fromDate">From </label>
                         <input wire:model.live="selectedFromDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-6 col-sm-auto col-md-2">
                     <div class="form-group">
                         <label class="custom__label" for="toDate">To</label>
                         <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-6 col-sm-auto col-md-2">
                     <div class="form-group">
                         <label class="custom__label">Date</label>
                         <select wire:model.live.debounce.150ms="selectedDate" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
@@ -29,7 +29,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-6 col-sm-auto col-md-2">
                     <div class="form-group">
                         <label class="custom__label">Type</label>
                         <select wire:model.live.debounce.150ms="selectedDate" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
@@ -46,7 +46,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-6 col-sm-auto col-md-2">
                     <div class="form-group">
                         <label class="custom__label">Category</label>
                         <select wire:model.live.debounce.150ms="selectedDate" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
@@ -58,7 +58,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col ">
+                <div class="col-6 col-sm-auto col-md-2 ">
                     <div class="form-group">
                         <label class="custom__label" for="toDate">Search</label>
                         <input type="search" wire:model.live.debounce.150ms="search" class="custom__input__field form-control rounded-0 form-control-sm float-right" placeholder="Search">

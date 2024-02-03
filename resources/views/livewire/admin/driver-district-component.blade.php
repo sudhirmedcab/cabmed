@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-header custom__filter__select">
         <div class="row">
-          <div class="col-2">
+          <div class="col-6 col-md-2">
             <div class="form-group">
               <label class="custom__label " for="vehicle_rc_no">Export Data</label>
               <button style="line-height:0" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
@@ -12,7 +12,7 @@
               </button>
             </div>
           </div>
-          <div class="col">
+          <div class="col-6 col-md-5">
             <div class="form-group">
               <label class="custom__label" for="vehicle_rc_no">State</label>
               <select wire:model.live.debounce.150ms="district_state" wire:loading.attr="disabled" wire:target="district_state" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="district_state">

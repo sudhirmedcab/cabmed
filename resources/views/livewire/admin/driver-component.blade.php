@@ -10,7 +10,7 @@
         @endif
         @include('livewire.admin.driver-nav-component')
 
-        <div class="card ">
+        <div class="card custom__filter__responsive">
             <div class="card-header custom__filter__select ">
 
                 <div class="row">
