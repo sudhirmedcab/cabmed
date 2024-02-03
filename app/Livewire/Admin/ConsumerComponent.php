@@ -9,11 +9,11 @@ use Livewire\WithPagination;
 
 class ConsumerComponent extends Component
 {
-    public $partner_id, $partner_f_name, $partner_l_name, $partner_mobile, $partner_dob ,$partner_gender,$partner_city_id,$partner_aadhar_no,$partner_referral ,$referral_referral_by,$partner_aadhar_back,$partner_aadhar_front,$partner_profile_img,$employees0,$selectedDate,$filterConditionl, 
+    public $selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$fromdate, $todate, $id, $name, $email,
-    $position, $employee_id, $consumer_status,$consumerVerificationStatus,
-    
+    $position, $employee_id, $consumer_status,$consumerVerificationStatus,$check_for,
+
     $activeTab;
     
     public $isOpen = 0;
@@ -61,12 +61,17 @@ class ConsumerComponent extends Component
         $consumerVerificationStatus = $this->consumerVerificationStatus ? $this->consumerVerificationStatus : null;
         $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
-        if($this->selectedFromDate && $this->selectedToDate){
+
+       if($this->selectedFromDate && $this->selectedToDate){
             $this->selectedDate = null;     
         }
-        if($this->selectedDate){
+        
+        if($this->selectedDate == 'custom'){
+            $this->selectedFromDate;
+            $this->selectedToDate;
+        }else{
             $this->selectedFromDate ='';
-            $this->selectedToDate ='';
+            $this->selectedToDate =''; 
         }
      
         switch ($this->selectedDate) {
@@ -122,7 +127,16 @@ class ConsumerComponent extends Component
         ->orderBy('consumer_id','desc')
         ->paginate(10);
 
-        return view('livewire.admin.consumer-component',$data);
+
+        if($this->check_for == 'custom'){
+            return view('livewire.admin.consumer-component',$data,[
+                'isCustom' => true
+            ]);
+        }
+        return view('livewire.admin.consumer-component',$data,[
+            'isCustom' => false
+        ]);
+        
 
 
     }

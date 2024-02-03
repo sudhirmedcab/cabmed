@@ -13,7 +13,7 @@ class PartnerComponent extends Component
     public $partner_id, $partner_f_name, $partner_l_name, $partner_mobile, $partner_dob ,$partner_gender,$partner_city_id,$partner_aadhar_no,$partner_referral ,$referral_referral_by,$partner_aadhar_back,$partner_aadhar_front,$partner_profile_img,$employees0,$selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$fromdate, $todate, $id, $name, $email,
-    $position, $employee_id, $partner_status=null,$partnerVerificationStatus,
+    $position, $employee_id, $partner_status=null,$partnerVerificationStatus,$check_for,
     
     $activeTab;
     
@@ -56,8 +56,8 @@ class PartnerComponent extends Component
 
             public function filterCondition($value){
                 $this->resetFilters();
+                
                     if($value=='Active'){
-                // $this->activeDriver = 1;
             
                     $this->activeTab=$value;
                     $this->partner_status='1';
@@ -88,15 +88,19 @@ class PartnerComponent extends Component
         $partnerVerificationStatus = $this->partnerVerificationStatus ? $this->partnerVerificationStatus : null;
         $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+
         if($this->selectedFromDate && $this->selectedToDate){
             $this->selectedDate = null;     
         }
-        if($this->selectedDate){
+        
+        if($this->selectedDate == 'custom'){
+            $this->selectedFromDate;
+            $this->selectedToDate;
+        }else{
             $this->selectedFromDate ='';
-            $this->selectedToDate ='';
+            $this->selectedToDate =''; 
         }
        
-     
         switch ($this->selectedDate) {
             case 'all':
                 $fromDate = null;
@@ -228,11 +232,19 @@ class PartnerComponent extends Component
 
                 $data['partner']  = $buckethlist; 
 
-                return view('livewire.admin.partner-component', [
+                if($this->check_for == 'custom'){
+                    return view('livewire.admin.partner-component',[
+                        'data' => $data,
+                        'isCustom' => true
+                    ],compact('partners'));
+                }
+                return view('livewire.admin.partner-component',[
                     'data' => $data,
-                ], compact('partners'));
+                    'isCustom' => false
+                ],compact('partners'));
 
     }
+    
     public function create()
     {
         $this->resetInputFields();

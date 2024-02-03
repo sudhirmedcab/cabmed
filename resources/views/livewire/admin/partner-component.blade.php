@@ -161,26 +161,29 @@
             <div class="card-header custom__filter__select">
 
                 <div class="row">
-                    <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
+                    <div class="col __col-3">
                         <div class="form-group">
                             <label class="custom__label" for="fromDate">From </label>
-                            <input wire:model.live="selectedFromDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
+                            <input wire:model.live="selectedFromDate" {{ !$isCustom ? 'disabled' : '' }} type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
                         </div>
                     </div>
-                    <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
+                    <div class="col __col-3">
                         <div class="form-group">
                             <label class="custom__label" for="toDate">To</label>
-                            <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+                            <input wire:model.live="selectedToDate" max="<?=date('Y-m-d')?>" type="date" {{ !$isCustom ? 'disabled' : '' }} class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
                         </div>
                     </div>
-                    <div class="col -{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
+                    <div class="col __col-3">
                         <div class="form-group">
                             <label class="custom__label">Select</label>
-                            <select wire:model.live.debounce.150ms="selectedDate" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+                            <select wire:model.live.debounce.150ms="selectedDate" wire:model="check_for" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+                                
+                            <option selected value="">Select Filters</option>
                                 <option selected value="all">All</option>
                                 <option value="today">Today</option>
                                 <option value="yesterday">Yesterday</option>
                                 <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
                                 <option value="thisMonth">This Month</option>
                             </select>
                         </div>
@@ -209,11 +212,7 @@
                             <a class="custom__label text-white" wire:click="create()"><i class="fa fa-plus"></i> Add</a>
                         </button>
                     </div>
-                    {{-- <div class="col d-flex justify-content-end w-100 p-2">
-                        <div class="form-group border w-100 d-flex align-items-center justify-conten-center">
-                            <a class=" custom__label w"><i class="fa fa-plus"></i> Add</a>
-                        </div>
-                    </div>--}}
+                  
                 </div>
 
             </div>
