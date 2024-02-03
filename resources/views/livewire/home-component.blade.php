@@ -1,8 +1,11 @@
 <style>
-  .submit__btn{
+  .submit__btn {
     height: 30px;
   }
 
+  .add__driver__form input[type='date'] {
+    height: 30px !important;
+  }
 </style>
 
 <div class="content">
@@ -11,20 +14,25 @@
     <div class="card card-default add__driver__form">
       <div class="card-header align-items-center d-flex">
         <h3 class="card-title">Add Driver</h3>
-        <div class="card-tools ml-auto">
+        <div class="card-tools d-flex align-items-center ml-auto">
           <button type="button" class="btn btn-tool" data-card-widget="collapse">
             <i class="fas fa-minus"></i>
           </button>
           <button type="button" class="btn btn-tool" data-card-widget="remove">
             <i class="fas fa-times"></i>
           </button>
+          <div class="col-3 ml-auto d-flex align-items-end justify-content-end">
+            <a href="#" class="submit__btn text-primary font-weight-bold my-1 d-flex align-items-center justify-content-center">
+              Submit
+            </a>
+          </div>
         </div>
       </div>
       <!-- /.card-header -->
       <div class="card-body py-1 pb-3">
         <form>
           <div class="row">
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label>Create Driver (For)</label>
 
@@ -34,7 +42,7 @@
                 </select>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label>Partner Name</label>
 
@@ -44,34 +52,29 @@
                 </select>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_first_name">Driver First Name</label>
                 <input wire:model="driver_first_name" type="text" class="rounded-0 form-control form-control-sm" id="driver_first_name" placeholder="Enter first name">
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_first_name">Driver Last Name</label>
                 <input wire:model="driver_first_name" type="text" class="rounded-0 form-control form-control-sm" id="driver_first_name" placeholder="Enter last name">
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_mobile">Driver Mobile</label>
                 <input wire:model="driver_mobile" type="text" class="rounded-0 form-control form-control-sm" id="driver_mobile" placeholder="Enter Driver Mobile">
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="vehicle_rc_no">Vehicle RC No.</label>
                 <input wire:model="vehicle_rc_no" type="text" oninput="this.value = this.value.toUpperCase()" class="rounded-0 form-control form-control-sm" id="vehicle_rc_no" placeholder="Enter Vehicle RC No.">
               </div>
-            </div>
-            <div class="col-1 d-flex align-items-end justify-content-end">
-              <button class="btn-primary btn rounded w-100 submit__btn mb-2 d-flex align-items-center justify-content-center">
-                Submit
-              </button>
             </div>
           </div>
         </form>
@@ -82,20 +85,25 @@
     <div class="card card-default add__driver__form">
       <div class="card-header align-items-center d-flex">
         <h3 class="card-title">Driver Basic Details</h3>
-        <div class="card-tools ml-auto">
+        <div class="card-tools d-flex align-items-center ml-auto">
           <button type="button" class="btn btn-tool" data-card-widget="collapse">
             <i class="fas fa-minus"></i>
           </button>
           <button type="button" class="btn btn-tool" data-card-widget="remove">
             <i class="fas fa-times"></i>
           </button>
+          <div class="col-3 ml-auto d-flex align-items-end justify-content-end">
+            <a href="#" class="submit__btn text-primary font-weight-bold my-1 d-flex align-items-center justify-content-center">
+              Submit
+            </a>
+          </div>
         </div>
       </div>
       <!-- /.card-header -->
-      <div class="card-body py-1 pb-3">
+      <div class="card-body py-1 pb-3 ">
         <form>
           <div class="row">
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-3">
               <div class="form-group">
                 <label for="exampleInputFile">Aadhaar Front Image</label>
                 <div class="input-group mb-0">
@@ -108,7 +116,7 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-3">
               <div class="form-group">
                 <label for="exampleInputFile">Aadhaar Back Image</label>
                 <div class="input-group mb-0">
@@ -121,13 +129,13 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_first_name">Aadhaar Number</label>
                 <input wire:model="driver_first_name" type="number" class="rounded-0 form-control form-control-sm" id="driver_first_name" placeholder="Enter aadhaar number">
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Pan Image</label>
                 <div class="input-group mb-0">
@@ -140,16 +148,11 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_first_name">Pan Number</label>
                 <input wire:model="driver_first_name" type="text" oninput="this.value = this.value.toUpperCase()" class="rounded-0 form-control form-control-sm" id="driver_first_name" placeholder="Enter PAN Number">
               </div>
-            </div>
-            <div class="col-1 ml-auto d-flex align-items-end justify-content-end">
-              <button class="btn-primary btn rounded w-100 submit__btn mb-2 d-flex align-items-center justify-content-center">
-                Submit
-              </button>
             </div>
           </div>
         </form>
@@ -160,20 +163,25 @@
     <div class="card card-default add__driver__form">
       <div class="card-header align-items-center d-flex">
         <h3 class="card-title">Verification</h3>
-        <div class="card-tools ml-auto">
+        <div class="card-tools d-flex align-items-center ml-auto">
           <button type="button" class="btn btn-tool" data-card-widget="collapse">
             <i class="fas fa-minus"></i>
           </button>
           <button type="button" class="btn btn-tool" data-card-widget="remove">
             <i class="fas fa-times"></i>
           </button>
+          <div class="col-3 ml-auto d-flex align-items-end justify-content-end">
+            <a href="#" class="submit__btn text-primary font-weight-bold my-1 d-flex align-items-center justify-content-center">
+              Submit
+            </a>
+          </div>
         </div>
       </div>
       <!-- /.card-header -->
       <div class="card-body py-1 pb-3">
         <form>
           <div class="row">
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Police Verification Image</label>
                 <div class="input-group mb-0">
@@ -186,13 +194,13 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label class="custom__label" for="toDate">Expiry :</label>
                 <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">DL Front Image</label>
                 <div class="input-group mb-0">
@@ -205,7 +213,7 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">DL Back Image</label>
                 <div class="input-group mb-0">
@@ -218,22 +226,17 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_first_name">DL Number</label>
                 <input wire:model="driver_first_name" type="text" oninput="this.value = this.value.toUpperCase()" class="rounded-0 form-control form-control-sm" id="driver_first_name" placeholder="Enter first name">
               </div>
             </div>
-            <div class="col ">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 ">
               <div class="form-group">
                 <label class="custom__label" for="toDate">Expiry :</label>
                 <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
               </div>
-            </div>
-            <div class="col-1 ml-auto d-flex align-items-end justify-content-end">
-              <button class="btn-primary btn rounded w-100 submit__btn mb-2 d-flex align-items-center justify-content-center">
-                Submit
-              </button>
             </div>
           </div>
         </form>
@@ -244,20 +247,25 @@
     <div class="card card-default add__driver__form">
       <div class="card-header align-items-center d-flex">
         <h3 class="card-title">Ambulance Details</h3>
-        <div class="card-tools ml-auto">
+        <div class="card-tools d-flex align-items-center ml-auto">
           <button type="button" class="btn btn-tool" data-card-widget="collapse">
             <i class="fas fa-minus"></i>
           </button>
           <button type="button" class="btn btn-tool" data-card-widget="remove">
             <i class="fas fa-times"></i>
           </button>
+          <div class="col-3 ml-auto d-flex align-items-end justify-content-end">
+            <a href="#" class="submit__btn text-primary font-weight-bold my-1 d-flex align-items-center justify-content-center">
+              Submit
+            </a>
+          </div>
         </div>
       </div>
       <!-- /.card-header -->
       <div class="card-body py-1 pb-3">
         <form>
           <div class="row">
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Ambulance Front Image</label>
                 <div class="input-group mb-0">
@@ -270,7 +278,7 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Ambulance Back Image</label>
                 <div class="input-group mb-0">
@@ -283,7 +291,7 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label>Creategory</label>
                 <select wire:change="partners()" wire:model="create_for" class="custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
@@ -292,7 +300,7 @@
                 </select>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label>Facilities</label>
                 <select wire:change="partners()" wire:model="create_for" class="custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
@@ -301,9 +309,7 @@
                 </select>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">RC Image</label>
                 <div class="input-group mb-0">
@@ -316,22 +322,106 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_first_name">RC Number</label>
                 <input wire:model="driver_first_name" type="text" oninput="this.value = this.value.toUpperCase()" class="rounded-0 form-control form-control-sm" id="driver_first_name" placeholder="Enter first name">
               </div>
             </div>
-            <div class="col ">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 ">
               <div class="form-group">
                 <label class="custom__label" for="toDate">Expiry :</label>
                 <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
               </div>
             </div>
-            <div class="col-1 ml-auto d-flex align-items-end justify-content-end">
-              <button class="btn-primary btn rounded w-100 submit__btn mb-2 d-flex align-items-center justify-content-center">
-                Submit
-              </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Ambulance Fitness -->
+    <div class="card card-default add__driver__form">
+      <div class="card-header align-items-center d-flex">
+        <h3 class="card-title">Ambulance Fitness</h3>
+        <div class="card-tools ml-auto d-flex align-items-center">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove">
+            <i class="fas fa-times"></i>
+          </button>
+          <div class="col-3 ml-auto d-flex align-items-end justify-content-end">
+            <a href="#" class="submit__btn text-primary font-weight-bold my-1 d-flex align-items-center justify-content-center">
+              Submit
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body py-1 pb-3 row">
+        <form>
+          <div class="row">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <div class="form-group">
+                <label for="exampleInputFile">Fitness Image</label>
+                <div class="input-group mb-0">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="exampleInputFile">
+                    <label class="custom-file-label" for="exampleInputFile">
+                      Choose file
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <div class="form-group">
+                <label class="custom__label" for="toDate">Expiry :</label>
+                <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <div class="form-group">
+                <label for="exampleInputFile">Insurance Image</label>
+                <div class="input-group mb-0">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="exampleInputFile">
+                    <label class="custom-file-label" for="exampleInputFile">
+                      Choose file
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <div class="form-group">
+                <label class="custom__label" for="toDate">Expiry :</label>
+                <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <div class="form-group">
+                <label for="driver_first_name">Insurance Holder Name</label>
+                <input wire:model="driver_first_name" type="text" class="rounded-0 form-control form-control-sm" id="driver_first_name" placeholder="Enter Name">
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <div class="form-group">
+                <label for="exampleInputFile">Pollution Certification Image</label>
+                <div class="input-group mb-0">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="exampleInputFile">
+                    <label class="custom-file-label" for="exampleInputFile">
+                      Choose file
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <div class="form-group">
+                <label class="custom__label" for="toDate">Expiry :</label>
+                <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+              </div>
             </div>
           </div>
         </form>
@@ -339,102 +429,10 @@
     </div>
   </div>
 
-  <!-- Ambulance Fitness -->
-  <div class="card card-default add__driver__form">
-    <div class="card-header align-items-center d-flex">
-      <h3 class="card-title">Ambulance Fitness</h3>
-      <div class="card-tools ml-auto">
-        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-          <i class="fas fa-minus"></i>
-        </button>
-        <button type="button" class="btn btn-tool" data-card-widget="remove">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-    </div>
-    <!-- /.card-header -->
-    <div class="card-body py-1 pb-3">
-      <form>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="exampleInputFile">Fitness Image</label>
-              <div class="input-group mb-0">
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="exampleInputFile">
-                  <label class="custom-file-label" for="exampleInputFile">
-                    Choose file
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col ">
-            <div class="form-group">
-              <label class="custom__label" for="toDate">Expiry :</label>
-              <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="exampleInputFile">Insurance Image</label>
-              <div class="input-group mb-0">
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="exampleInputFile">
-                  <label class="custom-file-label" for="exampleInputFile">
-                    Choose file
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col ">
-            <div class="form-group">
-              <label class="custom__label" for="toDate">Expiry :</label>
-              <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="driver_first_name">Insurance Holder Name</label>
-              <input wire:model="driver_first_name" type="text" class="rounded-0 form-control form-control-sm" id="driver_first_name" placeholder="Enter Name">
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="exampleInputFile">Pollution Certification Image</label>
-              <div class="input-group mb-0">
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="exampleInputFile">
-                  <label class="custom-file-label" for="exampleInputFile">
-                    Choose file
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col ">
-            <div class="form-group">
-              <label class="custom__label" for="toDate">Expiry :</label>
-              <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
-            </div>
-          </div>
-          <div class="col-1 ml-auto d-flex align-items-end justify-content-end">
-            <button class="btn-primary btn rounded w-100 submit__btn mb-2 d-flex align-items-center justify-content-center">
-              Submit
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
   <!-- /.card -->
 
   <!-- /.row -->
-</div>
-{{-- <div class="container-fluid">
+  {{-- <div class="container-fluid">
   <div class="row">
     <div class="col-lg-6">
       <div class="card">

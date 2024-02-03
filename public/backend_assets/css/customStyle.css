@@ -141,16 +141,23 @@ ul.custom__nav__tab li a {
 } */
 .custom__filter__select {
     padding-top: 0.5rem;
-    padding-bottom: 0;
+    padding-bottom: 0.5rem;
 }
 .custom__filter__select .form-control {
     font-size: 10px;
+}
+
+.custom__filter__select .form-group {
+    margin-bottom: 5px;
 }
 .custom__filter__select .custom__input__field option {
     margin-bottom: 0.4rem;
 }
 .custom__filter__select input[type="date"] {
     height: 25px;
+}
+::-webkit-calender-picker-indicator {
+    background: grey !important;
 }
 .custom__footer p {
     text-align: center;
@@ -180,8 +187,9 @@ ul.custom__nav__tab li a {
 .add__driver__form label {
     margin-bottom: 0.15rem;
 }
-.add__driver__form .submit__btn {
-    /* height: 25px; */
+.submit__btn {
+    height: 25px;
+    margin-bottom: 1rem;
     font-size: 10px;
 }
 .add__driver__form .custom-file-label {
@@ -191,6 +199,21 @@ ul.custom__nav__tab li a {
     height: 25px !important;
     border-radius: 4px;
 }
+
+
+@media all and (max-width: 680px) {
+    .custom__filter__responsive .row{
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+    .custom__filter__responsive .col{
+        max-width: 120px;
+        flex-shrink: 0;
+        flex-basis: auto;
+
+    }
+}
+
 
 @media all and (max-width: 640px) {
     .custom__driver__filter .custom__nav__tab {
