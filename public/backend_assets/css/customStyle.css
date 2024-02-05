@@ -199,7 +199,12 @@ ul.custom__nav__tab li a {
     height: 25px !important;
     border-radius: 4px;
 }
-
+.custom__driver__detail__section td:nth-child(2){
+    font-weight: bold;
+}
+.custom__driver__detail__section td:nth-child(2) a{
+    color: #007bffa9;
+}
 
 @media all and (max-width: 680px) {
     .custom__filter__responsive .row{
