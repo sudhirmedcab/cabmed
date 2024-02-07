@@ -93,6 +93,12 @@
                   <p>Rates</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="/consumer-enquiry" wire:navigate class="nav-link">
+                  <!-- <i class="nav-icon fas fa-hand-point-up"></i> -->
+                  <p>Consumer Enquiry</p>
+                </a>
+              </li>
             </ul>
           </li>
           <li class="nav-item">

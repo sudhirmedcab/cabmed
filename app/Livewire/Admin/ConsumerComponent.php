@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 
 class ConsumerComponent extends Component
 {
-    public $selectedDate,$filterConditionl, 
+    public $partner_id, $partner_f_name, $partner_l_name, $partner_mobile, $partner_dob ,$partner_gender,$partner_city_id,$partner_aadhar_no,$partner_referral ,$referral_referral_by,$partner_aadhar_back,$partner_aadhar_front,$partner_profile_img,$employees0,$selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$fromdate, $todate, $id, $name, $email,
     $position, $employee_id, $consumer_status,$consumerVerificationStatus,$check_for,
@@ -101,8 +101,7 @@ class ConsumerComponent extends Component
                 break;
         }
        
-        // ...
-       
+        
         $data['consumers'] = DB::table('consumer')
         ->leftJoin('remark_data', 'consumer.consumer_id', '=', 'remark_data.remark_consumer_id')
         ->leftJoin('admin', 'admin.id', '=', 'remark_data.remark_type')  
@@ -122,8 +121,11 @@ class ConsumerComponent extends Component
             return $query
                 ->where('consumer.consumer_status', 1);
         })
+        ->when($consumerVerificationStatus == 'InactiveVerification', function ($query) use ($consumerVerificationStatus) {
+            return $query
+                ->where('consumer.consumer_status', 2);
+        })
         ->select('consumer.*','remark_data.*','admin.*','consumer.created_at')
-        ->where('consumer.consumer_status','<>','2')
         ->orderBy('consumer_id','desc')
         ->paginate(10);
 
@@ -138,8 +140,8 @@ class ConsumerComponent extends Component
         ]);
         
 
-
     }
+
     public function create()
     {
         $this->resetInputFields();
@@ -171,11 +173,27 @@ class ConsumerComponent extends Component
         $this->position = $employee->position;
         $this->openModal();
     }
+    
     public function delete($id)
     {
-        $partnerDelete = DB::table('consumer')->where('consumer_id',$id)->update(['consumer_status'=>'2']);
+        $consumerData = DB::table('consumer')->where('consumer_id',$id)->first();
+        
+        $consumerStatus = $consumerData->consumer_status;
 
-        session()->flash('message', 'Consumer Data Deleted Successfully.');
-        session()->flash('type', 'delete');
+        if($consumerStatus == 0){
+            $consumerDelete = DB::table('consumer')->where('consumer_id',$id)->update(['consumer_status'=>'2']);
+            session()->flash('message', 'Consumer Data Deleted Successfully.');
+           session()->flash('type', 'delete');
+        }elseif($consumerStatus == 1){
+            $consumerDelete = DB::table('consumer')->where('consumer_id',$id)->update(['consumer_status'=>'2']);
+            session()->flash('message', 'Consumer Data Deleted Successfully.');
+           session()->flash('type', 'delete');
+        }elseif($consumerStatus == 2){
+            $consumerDelete = DB::table('consumer')->where('consumer_id',$id)->update(['consumer_status'=>'1']);
+            session()->flash('message', 'Consumer Data Activated Successfully.');
+            session()->flash('type', 'delete');
+        }
+
+
     }
 }

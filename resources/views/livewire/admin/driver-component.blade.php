@@ -197,7 +197,7 @@
                         <td>{{ $driver->vehicle_rc_number }}</td>
                         <td class="action__btn lbtn-group">
                             <button wire:click="edit({{ $driver->driver_id }})" class="btn-primary"><i class="fa fa-edit fa-sm"></i></button>
-                            <button  wire:navigate href="{{route('admin.driver-details-component')}}" class="btn-success"><i class="fa fa-eye fa-sm"></i></button>
+                            <button  wire:navigate href="{{route('admin.driver-details-component',['driverId' => $driver->driver_id])}}" class="btn-success"><i class="fa fa-eye fa-sm"></i></button>
                             <button wire:confirm="Are you sure you want to delete this post?" wire:click="delete({{ $driver->driver_id }})" class="btn-danger"><i class="fa fa-trash fa-sm"></i></button>
                         </td>
                     </tr>

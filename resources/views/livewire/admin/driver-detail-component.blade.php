@@ -1,35 +1,68 @@
+<?php
+    $createdMapper['0'] = "Self";
+    $createdMapper['1'] = "Partner";
+
+    $relationMapper['0'] = "Self";
+    $relationMapper['1'] = "Spouse";
+    $relationMapper['2'] = "Sister";
+    $relationMapper['3'] = "Brother";
+    $relationMapper['4'] = "Daughter";
+    $relationMapper['5'] = "Other";
+
+    ?>
+
 <div class="content">
     <div class="container-fluid">
         <div class="card my-2  text-center">
             <div class="card-header custom__driver__filter">
                 <ul class="nav nav-tabs custom__nav__tab  card-header-tabs">
-                    <li class="nav-item  active">
-                        <a class="nav-link fs-1" href="">Detail</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fs-1" href="">Enquiry</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fs-1" href="">New Booking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fs-1" href="">Ongoing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fs-1" href="">Invoice</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fs-1" href="">Complete</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fs-1" href="">Cancel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fs-1" href="">Transaction</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fs-1" href="">Map View</a>
-                    </li>
+
+                <li  class="nav-item {{ Request::is('driver-detail/*') ? 'active' : '' }}">
+                    <a  wire:navigate href="{{route('admin.driver-details-component',['driverId' => $driver_details->driver_id])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('driver_details')">
+                    Details
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/0') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driver_details->driver_id,'booking_status'=> '0'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Enquiry')">
+                    Enquiry
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/1') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driver_details->driver_id,'booking_status'=> '1'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('New')">
+                    New
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/2') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driver_details->driver_id,'booking_status'=> '2'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Ongoing')">
+                    Ongoing
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/3') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driver_details->driver_id,'booking_status'=> '3'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Invoice')">
+                    Invoice
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/4') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driver_details->driver_id,'booking_status'=> '4'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Complete')">
+                    Complete
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/5') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driver_details->driver_id,'booking_status'=> '5'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Cancel')">
+                    Cancel
+                    </a>
+                </li>
+                <li class="nav-item {{ Request::is('driver-booking-details/*/transaction') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driver_details->driver_id,'booking_status'=> 'transaction'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Transaction')">
+                    Transaction
+                    </a>
+                </li>
+                <li class="nav-item {{ Request::is('driver-booking-details/*/map') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driver_details->driver_id,'booking_status'=> 'map'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Map')">
+                    Map View
+                    </a>
+                </li>
+
                 </ul>
             </div>
         </div>
@@ -39,9 +72,9 @@
 
         <div class="custom__driver__detail__section card px-3">
             <table class="table m-0 table-sm custom__table table-bordered mt-3 mb-2">
-                <th>Type - Self</th>
+                <th>Type - {{$createdMapper[$driver_details->driver_created_by]}}</th>
                 <th>Verification</th>
-                <th>Unverify</th>
+                <th>@if(!empty($driver_details->driver_status==1))Active @elseif($driver_details->driver_status==0) New @elseif($driver_details->driver_status=='4') Applied @else FRC @endif</th>
             </table>
             <div class="row p-0">
                 <div class="col-12 col-md-6 px-0">
@@ -49,11 +82,11 @@
                         <table class="table m-0 custom__table table-bordered">
                             <tr>
                                 <td>Name</td>
-                                <td>Uttam</td>
+                                <td>{{$driver_details->driver_name.' '.$driver_details->driver_last_name}}</td>
                             </tr>
                             <tr>
                                 <td>Mobile Number</td>
-                                <td>9125106355 (Self)</td>
+                                <td>{{$driver_details->driver_mobile}} </td>
                             </tr>
                             <tr>
                                 <td>Profile</td>
@@ -61,15 +94,15 @@
                             </tr>
                             <tr>
                                 <td>DOB</td>
-                                <td>26/09/20002</td>
+                                <td>@if(!empty($driver_details->driver_dob)){{$driver_details->driver_dob}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>Gender</td>
-                                <td>Male</td>
+                                <td>{{$driver_details->driver_gender}}</td>
                             </tr>
                             <tr>
                                 <td>City, State</td>
-                                <td>Lucknow, Up</td>
+                                <td>{{$driver_details->city_name.' ,'.$driver_details->state_name}}</td>
                             </tr>
                             <tr>
                                 <td>Aadhaar Front</td>
@@ -81,7 +114,7 @@
                             </tr>
                             <tr>
                                 <td>Aadhaar Number</td>
-                                <td>984984651651984</td>
+                                <td>@if(!empty($driver_details->driver_details_aadhar_number)){{$driver_details->driver_details_aadhar_number}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>PAN Image</td>
@@ -89,19 +122,19 @@
                             </tr>
                             <tr>
                                 <td>PAN Number</td>
-                                <td>AFDSAA65435</td>
-                            </tr>
+                                <td>@if(!empty($driver_details->driver_details_pan_card_number)){{$driver_details->driver_details_pan_card_number}} @else N/A @endif</td>
+                              </tr>
                             <tr>
                                 <td>Police Verification Image</td>
                                 <td><a href="">View Image</a></td>
                             </tr>
                             <tr>
                                 <td>Police Verification Expiry</td>
-                                <td>2/3/2028</td>
+                                <td>@if(!empty($driver_details->driver_details_police_verification_date)){{$driver_details->driver_details_police_verification_date}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>DL Front</td>
-                                <td>View DL Front Image</td>
+                                <td><a href="">View DL Font Image</a></td>
                             </tr>
                             <tr>
                                 <td>DL Back</td>
@@ -109,7 +142,8 @@
                             </tr>
                             <tr>
                                 <td>DL Number</td>
-                                <td>984651984951</td>
+                                <td>@if(!empty($driver_details->driver_details_dl_number)){{$driver_details->driver_details_dl_number}} @else N/A @endif</td>
+
                             </tr>
                         </table>
                     </div>
@@ -119,7 +153,7 @@
                         <table class="table m-0 custom__table table-bordered">
                             <tr>
                                 <td>DL Expiry</td>
-                                <td>2/3/2029</td>
+                                <td>@if(!empty($driver_details->driver_details_dl_exp_date)){{$driver_details->driver_details_dl_exp_date}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>Ambulane Front</td>
@@ -131,11 +165,23 @@
                             </tr>
                             <tr>
                                 <td>Category</td>
-                                <td>Road Ambulance</td>
+                                <td>@if(!empty($driver_details->ambulance_category_name)){{$driver_details->ambulance_category_name}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>Facilities</td>
-                                <td>BLS</td>
+                                <td>@if(!empty($driver_details->ambulance_category_type))
+                                @php 
+                                    $i='a';
+                                 @endphp
+                                    
+                                    @foreach($ambulanceKit as $kit)
+
+                                   ({{$i}})
+                                    {{ nl2br(e($kit->ambulance_facilities_name)) }}
+                                    @php $i++ @endphp
+                                    @endforeach
+                                    @else N/A @endif
+                                </td>
                             </tr>
                             <tr>
                                 <td>RC Image</td>
@@ -143,11 +189,11 @@
                             </tr>
                             <tr>
                                 <td>RC Number</td>
-                                <td>1685498615</td>
+                                <td>@if(!empty($driver_details->vehicle_rc_number)){{$driver_details->vehicle_rc_number}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>RC Expiry</td>
-                                <td>3/6/2030</td>
+                                <td>@if(!empty($driver_details->vehicle_exp_date)){{$driver_details->vehicle_exp_date}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>Fitness Image</td>
@@ -155,7 +201,7 @@
                             </tr>
                             <tr>
                                 <td>Fitness Expiry</td>
-                                <td>3/6/2030</td>
+                                <td>@if(!empty($driver_details->vehicle_details_fitness_exp_date)){{$driver_details->vehicle_details_fitness_exp_date}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>Insurance Image</td>
@@ -163,11 +209,11 @@
                             </tr>
                             <tr>
                                 <td>Insurance Expiry</td>
-                                <td>9125106355</td>
+                                <td>@if(!empty($driver_details->vehicle_details_insurance_exp_date)){{$driver_details->vehicle_details_insurance_exp_date}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>Insurance Holder Name</td>
-                                <td>Sukhiram</td>
+                                <td>@if(!empty($driver_details->vehicle_details_insurance_holder_name)){{$driver_details->vehicle_details_insurance_holder_name}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>Pollution Image</td>
@@ -175,11 +221,11 @@
                             </tr>
                             <tr>
                                 <td>Pollution Expiry</td>
-                                <td>9125106355</td>
+                                <td>@if(!empty($driver_details->vehicle_details_pollution_exp_date)){{$driver_details->vehicle_details_pollution_exp_date}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <td>Partner Name & Number</td>
-                                <td>Partner, 123941923</td>
+                                <td>@if(!empty($driver_details->partner_f_name)){{$driver_details->partner_f_name.' '.$driver_details->partner_l_name.' ,'.$driver_details->partner_mobile}} @else N/A @endif</td>
                             </tr>
                         </table>
                     </div>

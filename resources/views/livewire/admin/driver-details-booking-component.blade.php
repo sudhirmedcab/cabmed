@@ -1,3 +1,17 @@
+
+<?php
+    $createdMapper['0'] = "Self";
+    $createdMapper['1'] = "Partner";
+
+    $statusMapper['0'] = "Enquiry";
+    $statusMapper['1'] = "New";
+    $statusMapper['2'] = "Ongoing";
+    $statusMapper['3'] = "Invoice";
+    $statusMapper['4'] = "Complete";
+    $statusMapper['5'] = "Cancel";
+
+    ?>
+
 <div class="content">
     <style>
         .loader {
@@ -136,10 +150,7 @@
         }
     </style>
     <div class="container-fluid">
-        @if ($isOpen)
-        @include('livewire.partner-form')
-        @endif
-
+    
         @if (session()->has('message') && session()->has('type') == 'delete')
 
         <div class="alert alert-danger alert-dismissible" role="alert">
@@ -153,32 +164,83 @@
             <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
             <strong>{{ session('message') }}!</strong>
         </div>
-        @endif
+        @endif        
+   
+        <div class="card my-2  text-center">
+            <div class="card-header custom__driver__filter">
+                <ul class="nav nav-tabs custom__nav__tab  card-header-tabs">
 
-        <!-- @include('partner.partner_nav') --> <!----------- It partner nav bar no needs currently Date: 02/02/2024 ---->
+                <li  class="nav-item {{ Request::is('driver-detail/*') ? 'active' : '' }}">
+                    <a  wire:navigate href="{{route('admin.driver-details-component',['driverId' => $driverDetails->driver_id])}}" class="custom__nav__btn nav-link fs-1">
+                    Details
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/0') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driverDetails->driver_id,'booking_status'=> '0'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Enquiry')">
+                    Enquiry
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/1') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driverDetails->driver_id,'booking_status'=> '1'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('New')">
+                    New
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/2') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driverDetails->driver_id,'booking_status'=> '2'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Ongoing')">
+                    Ongoing
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/3') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driverDetails->driver_id,'booking_status'=> '3'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Invoice')">
+                    Invoice
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/4') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driverDetails->driver_id,'booking_status'=> '4'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Complete')">
+                    Complete
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/5') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driverDetails->driver_id,'booking_status'=> '5'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Cancel')">
+                    Cancel
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/transaction') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driverDetails->driver_id,'booking_status'=> 'transaction'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Transaction')">
+                    Transaction
+                    </a>
+                </li>
+                <li  class="nav-item {{ Request::is('driver-booking-details/*/map') ? 'active' : '' }}">
+                    <a wire:navigate href="{{route('admin.driver-booking-component',['driverId' => $driverDetails->driver_id,'booking_status'=> 'map'])}}" class="custom__nav__btn nav-link fs-1" wire:click="filterCondition('Map')">
+                    Map View
+                    </a>
+                </li>
+
+                </ul>
+            </div>
+        </div>
 
         <div class="card mt-2 custom__filter__responsive">
             <div class="card-header custom__filter__select">
 
                 <div class="row">
-                    <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
+                    <div class="col __col-3">
                         <div class="form-group">
                             <label class="custom__label" for="fromDate">From </label>
                             <input wire:model.live="selectedFromDate" {{ !$isCustom ? 'disabled' : '' }} type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
                         </div>
                     </div>
-                    <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
+                    <div class="col __col-3}}">
                         <div class="form-group">
                             <label class="custom__label" for="toDate">To</label>
-                            <input wire:model.live="selectedToDate" max="<?= date('Y-m-d') ?>" type="date" {{ !$isCustom ? 'disabled' : '' }} class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+                            <input wire:model.live="selectedToDate" type="date" max="<?=date('Y-m-d')?>" {{ !$isCustom ? 'disabled' : '' }} class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
                         </div>
                     </div>
-                    <div class="col -{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
+                    <div class="col -col-3">
                         <div class="form-group">
                             <label class="custom__label">Select</label>
                             <select wire:model.live.debounce.150ms="selectedDate" wire:model="check_for" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
 
-                                <option selected value="">Select Filters</option>
                                 <option selected value="all">All</option>
                                 <option value="today">Today</option>
                                 <option value="yesterday">Yesterday</option>
@@ -188,34 +250,15 @@
                             </select>
                         </div>
                     </div>
+                  
+
                     <div class="col __col-3">
-                        <div class="form-group">
-                            <label class="custom__label">Status</label>
-
-                            <select wire:model.live.debounce.150ms="partnerVerificationStatus" wire:mode.live="partnerVerificationStatus" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
-                                <option selected value="AllVerification">All Partner</option>
-                                <option value="NewVerification">New Partner</option>
-                                <option value="ActiveVerification">Active Partner</option>
-                                <option value="InactiveVerification">Block Partner</option>
-
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col __col-2">
                         <div class="form-group">
                             <label class="custom__label" for="toDate">Search</label>
                             <input type="search" wire:model.live.debounce.150ms="search" class="custom__input__field form-control rounded-0 form-control-sm float-right" placeholder="Search">
                         </div>
                     </div>
-                    <div class="col ">
-                        <div class="form-group">
-                            <label class="custom__label">Partner</label>
-                            <button style="height:25px" class="w-100 mb-sm-2 mb-0 btn-primary btn rounded submit__btn d-flex align-items-center justify-content-center">
-                                <a class="custom__label text-white" wire:click="create()"><i class="fa fa-plus"></i> Add</a>
-                            </button>
-                        </div>
-                    </div>
+                  
 
                 </div>
 
@@ -227,71 +270,38 @@
                     <tr>
                         <th>Sr.</th>
                         <th>Id</th>
+                        <th>Created at</th>
                         <th>Name</th>
                         <th>Mobile</th>
-                        <th>Wallet</th>
+                        <th>Pickup</th>
+                        <th>Drop</th>
+                        <th>Category</th>
                         <th>Status</th>
-                        <th>Created At</th>
-                        <th>Driver Details</th>
-                        <th>Vehicle Details</th>
-                        <th>Driver</th>
-                        <th>Vehicle</th>
-                        <th>Remark</th>
-                        <th>City</th>
-                        <th>State</th>
+                        <th>Booking Amounts</th>
                         <th>Action</th>
 
                     </tr>
 
                     @php
                     $srno = 1
-                    @endphp @if(!empty($data['partner']))
+                    @endphp @if(!empty($bookingDetails))
 
-                    @foreach($data['partner'] as $key)
+                    @foreach($bookingDetails as $list)
                     <tr>
                         <td>{{ $srno }}</td>
-                        <td>{{ $key['partner_id'] }}</td>
-                        <td>{{$key['partner_f_name']. ' '.$key['partner_l_name']}}</td>
-                        <td>{{$key['partner_mobile']}}</td>
-                        <td>{{$key['partner_wallet']}}. &#8377</td>
-
-                        <td> @if ($key['partner_status'] == '0')
-                            {{'New'}}
-                            @elseif($key['partner_status'] == '1')
-                            {{'Active'}}
-                            @elseif($key['partner_status'] == '2')
-                            {{'Inactive'}}
-                            @else
-                            @endif
-                        </td>
-
-                        <td>
-                            {{ date("j F, Y h:i A", strtotime($key['created_at']))}}
-                        </td>
-
-                        <td>
-                            {{$key['active_driver_count']}}(A) ,{{$key['pending_driver_count']}}(P),{{$key['new_driver_count']}}(N)
-                        </td>
-                        <td> {{$key['active_vehicle_count']}}(A) ,{{$key['pending_vehicle_count']}}(P),{{$key['new_vehicle_count']}}(N) </td>
-                        <td>{{$key['total_driver']}}</td>
-                        <td>{{$key['total_vehicle']}}</td>
-                        <td>
-                            @if($key['remark_id']) {{$key['remark_text']}} @else N/A @endif
-
-                        </td>
-                        <td>{{$key['city_name']}} </td>
-                        <td>{{$key['state_name']}}</td>
+                        <td>{{ $list->booking_id }}</td>
+                        <td>{{ date("j F, Y h:i A", strtotime($list->created_at)) }}</td>
+                        <td>{{$list->booking_con_name}}</td>
+                        <td>{{$list->booking_con_mobile}}</td>
+                        <td>{!!wordwrap($list->booking_pickup,25,"<br>\n")!!}</td>
+                        <td>{!!wordwrap($list->booking_drop,25,"<br>\n")!!}</td>
+                        <td>{{$list->booking_view_category_name}}</td>
+                        <td>{{$statusMapper[$list->booking_status]}}</td>
+                        <td>{{$list->booking_view_total_fare}}. &#8377</td> 
+                 
                         <td class="action__btn lbtn-group">
-                            <button class="btn-primary"><i class="fa fa-edit"></i></button>
+                            <!-- <button class="btn-primary"><i class="fa fa-edit"></i></button> -->
                             <button class="btn-success"><i class="fa fa-eye"></i></button>
-                            @if($key['partner_status']==1)
-                            <button wire:confirm="Are you sure you want to delete this Partner Data?" wire:click="delete({{ $key['partner_id']  }})" class="btn-danger"><i class="fa fa-trash"></i></button>
-                            @elseif($key['partner_status']==0)
-                            <button wire:confirm="Are you sure you want to delete this Partner Data?" wire:click="delete({{ $key['partner_id']  }})" class="btn-danger"><i class="fa fa-trash"></i></button>
-                            @elseif($key['partner_status']==2)
-                            <button wire:confirm="Are you sure you want to Active this Partner Data?" wire:click="delete({{ $key['partner_id']  }})" class="btn-primary"><i class="fa fa-check"></i></button>
-                            @endif
-
                         </td>
                     </tr>
                     @php
@@ -303,7 +313,7 @@
                 </table>
                 <!-- <span wire:loadingf wire:target="filterCondition">Loading...</span> -->
                 <div class="custom__pagination mt-2 pt-1 card-footer__ clearfix">
-                    {{$partners->links()}}
+                {!! $bookingDetails->links() !!}
                 </div>
             </div>
         </div>
