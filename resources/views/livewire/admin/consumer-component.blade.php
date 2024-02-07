@@ -193,6 +193,7 @@
                                 <option selected value="AllVerification">All Consumer</option>
                                 <option value="NewVerification">New Consumer</option>
                                 <option value="ActiveVerification">Active Consumer</option>
+                                <option value="InactiveVerification">Block Consumer</option>
 
                             </select>
                         </div>
@@ -224,16 +225,17 @@
                     </tr>
 
                     @php
-                    $srno = 1
+                    $srno = 1;
+
+                    $statusMapper['0'] = "New";
+                    $statusMapper['1'] = "Active";
+                    $statusMapper['2'] = "Inactive";
+                 
                     @endphp
 
                     @if(!empty($consumers))
 
                     @foreach ($consumers as $consumer)
-
-                    @php
-                    $consumer_status = ($consumer->consumer_status == '1' ? 'Active' : ($consumer->consumer_status == '0' ? 'New' : 'All'));
-                    @endphp
 
                     <tr>
                         <td>{{ $srno }}</td>
@@ -242,11 +244,17 @@
                         <td>{{$consumer->consumer_name}}</td>
                         <td>{{$consumer->consumer_mobile_no}}</td>
                         <td>{{$consumer->consumer_wallet_amount}}.&#8377</td>
-                        <td>{{$consumer_status}}</td>
+                        <td>{{$statusMapper[$consumer->consumer_status]}}</td>
                         <td class="action__btn lbtn-group">
                             <button class="btn-primary"><i class="fa fa-edit fa-sm"></i></button>
                             <button class="btn-success"><i class="fa fa-eye fa-sm"></i></button>
+                            @if($consumer->consumer_status == 1)
                             <button wire:confirm="Are you sure you want to delete this Consumer?" wire:click="delete({{ $consumer->consumer_id }})" class="btn-danger"><i class="fa fa-trash fa-sm"></i></button>
+                            @elseif($consumer->consumer_status ==0)
+                            <button wire:confirm="Are you sure you want to delete this Consumer?" wire:click="delete({{ $consumer->consumer_id }})" class="btn-danger"><i class="fa fa-trash fa-sm"></i></button>
+                            @elseif($consumer->consumer_status ==2)
+                            <button wire:confirm="Are you sure you want to Active this Consumer Data?" wire:click="delete({{ $consumer->consumer_id  }})" class="btn-primary"><i class="fa fa-check"></i></button>
+                            @endif
                         </td>
                     </tr>
                     @php

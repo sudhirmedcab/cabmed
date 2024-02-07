@@ -140,7 +140,6 @@ class PartnerComponent extends Component
                 ->orWhere('partner.partner_l_name', 'like', '%' . $this->search . '%');
         })
         ->orderBy('partner.partner_id', 'desc')
-        ->where('partner.partner_status', '<>', '2')
         ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
             return $query->whereBetween('partner.created_at', [$fromDate, $toDate]);
         })
@@ -155,6 +154,10 @@ class PartnerComponent extends Component
         ->when($partnerVerificationStatus == 'ActiveVerification', function ($query) use ($partnerVerificationStatus) {
             return $query
                 ->where('partner.partner_status', 1);
+        })
+        ->when($partnerVerificationStatus == 'InactiveVerification', function ($query) use ($partnerVerificationStatus) {
+            return $query
+                ->where('partner.partner_status', 2);
         })
         ->select(
             'partner.partner_id',
@@ -345,9 +348,25 @@ class PartnerComponent extends Component
     }
     public function delete($id)
     {
-        $partnerDelete = DB::table('partner')->where('partner_id',$id)->update(['partner_status'=>'2']);
+        $partnerData = DB::table('partner')->where('partner_id',$id)->first();
+        
+        $partnerStatus = $partnerData->partner_status;
 
-        session()->flash('message', 'Partner Deleted Successfully.');
-        session()->flash('type', 'delete');
+        if($partnerStatus == 0){
+            $partnerDelete = DB::table('partner')->where('partner_id',$id)->update(['partner_status'=>'2']);
+            session()->flash('message', 'Partner Deleted Successfully.');
+            session()->flash('type', 'delete');
+        }elseif($partnerStatus == 1){
+
+            $partnerDelete = DB::table('partner')->where('partner_id',$id)->update(['partner_status'=>'2']);
+            session()->flash('message', 'Partner Deleted Successfully.');
+            session()->flash('type', 'delete');
+        }elseif($partnerStatus == 2){
+
+            $partnerDelete = DB::table('partner')->where('partner_id',$id)->update(['partner_status'=>'1']);
+            session()->flash('message', 'Partner Activated Successfully.');
+            session()->flash('type', 'delete');
+    }
+
     }
 }
