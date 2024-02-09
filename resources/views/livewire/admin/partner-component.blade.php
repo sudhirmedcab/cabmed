@@ -283,7 +283,7 @@
                         <td>{{$key['state_name']}}</td>
                         <td class="action__btn lbtn-group">
                             <button class="btn-primary"><i class="fa fa-edit"></i></button>
-                            <button class="btn-success"><i class="fa fa-eye"></i></button>
+                            <button  wire:navigate href="{{route('partner-details-component',['partnerId' => Crypt::encrypt($key['partner_id'])])}}" class="btn-success"><i class="fa fa-eye fa-sm"></i></button>
                             @if($key['partner_status']==1)
                             <button wire:confirm="Are you sure you want to delete this Partner Data?" wire:click="delete({{ $key['partner_id']  }})" class="btn-danger"><i class="fa fa-trash"></i></button>
                             @elseif($key['partner_status']==0)
