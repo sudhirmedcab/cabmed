@@ -65,6 +65,10 @@ class DriverDetailsBookingComponent extends Component
     {
 
         $booking_status = $this->booking_status ? $this->booking_status : null;
+
+        $driver_id = $this->driverId;
+        $decryptdriverId = decrypt($driver_id);
+
                 
         $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
@@ -116,7 +120,7 @@ class DriverDetailsBookingComponent extends Component
                     $query->where('driver.driver_name', 'like', '%' . $this->search . '%')
                         ->orWhere('driver.driver_last_name', 'like', '%' . $this->search . '%');
                 })
-                ->where('driver_id','=',$this->driverId)
+                ->where('driver_id','=',$decryptdriverId)
                 ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
                     return $query->whereBetween('driver_transection.created_at', [$fromDate, $toDate]);
                 }) 
@@ -124,7 +128,7 @@ class DriverDetailsBookingComponent extends Component
                 ->paginate(10);
 
                 $driverDetails = DB::table('driver')
-                ->where('driver_id',$this->driverId)->first();
+                ->where('driver_id',$decryptdriverId)->first();
 
                 if($this->check_for == 'custom'){
                     return view('livewire.admin.driver-transaction-list-component',['isCustom'=>true],compact('transactionDetails','driverDetails'));
@@ -136,7 +140,7 @@ class DriverDetailsBookingComponent extends Component
             if($booking_status == 'map'){
 
                 $driver_details=DB::table('driver') ->where([
-                    ['driver_id', '=', $this->driverId]
+                    ['driver_id', '=', $decryptdriverId]
                 ])
                 ->leftJoin('driver_details', 'driver.driver_id', '=', 'driver_details.driver_details_driver_id')
                 ->leftJoin('driver_live_location', 'driver.driver_id', '=', 'driver_live_location.driver_live_location_d_id')
@@ -171,7 +175,7 @@ class DriverDetailsBookingComponent extends Component
 
                 $transactionDetails = DB::table('driver')
                 ->leftJoin('driver_transection', 'driver.driver_id', '=', 'driver_transection.driver_transection_by')
-                ->where('driver_id','=',$this->driverId)
+                ->where('driver_id','=',$decryptdriverId)
                 ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
                     return $query->whereBetween('driver_transection.created_at', [$fromDate, $toDate]);
                 }) 
@@ -179,7 +183,7 @@ class DriverDetailsBookingComponent extends Component
                 ->paginate(10);
 
                 $driverDetails = DB::table('driver')
-                ->where('driver_id',$this->driverId)->first();
+                ->where('driver_id',$decryptdriverId)->first();
 
                 if($this->check_for == 'custom'){
                     return view('livewire.admin.driver-location-component',['isCustom'=>true],compact('transactionDetails','driverDetails','buket_map_data'));
@@ -194,7 +198,7 @@ class DriverDetailsBookingComponent extends Component
         ->where('booking_view.booking_view_category_name', 'like', '%' . $this->search . '%')
         ->leftJoin('driver', 'booking_view.booking_acpt_driver_id', '=', 'driver.driver_id')
         ->orderBy('booking_view.booking_id','desc')
-         ->where('booking_acpt_driver_id','=',$this->driverId)
+         ->where('booking_acpt_driver_id','=',$decryptdriverId)
          ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
             return $query->whereBetween('booking_view.created_at', [$fromDate, $toDate]);
         }) 
@@ -204,7 +208,7 @@ class DriverDetailsBookingComponent extends Component
          ->paginate(10);
 
          $driverDetails = DB::table('driver')
-         ->where('driver_id',$this->driverId)->first();
+         ->where('driver_id',$decryptdriverId)->first();
 
          if($this->check_for == 'custom'){
          return view('livewire.admin.driver-details-booking-component',['isCustom'=>true],compact('bookingDetails','driverDetails'));

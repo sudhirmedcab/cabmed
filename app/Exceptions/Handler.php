@@ -28,35 +28,36 @@ class Handler extends ExceptionHandler
             //
         });
     }
-
     public function render($request, Throwable $exception)
     {
-        if ($this->isHttpException($e)) {
-            switch ($e->getStatusCode()) {
+        if ($this->isHttpException($exception)) {
+            switch ($exception->getStatusCode()) {
     
                 // not authorized
-                case '403':
-                    return \Response::view('403',array(),403);
+                case 403:
+                    return response()->view('errors.403', [], 403);
                     break;
     
                 // not found
-                case '404':
-                    return \Response::view('404',array(),404);
+                case 404:
+                    return response()->view('errors.404', [], 404);
                     break;
     
                 // internal error
-                case '500':
-                    return \Response::view('500',array(),500);
+                case 500:
+                    return response()->view('errors.500', [], 500);
                     break;
     
                 default:
-                    return $this->renderHttpException($e);
+                    return $this->renderHttpException($exception);
                     break;
             }
-        } else {
-            return parent::render($request, $e);
         }
+    
+        return parent::render($request, $exception);
     }
+    // 
+    
 
 
 }

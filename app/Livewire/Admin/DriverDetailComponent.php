@@ -67,15 +67,20 @@ class DriverDetailComponent extends Component
     public function render()
     {
 
+       $driver_id = $this->driverId;
+
+       $decryptdriverId = decrypt($driver_id);
+
             $driver_details = DB::table('driver')
             ->leftJoin('driver_details', 'driver.driver_id', '=', 'driver_details.driver_details_driver_id')
             ->leftJoin('driver_live_location', 'driver.driver_id', '=', 'driver_live_location.driver_live_location_d_id')
             ->leftJoin('vehicle', 'driver.driver_assigned_vehicle_id', '=', 'vehicle.vehicle_id')
+            ->leftJoin('vehicle_details', 'vehicle_details.vehicle_details_vheicle_id', '=', 'vehicle.vehicle_id')
             ->leftJoin('ambulance_category', 'vehicle.vehicle_category_type', '=', 'ambulance_category.ambulance_category_type')
             ->leftJoin('booking_view', 'driver.driver_id', '=', 'booking_view.booking_acpt_driver_id')
             ->leftJoin('partner', 'driver.driver_created_partner_id', '=', 'partner.partner_id')
             ->leftJoin('city', 'driver.driver_city_id', '=', 'city.city_id')
-            ->where('driver_id', $this->driverId)
+            ->where('driver_id', $decryptdriverId)
             ->leftJoin('state', 'state.state_id', '=', 'city.city_state')
             ->first();
     

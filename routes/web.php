@@ -21,6 +21,8 @@ use App\Livewire\Admin\ConsumerEnquiryComponent;
 use App\Livewire\Admin\ConsumerDialComponent;
 use App\Livewire\Admin\ConsumerWebComponent;
 use App\Livewire\Admin\DriverDetailsBookingComponent;
+use App\Livewire\Admin\PartnerDetailComponent;
+use App\Livewire\Admin\PartnerDetailListComponent;
 
 
 
@@ -43,15 +45,17 @@ use App\Livewire\Admin\DriverDetailsBookingComponent;
     Route::get('/booking', AmbulanceBookingComponent::class);
     Route::get('/login', LoginComponent::class);
     Route::get('/driver', DriverComponent::class);
-    Route::get('/driver-detail/{driverId}', DriverDetailComponent::class)->name('admin.driver-details-component');
     Route::get('/manage-driver', ManageDriverComponent::class);
 
 
-    ## ............... Sukhi Routes for the Partner Componet ...................##
+    ## ............... Sukhi Routes for the Componet ...................##
 
     Route::get('/all-partner', PartnerComponent::class);
     Route::get('/roadAmbulance', RoadAmbulanceComponent::class);
     Route::get('/consumer', ConsumerComponent::class);
     Route::get('/consumer-enquiry', ConsumerEnquiryComponent::class);
     Route::get('/driver-booking-details/{driverId}/{booking_status}', DriverDetailsBookingComponent::class)->name('admin.driver-booking-component');
+    Route::get('/driver-detail/{driverId}', DriverDetailComponent::class)->name('admin.driver-details-component');
+    Route::get('/partner-detail/{partnerId}', PartnerDetailComponent::class)->name('partner-details-component');
+    Route::get('/partner-details/{partnerId}/{detailList}', PartnerDetailListComponent::class)->name('partner-details-list-component');
 
