@@ -9,8 +9,13 @@ use App\Livewire\HomeComponent;
 use App\Livewire\Admin\LoginComponent;
 use App\Livewire\Admin\DriverComponent;
 use App\Livewire\Admin\ManageDriverComponent;
+use App\Livewire\Admin\UpdateDriverComponent;
+use App\Livewire\Admin\AddDriverComponent;
+use App\Livewire\Admin\DriverMapViewComponent;
+use App\Livewire\Admin\DriverDivisionComponent;
 
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\DriverController;
 use App\Livewire\Admin\ConsumerComponent;
 
 use App\Livewire\Admin\PartnerComponent;
@@ -44,18 +49,28 @@ use App\Livewire\Admin\PartnerDetailListComponent;
     Route::get('/page1', HomeComponent::class);
     Route::get('/booking', AmbulanceBookingComponent::class);
     Route::get('/login', LoginComponent::class);
-    Route::get('/driver', DriverComponent::class);
+    Route::get('/driver', DriverComponent::class)->name('driver.list');
+    Route::get('/driver-detail/{driverId}', DriverDetailComponent::class)->name('admin.driver-details-component');
+    Route::get('/driver/division', DriverDivisionComponent::class);
     Route::get('/manage-driver', ManageDriverComponent::class);
+    Route::get('/manage-driver/{id}/edit', UpdateDriverComponent::class)->name('driver.edit');
+    Route::get('/add-driver', AddDriverComponent::class);
+    
+    Route::get('/driver-mapview', DriverMapViewComponent::class);
+
+    // Route::get('/consumer', ConsumerComponent::class);
+
 
 
     ## ............... Sukhi Routes for the Componet ...................##
 
-    Route::get('/all-partner', PartnerComponent::class);
+    // Route::get('/all-partner', PartnerComponent::class);
     Route::get('/roadAmbulance', RoadAmbulanceComponent::class);
-    Route::get('/consumer', ConsumerComponent::class);
-    Route::get('/consumer-enquiry', ConsumerEnquiryComponent::class);
-    Route::get('/driver-booking-details/{driverId}/{booking_status}', DriverDetailsBookingComponent::class)->name('admin.driver-booking-component');
-    Route::get('/driver-detail/{driverId}', DriverDetailComponent::class)->name('admin.driver-details-component');
-    Route::get('/partner-detail/{partnerId}', PartnerDetailComponent::class)->name('partner-details-component');
-    Route::get('/partner-details/{partnerId}/{detailList}', PartnerDetailListComponent::class)->name('partner-details-list-component');
+    // Route::get('/consumer', ConsumerComponent::class);
+    // Route::get('/consumer-enquiry', ConsumerEnquiryComponent::class);
+    // Route::get('/driver-booking-details/{driverId}/{booking_status}', DriverDetailsBookingComponent::class)->name('admin.driver-booking-component');
+    // Route::get('/driver-detail/{driverId}', DriverDetailComponent::class)->name('admin.driver-details-component');
+    // Route::get('/partner-detail/{partnerId}', PartnerDetailComponent::class)->name('partner-details-component');
+    // Route::get('/partner-details/{partnerId}/{detailList}', PartnerDetailListComponent::class)->name('partner-details-list-component');
 
+    // Route::get('/driver/on_duty_driver',[DriverController::class,'OnDutyDriver'])->name('Driver.OnDutyDriver');
