@@ -1,5 +1,9 @@
 <div class="content">
     <div class="container-fluid">
+        @if (session()->has('errorMessage'))
+            <div class="mt-3 custom-error-alert alert alert-danger">{{ session('errorMessage') }}</div>
+        @endif
+
         @if ($isOpen)
         @include('livewire.employee-form')
         @endif
@@ -14,30 +18,32 @@
             <div class="card-header custom__filter__select ">
 
                 <div class="row">
-                    
+                @if($this->activeTab !== 'documentExpiry')
                     <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                             <label class="custom__label" for="fromDate">From </label>
-                            <input wire:model.live="selectedFromDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
+                            <input @if($this->selectedDate !== 'custom') disabled @endif wire:model.live="selectedFromDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
                         </div>
                     </div>
                     <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                             <label class="custom__label" for="toDate">To</label>
-                            <input wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+                            <input @if($this->selectedDate !== 'custom') disabled @endif wire:model.live="selectedToDate" type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
                         </div>
                     </div>
+                    @endif
                     @if($this->activeTab !== 'documentExpiry')
 
                     <div class="col -{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
-                            <label class="custom__label">Select</label>
+                            <label class="custom__label">Select</label>{{$this->selectedDate}}
                             <select wire:model.live.debounce.150ms="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
                                 <option selected value="all">All</option>
                                 <option value="today">Today</option>
                                 <option value="yesterday">Yesterday</option>
                                 <option value="thisWeek">This Week</option>
                                 <option value="thisMonth">This Month</option>
+                                <option value="custom">Custom</option>
                             </select>
                         </div>
                     </div>
@@ -56,7 +62,7 @@
                         </div>
                     </div>
                     @endif
-                    @if($this->activeTab == 'UnderVerificationBySelf')
+                    @if($this->activeTab == 'underVerificationStatus')
                     <div class="col __col-3">
                         <div class="form-group">
                             <label class="custom__label">Driver By Status</label>
@@ -93,48 +99,7 @@
                 </div>
 
             </div>
-            <div class="row d-none card-header">
-                <div class="col-3">
-                    <div class="form-group">
-                        <label class="custom__label">Wallet Balance</label>
-                        <select wire:model.live.debounce.150ms="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
-                            <option value="positiveBalance">Positive Balance</option>
-                            <option value="zeroBalance">Zero Balance</option>
-                            <option value="negativeBalance">Negative Balance</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="form-group">
-                        <label class="custom__label">Wallet Balance</label>
-                        <select wire:model.live.debounce.150ms="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
-                            <option value="positiveBalance">Positive Balance</option>
-                            <option value="zeroBalance">Zero Balance</option>
-                            <option value="negativeBalance">Negative Balance</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="form-group">
-                        <label class="custom__label">Wallet Balance</label>
-                        <select wire:model.live.debounce.150ms="walletBalanceFilter" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
-                            <option value="positiveBalance">Positive Balance</option>
-                            <option value="zeroBalance">Zero Balance</option>
-                            <option value="negativeBalance">Negative Balance</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="form-group">
-                        <label class="custom__label">Wallet Balance</label>
-                        <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
-                            <option value="positiveBalance">Positive Balance</option>
-                            <option value="zeroBalance">Zero Balance</option>
-                            <option value="negativeBalance">Negative Balance</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+            
             <!-- <table class="table table-bordered table-sm table-responsive-sm mt-2"> -->
             <div wire:loading.remove wire:target="filterCondition" class="card-body p-2 overflow-auto">
                 <table class="table custom__table table-bordered table-sm ">
@@ -196,8 +161,8 @@
                         <td>{{ $driver->state_name }}</td>
                         <td>{{ $driver->vehicle_rc_number }}</td>
                         <td class="action__btn lbtn-group">
-                            <button wire:click="edit({{ $driver->driver_id }})" class="btn-primary"><i class="fa fa-edit fa-sm"></i></button>
                             <button  wire:navigate href="{{route('admin.driver-details-component',['driverId' => Crypt::encrypt($driver->driver_id)])}}" class="btn-success"><i class="fa fa-eye fa-sm"></i></button>
+                              <a style="padding: 0px 6px;border-radius: 3px;font-size: 10px;" href="{{ route('driver.edit', ['id' => $driver->driver_id]) }}" target="_blank" class="btn btn-sm btn-primary"><i class="fa fa-edit fa-sm"></i></a>
                             <button wire:confirm="Are you sure you want to delete this post?" wire:click="delete({{ $driver->driver_id }})" class="btn-danger"><i class="fa fa-trash fa-sm"></i></button>
                         </td>
                     </tr>
@@ -238,3 +203,4 @@
     </div>
 </div>
 </div>
+
