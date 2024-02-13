@@ -21,12 +21,16 @@ class DriverComponent extends Component
     $walletBalanceFilter,
     $selectDocumentExpiry,
     $driverVerificationStatus = null,
-    $sumDriverCountsByDivision;
+    $sumDriverCountsByDivision,
+    $underRegistration,
+    $underRegistrationFilter,
+    $underVerificationStatus;
     public $isOpen = 0;
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     // 
     public $search = '';
+    public $dexpnameSearch = '';
     public $sortBy = 'name';
     public $sortDirection = 'asc';
      public $age = '30';
@@ -39,7 +43,10 @@ class DriverComponent extends Component
         $this->state = $this->stateList();
         
     }
-
+    public function updatingActiveTab()
+    {
+        $this->resetPage();
+    }
     public function activeDriver($value){
     //    dd('ddfdfdf',$value);
     if($value=='Active'){
@@ -67,9 +74,12 @@ class DriverComponent extends Component
                 $this->driverUnderVerBySelf=null;
                 $this->driverUnderVerByPartner=null;
                 $this->driverVerificationStatus=null;
+                $this->underVerificationStatus=null;
                 $this->driver_status=null;
                 $this->driver_duty_status=null;
                 $this->selectedDate=null;
+                $this->resetPage();
+ 
             }
             public function filterCondition($value){
                 $this->resetFilters();
@@ -98,7 +108,7 @@ class DriverComponent extends Component
                 $this->driver_duty_status='OFF';
                 $this->activeTab=$value;
             }
-            if($value=='UnderVerificationBySelf'){
+            if($value=='underVerificationStatus'){
                 $this->driver_status=null;
                 $this->driver_duty_status=null;
                 $this->driverUnderVerByPartner=null;
@@ -141,11 +151,77 @@ class DriverComponent extends Component
             if($value=='documentExpiry'){
                 $this->activeTab=$value;
             }
+            if($value=='underRegistration'){
+                $this->activeTab=$value;
+                $this->underRegistration=$value;
+                
+            }
+            // dd($this->driver_duty_status,$this->underVerificationStatus,$this->driverUnderVerByPartner,$this->activeTab,$this->driver_status,$this->selectDocumentExpiry);
         }
  
     public function render()
     {
+        // dd('lklkl');
 // dd($this->activeTab);
+// dd($this->activeTab,$this->driverVerificationStatus);
+            // dd($this->driver_duty_status,$this->underVerificationStatus,$this->driverUnderVerByPartner,$this->activeTab,$this->driver_status,$this->selectDocumentExpiry);
+
+            if($this->activeTab=='documentExpiry'){
+                
+                $currentDate1 = Carbon::now()->format('d-F-Y'); 
+                $currentDate = Carbon::now()->format('Y-m-d'); 
+            //    dd($currentDate,$this->selectDocumentExpiry);
+                $selectDocumentExpiry = $this->selectDocumentExpiry ? $this->selectDocumentExpiry : null;
+                // $driver_details=DB::table('driver') ->where([
+                //     ['driver_status', '=', '1'],
+                //     ['driver_id', '=', $driver_id]
+                // ])
+                // ->leftJoin('driver_details', 'driver.driver_id', '=', 'driver_details.driver_details_driver_id')
+                // ->leftJoin('driver_live_location', 'driver.driver_id', '=', 'driver_live_location.driver_live_location_d_id')
+                // ->leftJoin('vehicle', 'driver.driver_assigned_vehicle_id', '=', 'vehicle.vehicle_id')
+                // ->leftJoin('ambulance_category', 'vehicle.vehicle_category_type', '=', 'ambulance_category.ambulance_category_type')
+                // ->leftJoin('booking_view', 'driver.driver_id', '=', 'booking_view.booking_acpt_driver_id')
+                // ->leftJoin('partner', 'driver.driver_created_partner_id', '=', 'partner.partner_id')
+                // ->leftJoin('city', 'driver.driver_city_id', '=', 'city.city_id')
+                // ->leftJoin('state', 'state.state_id', '=', 'city.city_state')
+                // ->get();
+
+                     $drivers_data = DB::table('driver')
+                    ->join('driver_details', 'driver.driver_id', '=', 'driver_details.driver_details_driver_id')
+                    ->join('city', 'driver.driver_city_id', '=', 'city.city_id')
+                    ->join('state', 'state.state_id', '=', 'city.city_state')
+                    ->join('vehicle', 'driver.driver_assigned_vehicle_id', '=', 'vehicle.vehicle_id')
+                    ->when($selectDocumentExpiry == 'dl', function ($query) use ($currentDate){
+                        return $query->where('driver_details.driver_details_dl_exp_date','<=',$currentDate)->where('driver_details.driver_details_dl_exp_date', '!=', '0000-00-00');
+                        return $query->whereRaw('STR_TO_DATE(driver_details.driver_details_dl_exp_date, "%d-%M-%Y") < ?', ['03-March-2034']);
+                    })
+                    ->when($selectDocumentExpiry == 'rcno', function ($query) use ($currentDate){
+                        return $query->where('driver_details.driver_details_dl_exp_date','<',$currentDate);
+                    })
+                    ->when($selectDocumentExpiry == 'vehicleInsuarance', function ($query) use ($currentDate){
+                        return $query->where('driver_details.driver_details_dl_exp_date','<',$currentDate);
+                    })
+                    ->when($selectDocumentExpiry == 'vehiclePolution', function ($query) use ($currentDate){
+                        return $query->where('driver_details.driver_details_dl_exp_date','<',$currentDate);
+                    })
+                    ->when($selectDocumentExpiry == 'vehicleFitness', function ($query) use ($currentDate){
+                        return $query->where('driver_details.driver_details_dl_exp_date','<',$currentDate);
+                    })
+                    ->where('driver.driver_name', 'like', '%' . $this->dexpnameSearch . '%')
+
+                    ->select('driver_details.*', 'city.*','state.*','vehicle.vehicle_id','vehicle.vehicle_exp_date', 'driver.driver_id', 'driver.driver_name', 'driver.driver_last_name', 'driver.driver_mobile','driver.driver_duty_status','driver.driver_created_by', 'driver.created_at', 'driver.driver_verify_date','driver.driver_status')
+                    ->orderBy('driver.driver_id', 'desc')
+                    ->paginate(10);
+                    // dd($this->activeTab, $driversdata);
+                    // dd($drivers_data->toSql(),$drivers_data->getBindings(),$currentDate);
+
+                         return view('livewire.admin.driver-document-expiry-component',['drivers_data'=>$drivers_data])->layout('livewire.admin.layouts.base');;
+
+            }
+
+
+
+
         $division = $this->division ? $this->division : null;
         if($this->activeTab=='division'){
         // $division_state_id = $this->division_state ? $this->division_state : 27;
@@ -237,9 +313,7 @@ class DriverComponent extends Component
         return view('livewire.admin.driver-district-component',['results' => $results, 'total_driver'=>$total_driver,'state'=>$state,'sumDriverCountsByDistrict'=>$sumDriverCountsByDistrict])->layout('livewire.admin.layouts.base');
 
         }
-        $currentTimestamps = Carbon::now();
-        $firstDayOfMonths = Carbon::now()->startOfMonth(); 
-    //    dd($this->selectedDate);
+       
         // ...
         // dd($this->driver_status);
         // dd($this->driverVerificationStatus);
@@ -250,18 +324,20 @@ class DriverComponent extends Component
         $driverVerificationStatus = $this->driverVerificationStatus ? $this->driverVerificationStatus : null;
         $walletBalanceFilter = $this->walletBalanceFilter ? $this->walletBalanceFilter : null;
         $selectDocumentExpiry = $this->selectDocumentExpiry ? $this->selectDocumentExpiry : null;
-            
+        $underRegistrationFilter = $this->underRegistration ? $this->underRegistration : null;
+        // dd($underRegistrationFilter,$this->underRegistration,$this->activeTab);
         // dd($driver_status,$driver_duty_status,$selectDocumentExpiry); 
          $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+        // dd($fromDate,$toDate);
         // dd('test', $this->selectedFromDate->format('m-d-Y'),Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay());
-        if($this->selectedFromDate && $this->selectedToDate){
-            $this->selectedDate = null;     
-        }
-        if($this->selectedDate){
-            $this->selectedFromDate ='';
-            $this->selectedToDate ='';
-        }
+        // if($this->selectedFromDate && $this->selectedToDate){
+        //     $this->selectedDate = null;     
+        // }
+        // if($this->selectedDate){
+        //     $this->selectedFromDate ='';
+        //     $this->selectedToDate ='';
+        // }
        
         switch ($this->driverVerificationStatus) {
             case 'UnderVerification':
@@ -342,10 +418,6 @@ class DriverComponent extends Component
         ->when($walletBalanceFilter !==null && $walletBalanceFilter == 'positiveBalance', function ($query) use ($walletBalanceFilter){
             return $query->where('driver.driver_wallet_amount','>',0);
         })
-        ->when($selectDocumentExpiry == 'dl', function ($query) use ($selectDocumentExpiry){
-            return $query->where('driver_details.driver_details_dl_exp_date','<',carbon::now());
-        })
-
         // ->when($driverUnderVerByPartner !== null, function ($query) use ($driverUnderVerByPartner) {
         //     return $query
         //         ->where('driver.driver_status', 4)
@@ -370,6 +442,10 @@ class DriverComponent extends Component
             return $query
                 ->where('driver.driver_status', 4)
                 ->where('driver_created_by', 1);
+        })
+        ->when($underRegistrationFilter == 'underRegistration', function ($query) use ($underRegistrationFilter) {
+            return $query
+                ->where('driver.driver_registration_step','<',6);
         })
         ->where('driver.driver_name', 'like', '%' . $this->search . '%')
         ->select('driver_details.*','ambulance_category.*','remark_data.*', 'vehicle.*', 'city.*', 'partner.*', 'state.*', 'driver.driver_id', 'driver.driver_name', 'driver.driver_last_name', 'driver.driver_mobile','driver.driver_wallet_amount','driver.driver_duty_status','driver.join_bonus_status', 'driver.driver_on_booking_status','driver.driver_created_by', 'driver.created_at', 'driver.driver_verify_date','driver.driver_status')
@@ -411,6 +487,22 @@ class DriverComponent extends Component
     {
         $this->isOpen = false;
     }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingDriverVerificationStatus()
+    {
+        $this->resetPage();
+    }
+    
+    public function updatingrWalletBalanceFilter()
+    {
+        $this->resetPage();
+    }
+    
+
     public function store()
     {
 
@@ -443,6 +535,7 @@ class DriverComponent extends Component
         $this->position = $employee->position;
         $this->openModal();
     }
+  
     public function delete($id)
     {
         // dd('id is ::',$id);
