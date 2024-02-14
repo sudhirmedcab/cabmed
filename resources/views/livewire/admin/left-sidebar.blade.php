@@ -66,7 +66,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/page1" wire:navigate class="nav-link">
+                <a href="/vehicle_details" wire:navigate class="nav-link">
                   <!-- <i class="nav-icon fas fa-hand-point-up"></i> -->
                   <p>Vehicle</p>
                 </a>

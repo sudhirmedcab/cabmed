@@ -62,9 +62,9 @@ class ConsumerComponent extends Component
         $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
 
-       if($this->selectedFromDate && $this->selectedToDate){
-            $this->selectedDate = null;     
-        }
+    //    if($this->selectedFromDate && $this->selectedToDate){
+    //         $this->selectedDate = null;     
+    //     }
         
         if($this->selectedDate == 'custom'){
             $this->selectedFromDate;

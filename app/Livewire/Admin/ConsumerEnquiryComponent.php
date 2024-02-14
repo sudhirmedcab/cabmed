@@ -63,10 +63,6 @@ class ConsumerEnquiryComponent extends Component
             $dialrecordFiter = $this->dialrecordFiter ? $this->dialrecordFiter : null;
             $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
             $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
-    
-           if($this->selectedFromDate && $this->selectedToDate){
-                $this->selectedDate = null;     
-            }
             
             if($this->selectedDate == 'custom'){
                 $this->selectedFromDate;
@@ -168,10 +164,6 @@ class ConsumerEnquiryComponent extends Component
             $ambulanceServiceFiter = $this->ambulanceServiceFiter ? $this->ambulanceServiceFiter : null;
             $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
             $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
-    
-           if($this->selectedFromDate && $this->selectedToDate){
-                $this->selectedDate = null;     
-            }
             
             if($this->selectedDate == 'custom'){
                 $this->selectedFromDate;
@@ -277,10 +269,6 @@ class ConsumerEnquiryComponent extends Component
         $mainServiceFiter = $this->mainServiceFiter ? $this->mainServiceFiter : null;
         $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
-
-       if($this->selectedFromDate && $this->selectedToDate){
-            $this->selectedDate = null;     
-        }
         
         if($this->selectedDate == 'custom'){
             $this->selectedFromDate;
