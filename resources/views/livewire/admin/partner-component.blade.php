@@ -147,11 +147,11 @@
             <strong>{{ session('message') }}!</strong>
         </div>
 
-        @elseif (session()->has('message') && session()->has('type') == 'store')
+        @elseif (session()->has('success'))
 
         <div class="alert alert-success alert-dismissible" role="alert">
             <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
-            <strong>{{ session('message') }}!</strong>
+            <strong>{{ session('success') }}!</strong>
         </div>
         @endif
 
@@ -178,7 +178,6 @@
                             <label class="custom__label">Select</label>
                             <select wire:model.live.debounce.150ms="selectedDate" wire:model="check_for" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
 
-                                <option selected value="">Select Filters</option>
                                 <option selected value="all">All</option>
                                 <option value="today">Today</option>
                                 <option value="yesterday">Yesterday</option>

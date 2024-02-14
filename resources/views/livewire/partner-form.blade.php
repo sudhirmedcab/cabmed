@@ -108,9 +108,9 @@ $cityData = DB::table('city')->get();
 
                         <div class="mb-3 col-6 col-md-4">
                             <label for="partner_profile_img">Image</label>
-                            <input wire:model="partner_profile_img" autopcomplete="off" type="file" multiple onchange="previewImage('partner_profile_img', 'preview_partner_profile')" accept="image/*" class="form-control" id="partner_profile_img">
+                            <input wire:model="partner_profile_img" autopcomplete="off" type="file" accept="image/*" class="form-control" id="partner_profile_img">
                             <img id="preview_partner_profile" src="#" alt="Preview Image" style="display: none; max-width: 17%; max-height: 86px;">
-                            <div wire:loading wire:target="partner_profile_img" wire:key="partner_profile_img"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i> Uploading</div>
+                            <div wire:loading wire:target="partner_profile_img" wire:key="partner_profile_img"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i></div>
 
                             @error('partner_profile_img') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
@@ -118,18 +118,18 @@ $cityData = DB::table('city')->get();
 
                         <div class="mb-3 col-6 col-md-4">
                             <label for="partner_aadhar_front">Aadhaar Front Image</label>
-                            <input wire:model="partner_aadhar_front" autopcomplete="off" multiple onchange="previewImage('partner_aadhar_front', 'preview__profile')" type="file" accept="image/*" class="form-control" id="partner_aadhar_front">
+                            <input wire:model="partner_aadhar_front" autopcomplete="off"  type="file" accept="image/*" class="form-control" id="partner_aadhar_front">
                             <img id="preview_owener_profile" src="#" alt="Preview Image" style="display: none; max-width: 17%; max-height: 86px;">
-                            <div wire:loading wire:target="partner_aadhar_front" wire:key="partner_aadhar_front"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i> Uploading</div>
+                            <div wire:loading wire:target="partner_aadhar_front" wire:key="partner_aadhar_front"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i></div>
 
                             @error('partner_aadhar_front') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="mb-3 col-6 col-md-4">
                             <label for="partner_aadhar_back">Aadhaar Back Image</label>
-                            <input wire:model="partner_aadhar_back" autopcomplete="off" multiple type="file" accept="image/*" class="form-control" id="partner_aadhar_back">
+                            <input wire:model="partner_aadhar_back" autopcomplete="off" type="file" accept="image/*" class="form-control" id="partner_aadhar_back">
                             <img id="preview_owener_profile" src="#" alt="Preview Image" style="display: none; max-width: 17%; max-height: 86px;">
-                            <div wire:loading wire:target="partner_aadhar_back" wire:key="partner_aadhar_back"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i> Uploading</div>
+                            <div wire:loading wire:target="partner_aadhar_back" wire:key="partner_aadhar_back"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i></div>
 
                             @error('partner_aadhar_back') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>

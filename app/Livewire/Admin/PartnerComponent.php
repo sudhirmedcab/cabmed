@@ -2,11 +2,12 @@
 
 namespace App\Livewire\Admin;
 use Illuminate\Support\Facades\DB; 
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Carbon\Carbon;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
-
+use Livewire\WithFileUploads;
 
 class PartnerComponent extends Component
 {
@@ -20,6 +21,8 @@ class PartnerComponent extends Component
     public $isOpen = 0;
     use WithoutUrlPagination;
     use WithPagination;
+    use WithFileUploads;
+
     protected $paginationTheme = 'bootstrap';
     // 
     public $search = '';
@@ -55,6 +58,7 @@ class PartnerComponent extends Component
             }
 
             public function filterCondition($value){
+
                 $this->resetFilters();
                 
                     if($value=='Active'){
@@ -89,9 +93,9 @@ class PartnerComponent extends Component
         $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
 
-        if($this->selectedFromDate && $this->selectedToDate){
-            $this->selectedDate = null;     
-        }
+        // if($this->selectedFromDate && $this->selectedToDate){
+        //     $this->selectedDate = null;     
+        // } ............ 
         
         if($this->selectedDate == 'custom'){
             $this->selectedFromDate;
@@ -270,72 +274,113 @@ class PartnerComponent extends Component
     }
     public function storepartner()
     {
-
-        try{
-            $this->validate([
+            $validatedData = $this->validate([
                 'partner_f_name' => 'required',
                 'partner_l_name' => 'required',
+                'partner_profile_img' => 'required|max:2048',
+                'partner_aadhar_front' => 'required|max:2048',
+                'partner_aadhar_back' => 'required|max:2048',
                 'partner_mobile' => [
                     'required',
                     'numeric',
                     'digits:10',
                     Rule::unique('partner','partner_mobile')
-                ], 
+                ],  
                 'partner_dob' => 'required',
                 'partner_gender' => 'required',
                 'partner_city_id' => 'required',
-                'partner_aadhar_no' => 'required|min:12|numeric',
+                'partner_aadhar_no' => 'required|digits:12',
                 'referral_referral_by'=>'required',
-                'partner_profile_img' => 'required',
-                'partner_aadhar_front' => 'required',
-                'partner_aadhar_back' => 'required',
-            ]);
     
+            ],
+            [
+                'partner_f_name.required' => 'First name required',
+                'partner_l_name.required' => 'Last name required',
+                'partner_mobile.unique' => 'Mobile Number Allready exist',
+                'partner_mobile.required' => 'Mobile Number required',
+                'partner_mobile.numeric' => 'Must be number',
+                'partner_dob.required' => 'Date of birth required',
+                'partner_aadhar_no.required' => 'Partner Adhar Number required',
+                'referral_referral_by.required' => 'Partner Refferal required',
+                'partner_gender.required' => 'Gender required',
+                'partner_city_id.required' => 'City required',
+                'partner_profile_img.required' => 'Profile Image requirerd',
+                'partner_aadhar_front.required' => 'Adhar Font Image requirerd',
+                'partner_aadhar_back.required' => 'Adhar Back Image requirerd',
+            ]
+          );
+
             $dateofBirth = (new Carbon($this->partner_dob))->format('d-F-Y');
-    
+
+            date_default_timezone_set('Asia/Kolkata'); //.........set default timezone
+
             $data = [
-                'partner_f_name' => $this->partner_f_name,
-                'partner_l_name' => $this->partner_l_name,
-                'partner_mobile' => $this->partner_mobile,
+                'partner_f_name' => $validatedData['partner_f_name'],
+                'partner_l_name' => $validatedData['partner_l_name'],
+                'partner_mobile' => $validatedData['partner_mobile'],
                 'partner_dob' => $dateofBirth,
-                'partner_gender' => $this->partner_gender,
-                'partner_city_id' => $this->partner_city_id,
-                'partner_aadhar_no' => $this->partner_aadhar_no,
+                'partner_gender' => $validatedData['partner_gender'],
+                'partner_city_id' => $validatedData['partner_city_id'],
+                'partner_aadhar_no' => $validatedData['partner_aadhar_no'],
                 'partner_status' => '0',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                'referral_referral_by' => $this->referral_referral_by,
-                // 'partner_profile_img' => $this->partner_profile_img->store(path: 'partner'),
-                // 'partner_aadhar_front' => $this->partner_aadhar_front->storePublicly('partner', 'partner_aadhar_front'),
-                // 'partner_aadhar_back' => $this->partner_aadhar_back->storePublicly('partner', 'partner_aadhar_back'),
+                'referral_referral_by' => $validatedData['referral_referral_by'],
             ];
-    
-            $savedata = DB::table('partner')->updateOrInsert(['partner_id' => $this->partner_id],$data);
-            if($savedata){
-                session()->flash('success', $this->partner_id ? 'Partner Updated Successfully.' : 'Partner Created Successfully.');
-    
-                $this->closeModal();
-                $this->resetInputFields();       
-            } else{
-               session()->flash('danger', 'somethingwent wrong !!');
-           }
-        }catch (Exception $e) {
-              
-            $message = $e->getMessage();
-            var_dump('Exception Message: '. $message);
-        
-            $code = $e->getCode();       
-            var_dump('Exception Code: '. $code);
-        
-            $string = $e->__toString();       
-            var_dump('Exception String: '. $string);
-        
-            exit;
-        }
-        
-     
 
-    }
+    
+          // dd($data);
+          try {
+            DB::beginTransaction();
+    
+            if ($this->partner_id) {
+                DB::table('partner')->where('partner_id', $this->partner_id)->update($data);
+                session()->flash('message', 'Partner successfully updated !! partner Id is::' . $this->partner_id);
+            } else {
+                $insertedId = DB::table('partner')->insertGetId($data);
+    
+                if ($insertedId) {
+                    // Store images
+                    $partner_profile_imageFilename = $this->storeImage($this->partner_profile_img, $insertedId, 'partner_profile');
+                    $partner_adharFont_imageFilename = $this->storeImage($this->partner_aadhar_front, $insertedId, 'partner_aadhar_front');
+                    $partner_adharBack_imageFilename = $this->storeImage($this->partner_aadhar_back, $insertedId, 'partner_aadhar_back');
+    
+                    $data2 = [
+                        'partner_profile_img' => $partner_profile_imageFilename,
+                        'partner_aadhar_front' => $partner_adharFont_imageFilename,
+                        'partner_aadhar_back' => $partner_adharBack_imageFilename,
+                    ];
+    
+                    DB::table('partner')->where('partner_id', $insertedId)->update($data2);
+    
+                    $this->partnerDataStep1 = $data2;
+                    $this->partner_id = $insertedId;
+    
+                    session()->flash('success','Partner Created Successfully..' . $insertedId);
+
+                } else {
+                    session()->flash('message', 'Something went wrong!!');
+                }
+            }
+    
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            session()->flash('message', 'Error: ' . $e->getMessage());
+            \Log::error('Error occurred while processing step1Form: ' . $e->getMessage());
+        }
+    
+        }
+
+     private function storeImage($image, $partnerId, $imageName)
+   {
+
+    $imageFilename = $partnerId . '_' . $imageName . '_' . time() . '.' . $image->getClientOriginalExtension();
+    $image->storeAs('partner', $imageFilename);
+    return 'assets/partner/' . $imageFilename;
+   }
+
+        
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);

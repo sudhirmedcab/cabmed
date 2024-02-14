@@ -53,6 +53,10 @@ class Handler extends ExceptionHandler
                     break;
             }
         }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return abort(404);
+        }
     
         return parent::render($request, $exception);
     }
