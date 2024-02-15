@@ -59,7 +59,7 @@ class UpdateDriverComponent extends Component
             if (!$result) {
             return Redirect::route($this->routeUri)->with('errorMessage', 'No record found!');
             }
-            // $this->loadData();
+            $this->loadData();
             
             $this->city = $this->cityList();
             $this->ambulanceCatList = $this->ambulanceCategoryList();
@@ -130,7 +130,8 @@ class UpdateDriverComponent extends Component
 
     public function render()
     {     
-    $this->loadData();
+    // $this->loadData();
+    // dd('klkl');
         return view('livewire.admin.update-driver-component',[
             'partners' => $this->partners(),
             'isPartner' => false
