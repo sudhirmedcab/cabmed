@@ -7,14 +7,21 @@ use Carbon\Carbon;
 use Livewire\WithPagination;
 use Illuminate\Validation\Rule;
 use Livewire\WithFileUploads;
+use Livewire\WithoutUrlPagination;
 
 class AmbulanceBookingComponent extends Component
 {
-    public $show,$fromdate ,$todate,$dateOption,$from_filter,$to_filter,$date_filter;
+    public $selectedDate,$filterConditionl, 
+    $selectedFromDate,$selectedToDate, $fromDate=null, 
+    $toDate=null,$fromdate, $todate,$selectedBookingType,$check_for,$selectedbookingStatus,$checkEmergencyStatus,$checkbookingEmergency,
+    $activeTab,$events = [];
+    
+    
 
     public $isOpen = 0;
     use WithPagination;
     use WithFileUploads;
+    use WithoutUrlPagination;
 
 
     protected $paginationTheme = 'bootstrap';
@@ -25,135 +32,438 @@ class AmbulanceBookingComponent extends Component
     public $partner_filter = '';
  
     #[Layout('livewire.admin.layouts.base')]    //......... add the layout dynamically for the all ...........//
+    
+
+    public function resetFilters(){
+          
+        $this->consumer_status=null;
+        $this->selectedDate=null;
+        $this->search = '';
+        $this->selectedFromDate = '';
+        $this->selectedToDate = '';
+
+    }
+
+    public function filterCondition($value){
+        $this->resetFilters();
+
+            if($value=='All'){            
+            $this->activeTab=$value;
+        }
+    
+        elseif($value=='ConsumerEmergency'){
+            $this->activeTab=$value;
+        }
+        elseif($value=='DriverEmergency'){
+            $this->activeTab=$value;
+        }
+        elseif($value=='airAmbulance'){
+            $this->activeTab=$value;
+        }elseif($value=='driverAutosearch'){
+            $this->activeTab=$value;
+        }elseif($value=='') {
+            
+        }
+       
+  
+}
 
     public function render()
     {
-        $currentTimestamps = Carbon::now();
-        $firstDayOfMonths = Carbon::now()->startOfMonth();
+            if($this->activeTab =='ConsumerEmergency'){
+         
+                $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
+                $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+                
+                if($this->selectedDate == 'custom'){
+                    $this->selectedFromDate;
+                    $this->selectedToDate;
+                }else{
+                    $this->selectedFromDate ='';
+                    $this->selectedToDate =''; 
+                }
+             
+                switch ($this->selectedDate) {
+                    case 'all':
+                        $fromDate = null;
+                        $toDate = null;
+                        break;
+                    case 'today':
+                        $fromDate = Carbon::today();
+                        $toDate = Carbon::today()->endOfDay();
+                        break;
+                    case 'yesterday':
+                        $fromDate = Carbon::yesterday();
+                        $toDate = Carbon::yesterday()->endOfDay();
+                        break;
+                    case 'thisWeek':
+                        $fromDate = Carbon::now()->subDays(7)->startOfDay();
+                        $toDate = Carbon::now();
+                        break;
+                    case 'thisMonth':
+                        $fromDate = Carbon::now()->startOfMonth();
+                        $toDate = Carbon::now()->endOfMonth();
+                        break;
+                    default:
+                        $fromDate = $fromDate;
+                        $toDate = $toDate;
+                        break;
+                }
+
+                $consumer_list = DB::table('consumer_emergency')
+                ->leftjoin('consumer', 'consumer_emergency.consumer_emergency_consumer_id', '=','consumer.consumer_id')
+                ->leftjoin('booking_view', 'consumer_emergency.consumer_emergency_booking_id', '=', 'booking_view.booking_id')
+                ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                    return $query->whereBetween('consumer_emergency.created_at', [$fromDate, $toDate]);
+                }) 
+                ->where(function ($query) {
+                    $query->where('consumer.consumer_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('consumer.consumer_mobile_no', 'like', '%' . $this->search . '%');
+                })
+                ->orderByDesc('consumer_emergency.consumer_emergency_id')
+                ->paginate(10);
+        
+                $buket_map_data = [];
+        
+                foreach($consumer_list as $location_data){
+                    $add_data['consumer_emergency_consumer_lat'] = $location_data->consumer_emergency_consumer_lat;
+                    $add_data['consumer_emergency_consumer_long'] = $location_data->consumer_emergency_consumer_long;
+                    $add_data['consumer_name'] = $location_data->consumer_name;
+                    $add_data['consumer_mobile_no'] = $location_data->consumer_mobile_no;
+                    $unix_time = $location_data->consumer_emergency_request_timing; 
+        
+                    $carbonDateTime = Carbon::createFromTimestamp($unix_time);
+                    $normalDateTime = $carbonDateTime->toDateTimeString();
+                    // $data = $convertedDates;
+                    $currentDateTime = Carbon::now();  
+                    $carbonDate = Carbon::parse($normalDateTime);
+                    $hoursDifference = $carbonDate->diffInHours($currentDateTime);
+                    $daysDifference = $carbonDate->diffInDays($currentDateTime);
+                    // Format the date difference as a human-readable message
+                    $add_data['time_diffrence'] =  $carbonDate->diffForHumans();
+        
+                    array_push($buket_map_data, $add_data);
+                }
+
+                if($this->check_for == 'custom'){
+                    return view('livewire.admin.ambulance.booking-emergency-component',[
+                        'isCustom' => true
+                    ],compact('buket_map_data', 'consumer_list'));
+                }
+                return view('livewire.admin.ambulance.booking-emergency-component',[
+                    'isCustom' => false
+                ],compact('buket_map_data', 'consumer_list'));
     
-        // Convert the input strings to Carbon date objects
-        $fromdate = $this->fromdate ? Carbon::createFromFormat('Y-m-d', $this->fromdate)->startOfDay() : null;
-        $todate = $this->todate ? Carbon::createFromFormat('Y-m-d', $this->todate)->endOfDay() : null;
-        $dateOption = $this->dateOption;
-    
-        // Check if "All" option is selected
-        if ($dateOption === 'all') {
-            $fromdate = null;
-            $todate = null;
-        } elseif (!empty($dateOption)) {
-            switch ($dateOption) {
+               
+        }elseif($this->activeTab=='DriverEmergency'){
+            $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
+            $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+            
+            if($this->selectedDate == 'custom'){
+                $this->selectedFromDate;
+                $this->selectedToDate;
+            }else{
+                $this->selectedFromDate ='';
+                $this->selectedToDate =''; 
+            }
+         
+            switch ($this->selectedDate) {
+                case 'all':
+                    $fromDate = null;
+                    $toDate = null;
+                    break;
                 case 'today':
-                    $fromdate = Carbon::today();
-                    $todate = Carbon::today()->endOfDay();
+                    $fromDate = Carbon::today();
+                    $toDate = Carbon::today()->endOfDay();
                     break;
                 case 'yesterday':
-                    $fromdate = Carbon::yesterday();
-                    $todate = Carbon::yesterday()->endOfDay();
+                    $fromDate = Carbon::yesterday();
+                    $toDate = Carbon::yesterday()->endOfDay();
                     break;
-                case 'week':
-                    $fromdate = Carbon::now()->subDays(7)->startOfDay();
-                    $todate = Carbon::now();
+                case 'thisWeek':
+                    $fromDate = Carbon::now()->subDays(7)->startOfDay();
+                    $toDate = Carbon::now();
                     break;
-                case 'month':
-                    $fromdate = Carbon::now()->startOfMonth();
-                    $todate = Carbon::now()->endOfMonth();
+                case 'thisMonth':
+                    $fromDate = Carbon::now()->startOfMonth();
+                    $toDate = Carbon::now()->endOfMonth();
                     break;
                 default:
-                    // Handle other cases if needed
+                    $fromDate = $fromDate;
+                    $toDate = $toDate;
                     break;
             }
+
+            $driver_list = DB::table('driver_emergency')
+            ->leftjoin('driver', 'driver_emergency.driver_emergency_driver_id', '=', 'driver.driver_id')
+            ->where(function ($query) {
+                $query->where('driver.driver_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('driver.driver_mobile', 'like', '%' . $this->search . '%');
+            })
+            ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                return $query->whereBetween('driver_emergency.created_at', [$fromDate, $toDate]);
+            }) 
+            ->orderByDesc('driver_emergency.driver_emergency_id')
+            ->paginate(10);
+    
+            // dd($driver_list);
+            $buket_map_data = [];
+    
+            foreach($driver_list as $location_data){
+                $add_data['driver_emergency_driver_lat'] = $location_data->driver_emergency_driver_lat;
+                $add_data['driver_emergency_driver_long'] = $location_data->driver_emergency_driver_long;
+                $add_data['driver_name'] = $location_data->driver_name;
+                $add_data['driver_last_name'] = $location_data->driver_last_name;
+                $add_data['driver_mobile'] = $location_data->driver_mobile;
+                $unix_time = $location_data->driver_emergency_request_timing; 
+    
+                $carbonDateTime = Carbon::createFromTimestamp($unix_time);
+                $normalDateTime = $carbonDateTime->toDateTimeString();
+                // $data = $convertedDates;
+                $currentDateTime = Carbon::now();  
+                $carbonDate = Carbon::parse($normalDateTime);
+                $hoursDifference = $carbonDate->diffInHours($currentDateTime);
+                $daysDifference = $carbonDate->diffInDays($currentDateTime);
+                // Format the date difference as a human-readable message
+                $add_data['time_diffrence'] =  $carbonDate->diffForHumans();
+    
+                array_push($buket_map_data, $add_data);
+            }
+
+            if($this->check_for == 'custom'){
+                return view('livewire.admin.ambulance.booking-emergency-component',[
+                    'isCustom' => true
+                ],compact('buket_map_data', 'driver_list'));
+            }
+            return view('livewire.admin.ambulance.booking-emergency-component',[
+                'isCustom' => false
+            ],compact('buket_map_data', 'driver_list'));
         }
+        
+        elseif($this->activeTab =='airAmbulance'){
+
+            $selectedbookingStatus = $this->selectedbookingStatus ? $this->selectedbookingStatus : null;
+            $selectedBookingType = $this->selectedBookingType ? $this->selectedBookingType : null;
+            $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
+            $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+            
+            if($this->selectedDate == 'custom'){
+                $this->selectedFromDate;
+                $this->selectedToDate;
+            }else{
+                $this->selectedFromDate ='';
+                $this->selectedToDate =''; 
+            }
+         
+            switch ($this->selectedDate) {
+                case 'all':
+                    $fromDate = null;
+                    $toDate = null;
+                    break;
+                case 'today':
+                    $fromDate = Carbon::today();
+                    $toDate = Carbon::today()->endOfDay();
+                    break;
+                case 'yesterday':
+                    $fromDate = Carbon::yesterday();
+                    $toDate = Carbon::yesterday()->endOfDay();
+                    break;
+                case 'thisWeek':
+                    $fromDate = Carbon::now()->subDays(7)->startOfDay();
+                    $toDate = Carbon::now();
+                    break;
+                case 'thisMonth':
+                    $fromDate = Carbon::now()->startOfMonth();
+                    $toDate = Carbon::now()->endOfMonth();
+                    break;
+                default:
+                    $fromDate = $fromDate;
+                    $toDate = $toDate;
+                    break;
+            }
+           
+    
+            $data['airAmbulanceData'] = DB::table('air_booking_view')
+                                    ->leftjoin('air_ambulance_patient', 'air_booking_view.air_booking_view_id', '=', 'air_ambulance_patient.patient_bid')
+                                    ->leftJoin('remark_data', 'remark_data.remark_airbooking_id', '=', 'air_booking_view.air_booking_view_id')
+                                    ->leftJoin('admin', 'admin.id', '=', 'remark_data.remark_type')
+                                    ->select('air_booking_view.created_at','air_booking_view.*','remark_data.*','admin.*','air_ambulance_patient.patient_name','air_ambulance_patient.patient_mobile_no','air_ambulance_patient.patient_gender')
+                                    ->where(function ($query) {
+                                        $query->where('air_booking_view.air_booking_con_name', 'like', '%' . $this->search . '%')
+                                            ->orWhere('air_booking_view.air_booking_con_mobile', 'like', '%' . $this->search . '%');
+                                    })
+                                    ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                                        return $query->whereBetween('air_booking_view.created_at', [$fromDate, $toDate]);
+                                    }) 
+                                    ->when($selectedbookingStatus == 'All', function ($query) use ($selectedbookingStatus) {
+                                        return $query
+                                            ->whereIn('air_booking_view.air_booking_status', [1,0,2,3,4,5]);
+                                    })
+                                    ->when($selectedbookingStatus == 'Enquiry', function ($query) use ($selectedbookingStatus) {
+                                        return $query
+                                            ->where('air_booking_view.air_booking_status',0);
+                                    })
+                                    ->when($selectedbookingStatus == 'New', function ($query) use ($selectedbookingStatus) {
+                                        return $query
+                                            ->where('air_booking_view.air_booking_status',1);
+                                    })
+                                    ->when($selectedbookingStatus == 'Ongoing', function ($query) use ($selectedbookingStatus) {
+                                        return $query
+                                            ->where('air_booking_view.air_booking_status',2);
+                                    })
+                                    ->when($selectedbookingStatus == 'Invoice', function ($query) use ($selectedbookingStatus) {
+                                        return $query
+                                            ->where('air_booking_view.air_booking_status',3);
+                                    })
+                                    ->when($selectedbookingStatus == 'Complete', function ($query) use ($selectedbookingStatus) {
+                                        return $query
+                                            ->where('air_booking_view.air_booking_status',4);
+                                    })
+                                    ->when($selectedbookingStatus == 'Cancel', function ($query) use ($selectedbookingStatus) {
+                                        return $query
+                                            ->where('air_booking_view.air_booking_status',5);
+                                    })
+                                    ->orderBy('air_booking_view.air_booking_view_id', 'desc')
+                                    ->paginate(10);
+
+    
+            if($this->check_for == 'custom'){
+                return view('livewire.admin.ambulance.ambulance-booking-component',$data,[
+                    'isCustom' => true
+                ]);
+            }
+            return view('livewire.admin.ambulance.ambulance-booking-component',$data,[
+                'isCustom' => false
+            ]);
+
+
+        }elseif($this->activeTab =='driverAutosearch') {
+            dd("driverAutosearch");
+        }elseif($this->activeTab =='DriverEmergency') {
+            // dd("DriverEmergency");
+        }
+       
+        $currentTimestamps = Carbon::now();
+        $firstDayOfMonths = Carbon::now()->startOfMonth(); 
  
-        $status = $this->show;
+        $selectedbookingStatus = $this->selectedbookingStatus ? $this->selectedbookingStatus : null;
+        $selectedBookingType = $this->selectedBookingType ? $this->selectedBookingType : null;
+        $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
+        $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+        
+        if($this->selectedDate == 'custom'){
+            $this->selectedFromDate;
+            $this->selectedToDate;
+        }else{
+            $this->selectedFromDate ='';
+            $this->selectedToDate =''; 
+        }
+     
+        switch ($this->selectedDate) {
+            case 'all':
+                $fromDate = null;
+                $toDate = null;
+                break;
+            case 'today':
+                $fromDate = Carbon::today();
+                $toDate = Carbon::today()->endOfDay();
+                break;
+            case 'yesterday':
+                $fromDate = Carbon::yesterday();
+                $toDate = Carbon::yesterday()->endOfDay();
+                break;
+            case 'thisWeek':
+                $fromDate = Carbon::now()->subDays(7)->startOfDay();
+                $toDate = Carbon::now();
+                break;
+            case 'thisMonth':
+                $fromDate = Carbon::now()->startOfMonth();
+                $toDate = Carbon::now()->endOfMonth();
+                break;
+            default:
+                $fromDate = $fromDate;
+                $toDate = $toDate;
+                break;
+        }
+       
 
         $data['bookingData'] = DB::table('booking_view')
         ->leftJoin('driver', 'driver.driver_id', '=', 'booking_view.booking_acpt_driver_id')
         ->leftJoin('remark_data', 'remark_data.remark_booking_id', '=', 'booking_view.booking_id')
         ->leftJoin('admin', 'admin.id', '=', 'remark_data.remark_type')
         ->where('booking_status', '!=', '7')
-        ->where('booking_view.booking_con_name', 'like', '%' . $this->search . '%')
-        ->when($fromdate && $todate, function ($query) use ($fromdate, $todate) {
-            return $query->whereBetween('booking_view.created_at', [$fromdate, $todate]);
+        ->where(function ($query) {
+            $query->where('booking_view.booking_con_name', 'like', '%' . $this->search . '%')
+                ->orWhere('booking_view.booking_con_mobile', 'like', '%' . $this->search . '%');
+        })
+        ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+            return $query->whereBetween('booking_view.created_at', [$fromDate, $toDate]);
         }) 
-        ->when($status !== null, function ($query) use ($status) {
-            return $query->where('booking_view.booking_status', $status);
+        ->when($selectedbookingStatus == 'All', function ($query) use ($selectedbookingStatus) {
+            return $query
+                ->whereIn('booking_view.booking_status', [1,0,2,3,4,5,6]);
         })
-        ->when($status === null, function ($query) {
-            return $query->whereIn('booking_view.booking_status', [1, 0,2,3,4,5,6]);
+        ->when($selectedbookingStatus == 'Enquiry', function ($query) use ($selectedbookingStatus) {
+            return $query
+                ->where('booking_view.booking_status',0);
         })
+        ->when($selectedbookingStatus == 'New', function ($query) use ($selectedbookingStatus) {
+            return $query
+                ->where('booking_view.booking_status',1);
+        })
+        ->when($selectedbookingStatus == 'Ongoing', function ($query) use ($selectedbookingStatus) {
+            return $query
+                ->where('booking_view.booking_status',2);
+        })
+        ->when($selectedbookingStatus == 'Invoice', function ($query) use ($selectedbookingStatus) {
+            return $query
+                ->where('booking_view.booking_status',3);
+        })
+        ->when($selectedbookingStatus == 'Complete', function ($query) use ($selectedbookingStatus) {
+            return $query
+                ->where('booking_view.booking_status',4);
+        })
+        ->when($selectedbookingStatus == 'Cancel', function ($query) use ($selectedbookingStatus) {
+            return $query
+                ->where('booking_view.booking_status',5);
+        })
+        ->when($selectedbookingStatus == 'Future', function ($query) use ($selectedbookingStatus) {
+            return $query
+                ->where('booking_view.booking_status',6);
+        })
+        
+        ->when($selectedBookingType == 'Road', function ($query) use ($selectedBookingType) {
+            return $query
+                ->where('booking_view.booking_type',0);
+        })
+        ->when($selectedBookingType == 'Rental', function ($query) use ($selectedBookingType) {
+            return $query
+                ->where('booking_view.booking_type',1);
+        })
+        ->when($selectedBookingType == 'Bulk', function ($query) use ($selectedBookingType) {
+            return $query
+                ->where('booking_view.booking_type',2);
+        })
+        ->when($selectedBookingType == 'Animal', function ($query) use ($selectedBookingType) {
+            return $query
+                ->where('booking_view.booking_type',6);
+        })
+        ->when($selectedBookingType == 'Pink', function ($query) use ($selectedBookingType) {
+            return $query
+                ->where('booking_view.booking_type',4);
+        })
+        
         ->select('booking_view.*','booking_view.created_at','remark_data.*' ,'admin.*','driver.driver_name','driver.driver_last_name','driver.driver_mobile')
         ->orderBy('booking_view.booking_id', 'desc')
         ->paginate(10);
 
-        if ($fromdate && $todate) {
-            $bookingStatus = $this->show;
-        
-            switch ($bookingStatus) {
-              
-                case "0":
-                    $bookingName = "Enquiry";
-                    break;
-                case "1":
-                    $bookingName = "New";
-                    break;
-                case "2":
-                    $bookingName = "Ongoing";
-                    break;
-                case "3":
-                    $bookingName = "Invoice";
-                    break;
-                case "4":
-                    $bookingName = "Complete";
-                    break;
-                case "5":
-                    $bookingName = "Cancel";
-                    break;
-                case "6":
-                    $bookingName = "Future";
-                    break;
-                default:
-                    $bookingName = "All Booking ";
-            }
-        
-            $data['booking_filter'] = $bookingName . ' Booking From ' . $fromdate->format('j F H:i:s A') . ' To ' . $todate->format('j F H:i:s A'); 
-        } else {
-            $bookingStatus = $this->show;
-        
-            switch ($bookingStatus) {
-              
-                case "0":
-                    $bookingName = "Enquiry";
-                    break;
-                case "1":
-                    $bookingName = "New";
-                    break;
-                case "2":
-                    $bookingName = "Ongoing";
-                    break;
-                case "3":
-                    $bookingName = "Invoice";
-                    break;
-                case "4":
-                    $bookingName = "Complete";
-                    break;
-                case "5":
-                    $bookingName = "Cancel";
-                    break;
-                case "6":
-                    $bookingName = "Future";
-                    break;
-                default:
-                    $bookingName = "";
-            }
-            $data['booking_filter'] = 'All ' . $bookingName . ' Booking ';
+        if($this->check_for == 'custom'){
+            return view('livewire.admin.ambulance.ambulance-booking-component',$data,[
+                'isCustom' => true
+            ]);
         }
-        
-        $filterValue = $this->from_filter && $this->to_filter;
-        $notfilterValue = $this->date_filter;
-
         return view('livewire.admin.ambulance.ambulance-booking-component',$data,[
-            'filterValue' => $filterValue,
-            'notfilterValue' => $notfilterValue,
+            'isCustom' => false
         ]);
 
     }
@@ -169,92 +479,8 @@ class AmbulanceBookingComponent extends Component
         $this->email = '';
 
     }
-    public function openModal()
-    {
-        $this->isOpen = true;
-    }
-    public function closeModal()
-    {
-        $this->isOpen = false;
-    }
-    public function storepartner()
-    {
+   
 
-        try{
-            $this->validate([
-                'partner_f_name' => 'required',
-                'partner_l_name' => 'required',
-                'partner_mobile' => [
-                    'required',
-                    'numeric',
-                    'digits:10',
-                    Rule::unique('partner','partner_mobile')
-                ], 
-                'partner_dob' => 'required',
-                'partner_gender' => 'required',
-                'partner_city_id' => 'required',
-                'partner_aadhar_no' => 'required|min:12|numeric',
-                'referral_referral_by'=>'required',
-                'partner_profile_img' => 'required',
-                'partner_aadhar_front' => 'required',
-                'partner_aadhar_back' => 'required',
-            ]);
-    
-            $dateofBirth = (new Carbon($this->partner_dob))->format('d-F-Y');
-    
-            $data = [
-                'partner_f_name' => $this->partner_f_name,
-                'partner_l_name' => $this->partner_l_name,
-                'partner_mobile' => $this->partner_mobile,
-                'partner_dob' => $dateofBirth,
-                'partner_gender' => $this->partner_gender,
-                'partner_city_id' => $this->partner_city_id,
-                'partner_aadhar_no' => $this->partner_aadhar_no,
-                'partner_status' => '0',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'referral_referral_by' => $this->referral_referral_by,
-                // 'partner_profile_img' => $this->partner_profile_img->store(path: 'partner'),
-                // 'partner_aadhar_front' => $this->partner_aadhar_front->storePublicly('partner', 'partner_aadhar_front'),
-                // 'partner_aadhar_back' => $this->partner_aadhar_back->storePublicly('partner', 'partner_aadhar_back'),
-            ];
-    
-            $savedata = DB::table('partner')->updateOrInsert(['partner_id' => $this->partner_id],$data);
-            if($savedata){
-                session()->flash('success', $this->partner_id ? 'Partner Updated Successfully.' : 'Partner Created Successfully.');
-    
-                $this->closeModal();
-                $this->resetInputFields();       
-            } else{
-               session()->flash('danger', 'somethingwent wrong !!');
-           }
-        }catch (Exception $e) {
-              
-            $message = $e->getMessage();
-            var_dump('Exception Message: '. $message);
-        
-            $code = $e->getCode();       
-            var_dump('Exception Code: '. $code);
-        
-            $string = $e->__toString();       
-            var_dump('Exception String: '. $string);
-        
-            exit;
-        }
-        
-     
-
-    }
-    public function edit($id)
-    {
-        $employee = Employee::findOrFail($id);
-        $this->id = $id;
-        $this->employee_id = $employee->employee_id;
-        $this->name = $employee->name;
-        $this->email = $employee->email;
-        $this->position = $employee->position;
-        $this->openModal();
-    }
     public function delete($id)
     {
         $partnerDelete = DB::table('booking_view')->where('booking_id',$id)->update(['booking_status'=>'7']);
@@ -262,11 +488,7 @@ class AmbulanceBookingComponent extends Component
         session()->flash('message', 'Booking Deleted Successfully.');
         session()->flash('type', 'delete');
     }
-    public function showNested($value)
-    {
-    $this->show = $value;
-
-    }
+  
 
 
 }
