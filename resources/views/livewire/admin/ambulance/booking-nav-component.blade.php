@@ -4,29 +4,34 @@
             <li class="nav-item">
                 <a class="nav-link fs-1" href="#">Dashboard</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link fs-1 " href="/driver" wire:navigate>All</a>
+            <li class="nav-item {{$this->activeTab == null ? 'active':''}}">
+                <a class="nav-link fs-1 " href="/booking" wire:navigate>All</a>
             </li>
             <li class="nav-item ">
                 <a class="nav-link fs-1" href="/manage-driver" wire:navigate class="nav-link">Generate</a>
             </li>
-            <li class="nav-item ">
-                <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('division')">
+            <!-- <li class="nav-item">
+                <a class="custom__nav__btn nav-link fs-1" href="/booking-calender" wire:navigate>
                     Scheduled
                 </a>
-            </li>
-            <li class="nav-item">
-                <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('district')">
+            </li> -->
+            <li class="nav-item {{$this->activeTab == 'driverAutosearch' ? 'active':''}}">
+                <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('driverAutosearch')">
                     Auto Search
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('walletBalance')">
-                    Emergency
+            <li class="nav-item {{$this->activeTab == 'ConsumerEmergency' ? 'active':''}}">
+                <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('ConsumerEmergency')">
+                   Consumer Emergency
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('Active')">
+            <li class="nav-item {{$this->activeTab == 'DriverEmergency' ? 'active':''}}">
+                <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('DriverEmergency')">
+                   Driver Emergency
+                </a>
+            </li>
+            <li class="nav-item {{$this->activeTab == 'airAmbulance' ? 'active':''}}">
+                <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('airAmbulance')">
                     Air Ambulance
                 </a>
             </li>
