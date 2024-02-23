@@ -1,4 +1,6 @@
 
+
+
 <div class="content">
     @if($activeTab == 'ConsumerEmergency')
     <div class="container-fluid">
@@ -9,6 +11,10 @@
         @endif
 
         @include('livewire.admin.ambulance.booking-nav-component')
+
+        @if ($isOpen)
+        @include('livewire.admin.ambulance.consmer_emergency_models')
+        @endif
 
         <div class="card custom__filter__responsive">
             <div class="card-header custom__filter__select ">
@@ -59,8 +65,10 @@
                          <th>Sr.No.</th>
 						<th>Emergency Id.</th>
 						<th>Booking Id.</th>
-						<th>Consumer Name</th>
-						<th>Wallet Amounts</th>
+						<th> Name</th>
+						<th> Mobile</th>
+						<th>Wallet</th>
+                        <th>Remark</th>
 						<th>Requested Time</th>
                         <th>Action</th>
                     </tr>
@@ -73,8 +81,12 @@
                              <td class="table-plus">{{$srno++}}</td>
                               <td>{{$list->consumer_emergency_id }}</td>
                               <td>{{$list->consumer_emergency_booking_id }}</a></td>
-                             <td>{{$list->consumer_name}}<p>{{$list->consumer_mobile_no}}</p></a></td>
+                             <td>{{$list->consumer_name}}</td>
+                             <td>{{$list->consumer_mobile_no}}</td>
 							<td>&#8377;.{{$list->consumer_wallet_amount}}</td>
+                            <td> @if($list->remark_id ) {{$list->remark_text}} @else
+                            <input type="text" placeholder="Enter The Remark" id="remarkTest" class="text-center">
+                                 @endif</td>
                           <td> @php
                                 $timestamp = is_numeric($list->consumer_emergency_request_timing) ? (int)$list->consumer_emergency_request_timing : null;
                                  @endphp
@@ -85,9 +97,12 @@
                               @endif</td>                       
                       
                         <td class="action__btn lbtn-group">
-                            <button class="btn-primary"><i class="fa fa-edit"></i></button>
-                            <button class="btn-success"><i class="fa fa-eye"></i></button>
-                            <!-- <button  wire:navigate href="#" target="_blank" class="btn-primary"><i class="fa fa-edit fa-sm"></i></button> -->
+                           @if($list->consumer_emergency_status=='1')
+                            <button class="btn-primary"><i class="fa fa-check"></i></button>
+                            @else
+                            <button class="btn-danger submitRemark" type="submit"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            @endif                      
+                         <button class="btn-success" wire:click="showMap({{$list->consumer_emergency_id}})"><i class="fa fa-eye"></i></button>
 
                         </td>
                     </tr>
@@ -104,21 +119,6 @@
             </div>
         </div>
 
-    	<div class="card-box mb-30">
-                        <div class="pd-20 card-box mb-30 p-5">
-                            <div class="clearfix">
-                                <div class="pull-left">
-                                    <h4 class="text-blue h4 "> Consumer Location In Map</h4>         
-                                </div>
-                            </div>
-                                    <div class="container mt-5">
-									<div id="map" style="height: 400px;"></div>
-							</div>
-                  </div>
-                     <!-- booking Details ends -->
-            
-				</div>
-
         <div class="container h-100 w-100">
             <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
                 <div class="col">
@@ -142,49 +142,33 @@
 
     </div>
 
-    <!---------------------= Js parts of the Consumer Emergency Data -------------------------------->
       <!-- /.card -->
-      @php 
-$mapKey = DB::table('aa_setting')->where('a_setting_id', 9)->first();
-@endphp
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAP_KEY')}}&callback=initMap" async defer></script> 
-<script>
-    function initMap() {
-        var buket_map_data = @json($buket_map_data);
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
-            center: new google.maps.LatLng(buket_map_data[0].consumer_emergency_consumer_lat, buket_map_data[0].consumer_emergency_consumer_long),
-        });
-
-        buket_map_data.forEach(function (location) {
-			var icon = {
-                url: '/assets/app_icon/large_car.png', // Replace with the URL of your custom icon
-                scaledSize: new google.maps.Size(40, 40), // Adjust the size of the icon
-            };
-
-		
-		
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(location.consumer_emergency_consumer_lat, location.consumer_emergency_consumer_long),
-                map: map,
-                title: location.consumer_name + '  ' + location.time_diffrence,
-				icon: icon, // Set the custom icon,
-				
+      @asset 
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+      @endasset
+      @script
+      <script>
+        $("#submitRemark").click(function(e) {
+            alert("Please enter");
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/save/ConsumerEmergency",
+                data: { 
+                    id: $('#remarkTest').val(), // < note use of 'this' here
+                    access_token: $("#access_token").val() 
+                },
+                success: function(result) {
+                    alert('ok');
+                },
+                error: function(result) {
+                    alert('error');
+                }
             });
         });
-    }
-</script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.select2-dropdown').select2();
-            $('.select2-dropdown').on('change', function (e) {
-                var data = $('.select2-dropdown').select2("val");
-                @this.set('ottPlatform', data);
-            });
-        });
-    </script>
+      </script>
+      @endscript
+
     @endif 
 
     @if($this->activeTab == 'DriverEmergency')
@@ -197,6 +181,10 @@ $mapKey = DB::table('aa_setting')->where('a_setting_id', 9)->first();
         @endif
 
         @include('livewire.admin.ambulance.booking-nav-component')
+
+        @if ($isOpen)
+        @include('livewire.admin.ambulance.consmer_emergency_models')
+        @endif
 
         <div class="card custom__filter__responsive">
             <div class="card-header custom__filter__select ">
@@ -247,9 +235,11 @@ $mapKey = DB::table('aa_setting')->where('a_setting_id', 9)->first();
                          <th>Sr.No.</th>
 						<th>Emergency Id.</th>
 						<th>Booking Id.</th>
-						<th>Driver Name</th>
+						<th> Name</th>
+						<th> Mobile</th>
 						<th>Wallet Amounts</th>
 						<th>Requested Time</th>
+						<th>Remark</th>
                         <th>Action</th>
                     </tr>
                     @php
@@ -261,7 +251,8 @@ $mapKey = DB::table('aa_setting')->where('a_setting_id', 9)->first();
                              <td class="table-plus">{{$srno++}}</td>
                               <td>{{$list->driver_emergency_driver_id }}</td>
                               <td>{{$list->driver_emergency_booking_id }}</a></td>
-                             <td>{{$list->driver_name.' '.$list->driver_last_name}}<p>{{$list->driver_mobile}}</p></a></td>
+                             <td>{{$list->driver_name.' '.$list->driver_last_name}}</td>
+                             <td>{{$list->driver_mobile}}</td>
 							<td>&#8377;.{{$list->driver_wallet_amount}}</td>
                           <td> @php
                                 $timestamp = is_numeric($list->driver_emergency_request_timing) ? (int)$list->driver_emergency_request_timing : null;
@@ -271,11 +262,16 @@ $mapKey = DB::table('aa_setting')->where('a_setting_id', 9)->first();
                                          {{ date('j F Y, H:i:s A', $timestamp) }}
                                   @else
                               @endif</td>                       
-                      
-                        <td class="action__btn lbtn-group">
-                            <button class="btn-primary"><i class="fa fa-edit"></i></button>
-                            <button class="btn-success"><i class="fa fa-eye"></i></button>
-                            <!-- <button  wire:navigate href="#" target="_blank" class="btn-primary"><i class="fa fa-edit fa-sm"></i></button> -->
+                              <td> @if($list->remark_id ) {{$list->remark_text}} @else
+                            <input type="text" placeholder="Enter The Remark" class="text-center">
+                                 @endif</td>
+                            <td class="action__btn lbtn-group">
+                           @if($list->driver_emergency_status=='1')
+                            <button class="btn-primary"><i class="fa fa-check"></i></button>
+                            @else
+                            <button class="btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            @endif
+                            <button class="btn-success" wire:click="showMap({{$list->driver_emergency_driver_id}})"><i class="fa fa-eye"></i></button>
 
                         </td>
                     </tr>
@@ -291,22 +287,6 @@ $mapKey = DB::table('aa_setting')->where('a_setting_id', 9)->first();
                 </div>
             </div>
         </div>
-
-        
-    	<div class="card-box mb-30">
-                        <div class="pd-20 card-box mb-30 p-5">
-                            <div class="clearfix">
-                                <div class="pull-left">
-                                    <h4 class="text-blue h4 "> Driver Location In Map</h4>         
-                                </div>
-                            </div>
-                                    <div class="container mt-5">
-									<div id="map" style="height: 400px;"></div>
-							</div>
-                  </div>
-                     <!-- booking Details ends -->
-            
-				</div>
 
         <div class="container h-100 w-100">
             <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
@@ -345,39 +325,7 @@ $mapKey = DB::table('aa_setting')->where('a_setting_id', 9)->first();
         });
     </script>
     @endif 
-    
-  
 </div>
-@php 
-$mapKey = DB::table('aa_setting')->where('a_setting_id', 9)->first();
-@endphp
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAP_KEY')}}&callback=initMap" async defer></script> 
-<script>
-    function initMap() {
-        var buket_map_data = @json($buket_map_data);
-        console.log(buket_map_data);
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
-            center: new google.maps.LatLng(buket_map_data[0].consumer_emergency_consumer_lat, buket_map_data[0].consumer_emergency_consumer_long),
-        });
-
-        buket_map_data.forEach(function (location) {
-			var icon = {
-                url: '/assets/app_icon/large_car.png', // Replace with the URL of your custom icon
-                scaledSize: new google.maps.Size(40, 40), // Adjust the size of the icon
-            };
-		
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(location.consumer_emergency_consumer_lat, location.consumer_emergency_consumer_long),
-                map: map,
-                title: location.consumer_name + '  ' + location.time_diffrence,
-				icon: icon, // Set the custom icon,
-				
-            });
-        });
-    }
-</script>
 
   <!-- /.row -->
 

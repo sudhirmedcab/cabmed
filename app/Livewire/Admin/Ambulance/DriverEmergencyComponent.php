@@ -9,12 +9,12 @@ use Illuminate\Validation\Rule;
 use Livewire\WithFileUploads;
 use Livewire\WithoutUrlPagination;
 
-class BookingEmergencyComponent extends Component
+class DriverEmergencyComponent extends Component
 {
     public $selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$fromdate, $todate,$selectedBookingType,$check_for,$selectedbookingStatus,$checkEmergencyStatus,$checkbookingEmergency,
-    $activeTab,$consumerEmergencyId,$consumerEmergency,$events = [];
+    $activeTab,$events = [];
     
     
 
@@ -69,7 +69,6 @@ class BookingEmergencyComponent extends Component
 }
     public function render()
     {
-
         // $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
         // $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
         
@@ -108,27 +107,28 @@ class BookingEmergencyComponent extends Component
         //         break;
         // }
 
-        // $consumer_list = DB::table('consumer_emergency')
-        // ->leftjoin('consumer', 'consumer_emergency.consumer_emergency_consumer_id', '=','consumer.consumer_id')
-        // ->leftjoin('booking_view', 'consumer_emergency.consumer_emergency_booking_id', '=', 'booking_view.booking_id')
-        // ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
-        //     return $query->whereBetween('consumer_emergency.created_at', [$fromDate, $toDate]);
-        // }) 
+        // $driver_list = DB::table('driver_emergency')
+        // ->leftjoin('driver', 'driver_emergency.driver_emergency_driver_id', '=', 'driver.driver_id')
         // ->where(function ($query) {
-        //     $query->where('consumer.consumer_name', 'like', '%' . $this->search . '%')
-        //         ->orWhere('consumer.consumer_mobile_no', 'like', '%' . $this->search . '%');
+        //     $query->where('driver.driver_name', 'like', '%' . $this->search . '%')
+        //         ->orWhere('driver.driver_mobile', 'like', '%' . $this->search . '%');
         // })
-        // ->orderByDesc('consumer_emergency.consumer_emergency_id')
+        // ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+        //     return $query->whereBetween('driver_emergency.created_at', [$fromDate, $toDate]);
+        // }) 
+        // ->orderByDesc('driver_emergency.driver_emergency_id')
         // ->paginate(10);
 
+        // // dd($driver_list);
         // $buket_map_data = [];
 
-        // foreach($consumer_list as $location_data){
-        //     $add_data['consumer_emergency_consumer_lat'] = $location_data->consumer_emergency_consumer_lat;
-        //     $add_data['consumer_emergency_consumer_long'] = $location_data->consumer_emergency_consumer_long;
-        //     $add_data['consumer_name'] = $location_data->consumer_name;
-        //     $add_data['consumer_mobile_no'] = $location_data->consumer_mobile_no;
-        //     $unix_time = $location_data->consumer_emergency_request_timing; 
+        // foreach($driver_list as $location_data){
+        //     $add_data['driver_emergency_driver_lat'] = $location_data->driver_emergency_driver_lat;
+        //     $add_data['driver_emergency_driver_long'] = $location_data->driver_emergency_driver_long;
+        //     $add_data['driver_name'] = $location_data->driver_name;
+        //     $add_data['driver_last_name'] = $location_data->driver_last_name;
+        //     $add_data['driver_mobile'] = $location_data->driver_mobile;
+        //     $unix_time = $location_data->driver_emergency_request_timing; 
 
         //     $carbonDateTime = Carbon::createFromTimestamp($unix_time);
         //     $normalDateTime = $carbonDateTime->toDateTimeString();
@@ -143,37 +143,22 @@ class BookingEmergencyComponent extends Component
         //     array_push($buket_map_data, $add_data);
         // }
 
+        // $locations = [
+        //     ['Mumbai', 19.0760,72.8777],
+        //     ['Pune', 18.5204,73.8567],
+        //     ['Bhopal ', 23.2599,77.4126],
+        //     ['Agra', 27.1767,78.0081],
+        //     ['Delhi', 28.7041,77.1025],
+        //     ['Rajkot', 22.2734719,70.7512559],
+        // ];
+
         // if($this->check_for == 'custom'){
-        //     return view('livewire.admin.ambulance.booking-emergency-component',[
+        //     return view('livewire.admin.ambulance.driver-emergency-component',[
         //         'isCustom' => true
-        //     ],compact('buket_map_data', 'consumer_list'));
+        //     ],compact('buket_map_data', 'driver_list'));
         // }
 
-        return view('livewire.admin.ambulance.booking-emergency-component');
+        return view('livewire.admin.ambulance.driver-emergency-component');
 
-}
-
-public function openModal()
-{
-    $this->isOpen = true;
-}
-
-public function closeModal()
-{
-    $this->isOpen = false;
-}
-
-public function showMap($consumerEmergencyId)
-{
-        $consumerEmergency = DB::table('consumer_emergency')
-        ->leftjoin('consumer', 'consumer_emergency.consumer_emergency_consumer_id', '=','consumer.consumer_id')
-        ->where('consumer_emergency.consumer_emergency_id','=',$consumerEmergencyId)
-        ->orderByDesc('consumer_emergency.consumer_emergency_id')
-        ->first();
-
-        $this->consumerEmergency = $consumerEmergency;
-
-    $this->openModal();
-}
-
+    }
 }

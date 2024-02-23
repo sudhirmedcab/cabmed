@@ -1,6 +1,21 @@
 <div class="container-fluid">
     @include('livewire.admin.ambulance.booking-nav-component')
     @if(!empty($bookingData))
+
+    @if (session()->has('remarkSaved'))
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
+        <strong>{{ session('remarkSaved') }}!</strong>
+    </div>
+    @endif
+
+    @if (session()->has('errorRemark'))
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
+        <strong>{{ session('errorRemark') }}!</strong>
+    </div>
+    @endif
+
     <div class="card ">
         <div class="card-header custom__filter__select ">
 
@@ -150,12 +165,14 @@
                             </p>
                         </td>
                         <td>
-                            @if(($data->remark_id))
-                            <input type="text" value="{{$data->remark_text}}" class="text-center">
-                            @else
-                            <input type="text" placeholder="Enter The Remark" class="text-center">
-                            @endif
+                            <input type="text" wire:model.debounce.500ms="remarkText.{{$data->booking_id}}" wire:key="{{$data->remark_id }}" value="{{$data->remark_text ?? null}}" placeholder="Enter The Remark" class="text-center">
+                            <input type="hidden" wire:model="bookingId.{{$data->booking_id}}" value="{{$data->booking_id}}" class="text-center">
+
                             <br />
+                            <p class="m-0 mt-2">
+                                Remark Text:
+                               ( {{$data->remark_text}} )
+                            </p>
                             <p class="m-0 mt-2">
                                 Commented:
                                 {{$data->admin_name}}
@@ -167,7 +184,7 @@
                             </p>
                         </td>
                         <td class="action__btn lbtn-group">
-                            <button class="btn-primary"><i class="fa fa-edit"></i></button>
+                        <button class="btn-primary" wire:click="saveRemark({{ $data->booking_id }})"><i class="fa fa-edit"></i></button>
                             <button class="btn-success"><i class="fa fa-eye"></i></button>
                             <!-- <button wire:confirm="Are you sure you want to delete this Booking?" wire:click="#" class="btn-danger"><i class="fa fa-trash"></i></button> -->
                         </td>
@@ -377,6 +394,5 @@
         </div>
     </div>
     @endif 
-
-
+  
 </div>
