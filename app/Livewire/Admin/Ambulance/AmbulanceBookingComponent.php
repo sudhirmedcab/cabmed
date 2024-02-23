@@ -15,7 +15,11 @@ class AmbulanceBookingComponent extends Component
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$fromdate, $todate,$selectedBookingType,$check_for,$selectedbookingStatus,$checkEmergencyStatus,$checkbookingEmergency,
     $activeTab,$events = [];
-    
+
+    public $remarkText = [];
+    public $bookingId = [];
+    public $remarkId = [];
+
     
 
     public $isOpen = 0;
@@ -65,7 +69,6 @@ class AmbulanceBookingComponent extends Component
             
         }
        
-  
 }
 
     public function render()
@@ -113,6 +116,7 @@ class AmbulanceBookingComponent extends Component
                 $consumer_list = DB::table('consumer_emergency')
                 ->leftjoin('consumer', 'consumer_emergency.consumer_emergency_consumer_id', '=','consumer.consumer_id')
                 ->leftjoin('booking_view', 'consumer_emergency.consumer_emergency_booking_id', '=', 'booking_view.booking_id')
+                ->leftJoin('remark_data', 'remark_data.remark_consumer_emeregncy_id', '=', 'consumer_emergency.consumer_emergency_consumer_id')
                 ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
                     return $query->whereBetween('consumer_emergency.created_at', [$fromDate, $toDate]);
                 }) 
@@ -155,89 +159,6 @@ class AmbulanceBookingComponent extends Component
                 ],compact('buket_map_data', 'consumer_list'));
     
                
-        }elseif($this->activeTab=='DriverEmergency'){
-            $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
-            $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
-            
-            if($this->selectedDate == 'custom'){
-                $this->selectedFromDate;
-                $this->selectedToDate;
-            }else{
-                $this->selectedFromDate ='';
-                $this->selectedToDate =''; 
-            }
-         
-            switch ($this->selectedDate) {
-                case 'all':
-                    $fromDate = null;
-                    $toDate = null;
-                    break;
-                case 'today':
-                    $fromDate = Carbon::today();
-                    $toDate = Carbon::today()->endOfDay();
-                    break;
-                case 'yesterday':
-                    $fromDate = Carbon::yesterday();
-                    $toDate = Carbon::yesterday()->endOfDay();
-                    break;
-                case 'thisWeek':
-                    $fromDate = Carbon::now()->subDays(7)->startOfDay();
-                    $toDate = Carbon::now();
-                    break;
-                case 'thisMonth':
-                    $fromDate = Carbon::now()->startOfMonth();
-                    $toDate = Carbon::now()->endOfMonth();
-                    break;
-                default:
-                    $fromDate = $fromDate;
-                    $toDate = $toDate;
-                    break;
-            }
-
-            $driver_list = DB::table('driver_emergency')
-            ->leftjoin('driver', 'driver_emergency.driver_emergency_driver_id', '=', 'driver.driver_id')
-            ->where(function ($query) {
-                $query->where('driver.driver_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('driver.driver_mobile', 'like', '%' . $this->search . '%');
-            })
-            ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
-                return $query->whereBetween('driver_emergency.created_at', [$fromDate, $toDate]);
-            }) 
-            ->orderByDesc('driver_emergency.driver_emergency_id')
-            ->paginate(10);
-    
-            // dd($driver_list);
-            $buket_map_data = [];
-    
-            foreach($driver_list as $location_data){
-                $add_data['driver_emergency_driver_lat'] = $location_data->driver_emergency_driver_lat;
-                $add_data['driver_emergency_driver_long'] = $location_data->driver_emergency_driver_long;
-                $add_data['driver_name'] = $location_data->driver_name;
-                $add_data['driver_last_name'] = $location_data->driver_last_name;
-                $add_data['driver_mobile'] = $location_data->driver_mobile;
-                $unix_time = $location_data->driver_emergency_request_timing; 
-    
-                $carbonDateTime = Carbon::createFromTimestamp($unix_time);
-                $normalDateTime = $carbonDateTime->toDateTimeString();
-                // $data = $convertedDates;
-                $currentDateTime = Carbon::now();  
-                $carbonDate = Carbon::parse($normalDateTime);
-                $hoursDifference = $carbonDate->diffInHours($currentDateTime);
-                $daysDifference = $carbonDate->diffInDays($currentDateTime);
-                // Format the date difference as a human-readable message
-                $add_data['time_diffrence'] =  $carbonDate->diffForHumans();
-    
-                array_push($buket_map_data, $add_data);
-            }
-
-            if($this->check_for == 'custom'){
-                return view('livewire.admin.ambulance.booking-emergency-component',[
-                    'isCustom' => true
-                ],compact('buket_map_data', 'driver_list'));
-            }
-            return view('livewire.admin.ambulance.booking-emergency-component',[
-                'isCustom' => false
-            ],compact('buket_map_data', 'driver_list'));
         }
         
         elseif($this->activeTab =='airAmbulance'){
@@ -340,8 +261,92 @@ class AmbulanceBookingComponent extends Component
         }elseif($this->activeTab =='driverAutosearch') {
             dd("driverAutosearch");
         }elseif($this->activeTab =='DriverEmergency') {
-            // dd("DriverEmergency");
+
+        $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
+        $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+        
+        if($this->selectedDate == 'custom'){
+            $this->selectedFromDate;
+            $this->selectedToDate;
+        }else{
+            $this->selectedFromDate ='';
+            $this->selectedToDate =''; 
         }
+     
+        switch ($this->selectedDate) {
+            case 'all':
+                $fromDate = null;
+                $toDate = null;
+                break;
+            case 'today':
+                $fromDate = Carbon::today();
+                $toDate = Carbon::today()->endOfDay();
+                break;
+            case 'yesterday':
+                $fromDate = Carbon::yesterday();
+                $toDate = Carbon::yesterday()->endOfDay();
+                break;
+            case 'thisWeek':
+                $fromDate = Carbon::now()->subDays(7)->startOfDay();
+                $toDate = Carbon::now();
+                break;
+            case 'thisMonth':
+                $fromDate = Carbon::now()->startOfMonth();
+                $toDate = Carbon::now()->endOfMonth();
+                break;
+            default:
+                $fromDate = $fromDate;
+                $toDate = $toDate;
+                break;
+        }
+
+        $driver_list = DB::table('driver_emergency')
+        ->leftjoin('driver', 'driver_emergency.driver_emergency_driver_id', '=', 'driver.driver_id')
+        ->leftJoin('remark_data', 'remark_data.remark_driver_emeregncy_id', '=', 'driver_emergency.driver_emergency_driver_id')
+        ->where(function ($query) {
+            $query->where('driver.driver_name', 'like', '%' . $this->search . '%')
+                ->orWhere('driver.driver_mobile', 'like', '%' . $this->search . '%');
+        })
+        ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+            return $query->whereBetween('driver_emergency.created_at', [$fromDate, $toDate]);
+        }) 
+        ->orderByDesc('driver_emergency.driver_emergency_id')
+        ->paginate(10);
+
+        // dd($driver_list);
+        $buket_map_data = [];
+
+        foreach($driver_list as $location_data){
+            $add_data['driver_emergency_driver_lat'] = $location_data->driver_emergency_driver_lat;
+            $add_data['driver_emergency_driver_long'] = $location_data->driver_emergency_driver_long;
+            $add_data['driver_name'] = $location_data->driver_name;
+            $add_data['driver_last_name'] = $location_data->driver_last_name;
+            $add_data['driver_mobile'] = $location_data->driver_mobile;
+            $unix_time = $location_data->driver_emergency_request_timing; 
+
+            $carbonDateTime = Carbon::createFromTimestamp($unix_time);
+            $normalDateTime = $carbonDateTime->toDateTimeString();
+            // $data = $convertedDates;
+            $currentDateTime = Carbon::now();  
+            $carbonDate = Carbon::parse($normalDateTime);
+            $hoursDifference = $carbonDate->diffInHours($currentDateTime);
+            $daysDifference = $carbonDate->diffInDays($currentDateTime);
+            // Format the date difference as a human-readable message
+            $add_data['time_diffrence'] =  $carbonDate->diffForHumans();
+
+            array_push($buket_map_data, $add_data);
+        }       
+    
+        if($this->check_for == 'custom'){
+            return view('livewire.admin.ambulance.booking-emergency-component',[
+                'isCustom' => true
+            ],compact('buket_map_data', 'driver_list'));
+        }
+        return view('livewire.admin.ambulance.booking-emergency-component',[
+            'isCustom' => false
+        ],compact('buket_map_data', 'driver_list'));
+
+    }
        
         $currentTimestamps = Carbon::now();
         $firstDayOfMonths = Carbon::now()->startOfMonth(); 
@@ -480,6 +485,28 @@ class AmbulanceBookingComponent extends Component
 
     }
    
+    public function openModal()
+{
+    $this->isOpen = true;
+}
+
+public function closeModal()
+{
+    $this->isOpen = false;
+}
+
+public function showMap($consumerEmergencyId)
+{
+        $consumerEmergency = DB::table('consumer_emergency')
+        ->leftjoin('consumer', 'consumer_emergency.consumer_emergency_consumer_id', '=','consumer.consumer_id')
+        ->where('consumer_emergency.consumer_emergency_id','=',$consumerEmergencyId)
+        ->orderByDesc('consumer_emergency.consumer_emergency_id')
+        ->first();
+
+        $this->consumerEmergency = $consumerEmergency;
+
+    $this->openModal();
+}
 
     public function delete($id)
     {
@@ -490,5 +517,48 @@ class AmbulanceBookingComponent extends Component
     }
   
 
+    public function saveRemark($bookingId)
+    {
+        try {
+            DB::beginTransaction();
+    
+            $remarkData = DB::table('remark_data')
+                            ->where('remark_booking_id',$bookingId)
+                            ->first();
+
+            $remarkId = $remarkData->remark_id ?? null;
+            $remarkText = $this->remarkText[$bookingId];
+
+            if (!is_null($remarkId)) {
+                DB::table('remark_data')
+                    ->where('remark_booking_id', $bookingId)
+                    ->update([
+                        'remark_text' => $remarkText,
+                        'updated_at' => now(),
+                    ]);
+    
+                session()->flash('remarkSaved', 'Remark Updated Successfully..');
+            } else {
+                $remarkByUserId = 1; // You might want to change this based on your authentication system
+                $remarkId = DB::table('remark_data')->insertGetId([
+                    'remark_booking_id' => $bookingId,
+                    'remark_type' => $remarkByUserId,
+                    'remark_text' => $remarkText,
+                    'remark_add_unix_time' => now()->timestamp,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+    
+                session()->flash('remarkSaved', 'Remark Added Successfully..'.$remarkId);
+            }
+    
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('errorRemark', 'Error: ' . $e->getMessage());
+            \Log::error('Error occurred while processing saveRemark: ' . $e->getMessage());
+        }
+    }
+    
 
 }
