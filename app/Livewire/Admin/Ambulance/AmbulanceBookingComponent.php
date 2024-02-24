@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Livewire\WithPagination;
 use Illuminate\Validation\Rule;
 use Livewire\WithFileUploads;
-use Livewire\WithoutUrlPagination;
+// use Livewire\WithoutUrlPagination;
 
 class AmbulanceBookingComponent extends Component
 {
@@ -25,7 +25,7 @@ class AmbulanceBookingComponent extends Component
     public $isOpen = 0;
     use WithPagination;
     use WithFileUploads;
-    use WithoutUrlPagination;
+    // use WithoutUrlPagination;
 
 
     protected $paginationTheme = 'bootstrap';
