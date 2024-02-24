@@ -371,3 +371,27 @@ ul.custom__nav__tab li a {
         box-shadow: 0 0 1px rgba(255,255,255,.8), 0 1px 3px #f39c12 !important;
         margin-bottom: 1rem;
 }
+
+.custom-error-alert {
+    padding: 0.4rem 1rem !important;
+    font-size: 12px;
+}
+.text__uppercase{
+    text-transform:uppercase;
+}
+.cat__icon img{
+    height: 20px;
+}
+.booking__accepted{
+    
+    box-shadow: 4px 3px 6px 2px #eddada;
+    border-radius: 4px;
+    padding: 16px;
+    /* background: limegreen; */
+    border: 2px solid limegreen;
+        /* border: none !important; */
+
+}
+.booking__accepted td{
+    border:none;
+}
