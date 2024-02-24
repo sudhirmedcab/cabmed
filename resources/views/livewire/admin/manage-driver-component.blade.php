@@ -124,7 +124,7 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_profile_image">Profile Image</label>
-                <input type="file" wire:model="driver_profile_image" class="rounded-0 form-control form-control-sm" id="vehicle_rc_no" placeholder="Enter Vehicle RC No.">
+                <input type="file" wire:model="driver_profile_image" class="rounded-0 form-control form-control-sm" accept=".jpeg,.jpg,.png" id="vehicle_rc_no" placeholder="Enter Vehicle RC No.">
                 @error('driver_profile_image') <span class="text-danger">{{ $message }}</span> @enderror
                 <input type="hidden" wire:model="driver_id">
               
@@ -168,14 +168,14 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-3">
               <div class="form-group">
                 <label for="exampleInputFile">Aadhaar Front Image</label>
-                    <input wire:model="driver_adhar_front" type="file" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input wire:model="driver_adhar_front" type="file" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                     @error('driver_adhar_front') <span class="text-danger">{{$message}}</span> @enderror
               </div>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-3">
               <div class="form-group">
                 <label for="exampleInputFile">Aadhaar Back Image</label>
-                    <input wire:model="driver_adhar_back" type="file" class="rounded-0 form-control form-control-sm" id="driver_adhar_back">
+                    <input wire:model="driver_adhar_back" type="file" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="driver_adhar_back">
                 @error('driver_adhar_back') <span class="text-danger">{{$message}}</span> @enderror
               </div>
             </div>
@@ -190,7 +190,7 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_pan_img">Pan Image</label>
-                      <input wire:model="driver_pan_img" type="file" class="rounded-0 form-control form-control-sm" id="driver_pan_back">
+                      <input wire:model="driver_pan_img" type="file" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="driver_pan_back">
                 @error('driver_pan_img') <span class="text-danger">{{$message}}</span> @enderror
               </div>
             </div>
@@ -248,7 +248,7 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Police Verification Image</label>
-                    <input wire:model="driver_police_verification_img" type="file" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input wire:model="driver_police_verification_img" type="file" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                 @error('driver_police_verification_img') <span class="text-danger">{{ $message }}</span> @enderror
               </div>
             </div>
@@ -263,7 +263,7 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">DL Front Image</label>
-                    <input wire:model.live="driver_dl_front" type="file" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input wire:model.live="driver_dl_front" type="file" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                 @error('driver_dl_front') <span class="text-danger">{{ $message }}</span> @enderror
 
               </div>
@@ -271,7 +271,7 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">DL Back Image</label>
-                    <input  wire:model.live="driver_dl_back"  type="file" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input  wire:model.live="driver_dl_back"  type="file" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                 @error('driver_dl_back') <span class="text-danger">{{ $message }}</span> @enderror
               </div>
             </div>
@@ -337,14 +337,14 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Ambulance Front Image</label>
-                    <input type="file" wire:model="vehicle_front_image" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input type="file" wire:model="vehicle_front_image" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                     @error('vehicle_front_image') <span class="text-danger">{{ $message }}</span> @enderror
                   </div>
             </div>
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Ambulance Back Image</label>
-                    <input type="file" wire:model="vehicle_back_image" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input type="file" wire:model="vehicle_back_image" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                  @error('vehicle_back_image') <span class="text-danger">{{ $message }}</span> @enderror
                   </div>
             </div>
@@ -363,7 +363,7 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="vehicle_rc_image">RC Image</label>
-                    <input type="file" wire:model="vehicle_rc_image" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input type="file" wire:model="vehicle_rc_image" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                     @error('vehicle_rc_image') <span class="text-danger">{{ $message }}</span> @enderror
             
                   </div>
@@ -431,7 +431,7 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Fitness Image</label>
-                    <input type="file" wire:model="vehicle_details_fitness_certi_img" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input type="file" wire:model="vehicle_details_fitness_certi_img" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                     @error('vehicle_details_fitness_certi_img') <span class="text-danger">{{ $message }}</span> @enderror
 
               </div>
@@ -447,7 +447,7 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Insurance Image</label>
-                    <input type="file" wire:model="vehicle_details_insurance_img" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input type="file" wire:model="vehicle_details_insurance_img" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                     @error('vehicle_details_insurance_img') <span class="text-danger">{{ $message }}</span> @enderror
 
               </div>
@@ -471,7 +471,7 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="exampleInputFile">Pollution Certification Image</label>
-                    <input  wire:model="vehicle_details_pollution_img" type="file" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
+                    <input  wire:model="vehicle_details_pollution_img" type="file" accept=".jpeg,.jpg,.png" class="rounded-0 form-control form-control-sm" id="exampleInputFile">
                 @error('vehicle_details_pollution_img') <span class="text-danger">{{ $message }}</span> @enderror
 
               </div>
@@ -488,7 +488,9 @@
               <button type="submit"
                        wire:loading.attr="disabled" 
                        class="mt-2 rounded-0 form-control form-control-sm btn-primary">
-                       <i wire:loading wire:target="step5Form" class="fa fa-spinner fa-spin mt-2 ml-2"></i> {{$isStep4FormSubmitted ? 'Update' : 'Submit'}}
+                       <i wire:loading wire:target="step5Form" class="fa fa-spinner fa-spin mt-2 ml-2"></i> 
+                        {{$isStep5FormSubmitted ? 'Update' : 'Submit'}} 
+
                        </button>
             </div>
           </div>

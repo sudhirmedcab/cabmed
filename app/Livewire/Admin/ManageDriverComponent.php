@@ -163,7 +163,6 @@ public function step1Form(){
             'driver_dob' => 'required',
             'driver_gender' => 'required',
             'driver_city' => 'required',
-
         ],
         [
             'create_for.required' => 'Field required',
