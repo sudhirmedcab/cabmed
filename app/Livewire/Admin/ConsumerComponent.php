@@ -9,10 +9,9 @@ use Livewire\WithPagination;
 
 class ConsumerComponent extends Component
 {
-    public $partner_id, $partner_f_name, $partner_l_name, $partner_mobile, $partner_dob ,$partner_gender,$partner_city_id,$partner_aadhar_no,$partner_referral ,$referral_referral_by,$partner_aadhar_back,$partner_aadhar_front,$partner_profile_img,$employees0,$selectedDate,$filterConditionl, 
+    public $selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
-    $toDate=null,$fromdate, $todate, $id, $name, $email,
-    $position, $employee_id, $consumer_status,$consumerVerificationStatus,$check_for,
+    $toDate=null,$fromdate, $todate, $consumer_status,$consumerVerificationStatus,$check_for,
 
     $activeTab;
     
@@ -31,6 +30,7 @@ class ConsumerComponent extends Component
           
                 $this->consumer_status=null;
                 $this->selectedDate=null;
+                $this->search ='';
             }
 
             public function filterCondition($value){
