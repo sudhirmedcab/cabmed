@@ -140,14 +140,14 @@
             @include('livewire.consumer-form')
         @endif
 
-        @if (session()->has('message') && session()->has('type') == 'delete')
+        @if (session()->has('message') || session()->has('type') == 'delete')
 
         <div class="alert alert-danger alert-dismissible" role="alert">
             <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
             <strong>{{ session('message') }}!</strong>
         </div>
 
-        @elseif (session()->has('message') && session()->has('type') == 'store')
+        @elseif (session()->has('message') || session()->has('type') == 'store')
 
         <div class="alert alert-success alert-dismissible" role="alert">
             <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
@@ -247,7 +247,7 @@
                         <td>{{$statusMapper[$consumer->consumer_status]}}</td>
                         <td class="action__btn lbtn-group">
                             <button class="btn-primary"><i class="fa fa-edit fa-sm"></i></button>
-                            <button class="btn-success"><i class="fa fa-eye fa-sm"></i></button>
+                            <button  wire:navigate href="{{route('consumer-details',['consumerId' => Crypt::encrypt($consumer->consumer_id)])}}"  class="btn-success"><i class="fa fa-eye fa-sm"></i></button>
                             @if($consumer->consumer_status == 1)
                             <button wire:confirm="Are you sure you want to delete this Consumer?" wire:click="delete({{ $consumer->consumer_id }})" class="btn-danger"><i class="fa fa-trash fa-sm"></i></button>
                             @elseif($consumer->consumer_status ==0)
