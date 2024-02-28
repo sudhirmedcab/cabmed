@@ -33,11 +33,12 @@ class VehicleComponent extends Component
     public $address = 'Lucknow';
   
     #[Layout('livewire.admin.layouts.base')] 
-
+    
   public function resetFilters(){
 
          $this->vehicle_status=null;
          $this->selectedDate=null;
+         $this->search ='';
 
             }
 
@@ -68,6 +69,9 @@ class VehicleComponent extends Component
                     $this->activeTab=$value;
                 }
                 if($value=='cityWiseBooking'){
+                    $this->activeTab=$value;
+                }
+                if($value=='addVehicle'){
                     $this->activeTab=$value;
                 }
           }
@@ -720,14 +724,17 @@ class VehicleComponent extends Component
         ->when($vehicleStatusFilter !==null && $vehicleStatusFilter == 'All', function ($query) use ($vehicleStatusFilter){
             return $query->whereIn('vehicle.vehicle_status',[1,0]);
         })
-        ->when($vehicleStatusFilter !==null && $vehicleStatusFilter == 'Active', function ($query) use ($vehicleStatusFilter){
-            return $query->where('vehicle.vehicle_status',1);
+        ->when($vehicleStatusFilter !==null && $vehicleStatusFilter == 'Inactive', function ($query) use ($vehicleStatusFilter){
+            return $query->where('vehicle.vehicle_status',2);
         })
         ->when($vehicleStatusFilter !==null && $vehicleStatusFilter == 'Partner', function ($query) use ($vehicleStatusFilter){
             return $query->where('vehicle.vehicle_added_type',1);
         })
         ->when($vehicleStatusFilter !==null && $vehicleStatusFilter == 'Driver', function ($query) use ($vehicleStatusFilter){
             return $query->where('vehicle.vehicle_added_type',0);
+        })
+        ->when($vehicleStatusFilter !==null && $vehicleStatusFilter == 'Deleted', function ($query) use ($vehicleStatusFilter){
+            return $query->where('vehicle.vehicle_status',3);
         })
           ->leftJoin('partner', 'vehicle.vehicle_added_by', '=', 'partner.partner_id')
           ->paginate(10);
@@ -764,5 +771,33 @@ class VehicleComponent extends Component
 
     }
 
+    public function deletevehicleData($id)
+    {
+        $vehicleData = DB::table('vehicle')->where('vehicle_id',$id)->first();
+        
+        $vehicleStatus = $vehicleData->vehicle_status;
 
+        if($vehicleStatus == 0){
+            $vehicleDelete = DB::table('vehicle')->where('vehicle_id',$id)->update(['vehicle_status'=>'2']);
+            session()->flash('message', 'Vehicle Deleted Successfully.');
+            session()->flash('type', 'delete');
+        }elseif($vehicleStatus == 1){
+
+            $vehicleDelete = DB::table('vehicle')->where('vehicle_id',$id)->update(['vehicle_status'=>'2']);
+            session()->flash('message', 'Vehicle Deleted Successfully.');
+            session()->flash('type', 'delete');
+        }elseif($vehicleStatus == 2){
+
+            $vehicleDelete = DB::table('vehicle')->where('vehicle_id',$id)->update(['vehicle_status'=>'1']);
+            session()->flash('message', 'Vehicle Activated Successfully.');
+            session()->flash('type', 'store');
+    }
+    elseif($vehicleStatus == 3){
+
+            $vehicleDelete = DB::table('vehicle')->where('vehicle_id',$id)->update(['vehicle_status'=>'0']);
+            session()->flash('message', 'Vehicle Restore Successfully.');
+            session()->flash('type', 'store');
+    }
+
+    }
 }
