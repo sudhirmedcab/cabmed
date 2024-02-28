@@ -127,13 +127,13 @@ class DriverDetailsBookingComponent extends Component
                 ->orderBy('driver_transection.driver_transection_id','desc')
                 ->paginate(10);
 
-                $driverDetails = DB::table('driver')
+                $driver_details = DB::table('driver')
                 ->where('driver_id',$decryptdriverId)->first();
 
                 if($this->check_for == 'custom'){
-                    return view('livewire.admin.driver-transaction-list-component',['isCustom'=>true],compact('transactionDetails','driverDetails'));
+                    return view('livewire.admin.driver-transaction-list-component',['isCustom'=>true],compact('transactionDetails','driver_details'));
                     }else {
-                       return view('livewire.admin.driver-transaction-list-component',['isCustom'=>false],compact('transactionDetails','driverDetails'));
+                       return view('livewire.admin.driver-transaction-list-component',['isCustom'=>false],compact('transactionDetails','driver_details'));
                    }            
             }
 
@@ -182,13 +182,13 @@ class DriverDetailsBookingComponent extends Component
                 ->orderBy('driver_transection.driver_transection_id','desc')
                 ->paginate(10);
 
-                $driverDetails = DB::table('driver')
+                $driver_details = DB::table('driver')
                 ->where('driver_id',$decryptdriverId)->first();
 
                 if($this->check_for == 'custom'){
-                    return view('livewire.admin.driver-location-component',['isCustom'=>true],compact('transactionDetails','driverDetails','buket_map_data'));
+                    return view('livewire.admin.driver-location-component',['isCustom'=>true],compact('transactionDetails','driver_details','buket_map_data'));
                     }else {
-                       return view('livewire.admin.driver-location-component',['isCustom'=>false],compact('transactionDetails','driverDetails','buket_map_data'));
+                       return view('livewire.admin.driver-location-component',['isCustom'=>false],compact('transactionDetails','driver_details','buket_map_data'));
                    }            
             }
 
@@ -207,13 +207,14 @@ class DriverDetailsBookingComponent extends Component
         })
          ->paginate(10);
 
-         $driverDetails = DB::table('driver')
+         $driver_details = DB::table('driver')
          ->where('driver_id',$decryptdriverId)->first();
+         
 
          if($this->check_for == 'custom'){
-         return view('livewire.admin.driver-details-booking-component',['isCustom'=>true],compact('bookingDetails','driverDetails'));
+         return view('livewire.admin.driver-details-booking-component',['isCustom'=>true],compact('bookingDetails','driver_details'));
          }else {
-            return view('livewire.admin.driver-details-booking-component',['isCustom'=>false],compact('bookingDetails','driverDetails'));
+            return view('livewire.admin.driver-details-booking-component',['isCustom'=>false],compact('bookingDetails','driver_details'));
         }
 
         }
