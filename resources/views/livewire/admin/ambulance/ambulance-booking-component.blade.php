@@ -49,9 +49,10 @@
                     <div class="form-group">
                         <label class="custom__label">Booking Status</label>
                             <select wire:model.live.debounce.150ms="selectedbookingStatus" wire:mode.live="selectedbookingStatus" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
-                            <option selected value="All">All</option>
+                            <option selected value="New">New</option>
+
+                            <option  value="All">All</option>
                             <option value="Enquiry">Enquiry</option>
-                            <option value="New">New</option>
                             <option value="Ongoing">Ongoing</option>
                             <option value="Invoice">Invoice</option>
                             <option  value="Complete">Complete</option>
