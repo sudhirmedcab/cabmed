@@ -4,7 +4,7 @@
             <li class="nav-item">
                 <a class="nav-link fs-1" href="#">Dashboard</a>
             </li>
-            <li class="nav-item {{$this->activeTab == null ? 'active':''}}">
+            <li class="nav-item {{ Request::is('booking') && ($this->activeTab == null) ? 'active':''}}">
                 <a class="nav-link fs-1 " href="/booking" wire:navigate>All</a>
             </li>
             <li class="nav-item ">
@@ -15,8 +15,8 @@
                     Scheduled
                 </a>
             </li> -->
-            <li class="nav-item {{$this->activeTab == 'driverAutosearch' ? 'active':''}}">
-                <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('driverAutosearch')">
+            <li class="nav-item {{ Request::is('driver_autosearch') || ($this->activeTab == 'driverAutosearch') ?  'active' : '' }}">
+                <a class="custom__nav__btn nav-link fs-1 " href="/driver_autosearch">
                     Auto Search
                 </a>
             </li>

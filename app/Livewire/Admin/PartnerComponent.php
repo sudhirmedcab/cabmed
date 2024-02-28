@@ -55,6 +55,7 @@ class PartnerComponent extends Component
           
                 $this->partner_status=null;
                 $this->selectedDate=null;
+                $this->search ='';
             }
 
             public function filterCondition($value){
