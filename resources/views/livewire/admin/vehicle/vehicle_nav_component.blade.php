@@ -4,8 +4,8 @@
       <li class="nav-item {{$this->activeTab == null ? 'active':''}}">
         <a class="nav-link fs-1" href="/vehicle_details" wire:navigate>Vehicle list</a>
       </li>
-      <li class="nav-item {{$this->activeTab == 'add' ? 'active':''}}">
-        <a class="nav-link fs-1" href="#" wire:navigate class="nav-link">Add</a>
+      <li class="nav-item {{$this->activeTab == 'addVehicle' ? 'active':''}}">
+        <a class="nav-link fs-1" href="{{route('add-vehicle',['vehicleId' => Crypt::encrypt(null)])}}" wire:navigate class="nav-link" wire:click="filterCondition('addVehicle')">Add</a>
       </li>
       <li class="nav-item {{$this->activeTab == 'cityCount' ? 'active':''}}">
         <a class="custom__nav__btn nav-link fs-1 " wire:click="filterCondition('cityCount')">

@@ -18,7 +18,7 @@
           <div class="col-6 col-md-5">
             <div class="form-group">
               <label class="custom__label" for="vehicle_rc_no">State</label>
-              <select wire:model.live.debounce.150ms="city_state" wire:loading.attr="disabled" wire:target="city_state" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="city_state">
+              <select wire:model.live.debounce.150ms="city_state" wire:loading.attr="disabled" wire:target="city_state" class="custom__input__field custom-select rounded-0 form-control form-control-sm select2Data" id="city_state">
                 @foreach ($stateData as $list)
                 <option @if($list->state_id === 27 ) selected @endif value="{{ $list->state_id }}">{{ $list->state_name }} (Total City: {{ $list->total_city_count }}) </option>
 
@@ -469,3 +469,15 @@
   </div>
 </div>
 </div>
+ <!-- /.card -->
+ <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('#city_state').select2();
+        $('#city_state').on('change', function (e) {
+            var data = $('#city_state').select2("val");
+            @this.set('ottPlatform', data);
+        });
+    });
+</script>
+  <!-- /.row -->

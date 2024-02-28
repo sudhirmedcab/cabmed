@@ -397,9 +397,9 @@
                     </div>
                    
                     <div class="col __col-2">
-                    <div class="form-group">
+                    <div class="form-group" wire:ignore>
                       <label class="custom__label" for="vehicle_rc_no">Choose State</label>
-                      <select wire:model.live.debounce.150ms="division_state" wire:loading.attr="disabled" wire:target="division_state" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="division_state">
+                      <select wire:model.live.debounce.150ms="division_state" wire:loading.attr="disabled" wire:target="division_state" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="select2-dropdown">
                         @foreach ($stateData as $list)
                         <option @selected(($list->state_id ) == 27) value="{{ $list->state_id }}">{{ $list->state_name }} (Total City: {{ $list->total_city_count }}) </option>
 
@@ -491,3 +491,15 @@
   </div>
 </div>
 </div>
+
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        $('#select2-dropdown').select2();
+        $('#select2-dropdown').on('change', function (e) {
+            var data = $('#select2-dropdown').select2("val");
+            @this.set('ottPlatform', data);
+        });
+    });
+</script>
+@endpush

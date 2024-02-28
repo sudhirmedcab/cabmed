@@ -46,6 +46,8 @@
                                 <option value="All">All</option>
                                 <option value="Active">Active</option>
                                 <option value="New">New</option>
+                                <option value="Deleted">Deleted</option>
+                                <option value="Inactive">Inactive</option>
                                 <option value="Partner">By Partner</option>
                                 <option value="Driver"> By Driver</option>
                             </select>
@@ -102,17 +104,30 @@
                         </td>
                         <td>{{ $key['vehicle']->vehicle_rc_number }}</td>
                         <td>{{ $key['vehicle']->ambulance_category_name }} ({{ $key['vehicle']->vehicle_category_type }})</td>
-                        <td> @if(!empty($key['vehicle']->vehicle_status==1))Active @elseif($key['vehicle']->vehicle_status==0) New @elseif($key['vehicle']->vehicle_status=='4') Applied @else @endif</td>
+                        <td> @if(!empty($key['vehicle']->vehicle_status==1))Active @elseif($key['vehicle']->vehicle_status==0) New @elseif($key['vehicle']->vehicle_status=='4') Applied @elseif($key['vehicle']->vehicle_status==2) Inactive @else @endif</td>
                         <td>@if (!empty($key['active_drivers'][0]))
 						{{ $key['active_drivers'][0]->driver_name }} {{ $key['active_drivers'][0]->driver_last_name }} ({{ $key['active_drivers'][0]->driver_id }}) @else Not Assigned @endif</td>
-                         <td> @if (!empty($key['active_drivers'][0])) {{ $key['active_drivers'][0]->driver_mobile }} @else @endif</td>
+                         <td> @if (!empty($key['active_drivers'][0])) {{ $key['active_drivers'][0]->driver_mobile }} @else N/A @endif</td>
                         <td>
                         @if($key['vehicle']->remark_id) {{$key['vehicle']->remark_text}} @else N/A @endif
                         </td>
                       
                         <td class="action__btn lbtn-group">
-                            <button wire:click="#" class="btn-primary"><i class="fa fa-edit fa-sm"></i></button>
-                            <button wire:confirm="Are you sure you want to delete this post?" wire:click="#" class="btn-danger"><i class="fa fa-trash fa-sm"></i></button>
+                            @if($key['vehicle']->vehicle_added_type == 1)
+                            <button  wire:navigate href="{{route('add-vehicle',['vehicleId' => Crypt::encrypt($key['vehicle']->vehicle_id)])}}" target="_blank" class="btn-primary"><i class="fa fa-edit fa-sm"></i></button>
+                            @endif
+                            @if($key['vehicle']->vehicle_added_type == 0)
+                            <button  wire:navigate href="{{route('driver.edit',['id' => $key['vehicle']->vehicle_added_by])}}" target="_blank" class="btn-primary"><i class="fa fa-edit fa-sm"></i></button>
+                            @endif
+                            @if($key['vehicle']->vehicle_status==1)
+                            <button wire:confirm="Are you sure you want to delete this Vehicle Data?" wire:click="deletevehicleData({{ $key['vehicle']->vehicle_id  }})" class="btn-danger"><i class="fa fa-trash"></i></button>
+                            @elseif($key['vehicle']->vehicle_status==0)
+                            <button wire:confirm="Are you sure you want to delete this Vehicle Data?"wire:click="deletevehicleData({{ $key['vehicle']->vehicle_id  }})" class="btn-danger"><i class="fa fa-trash"></i></button>
+                            @elseif($key['vehicle']->vehicle_status==2)
+                            <button wire:confirm="Are you sure you want to Active this Vehicle Data?" wire:click="deletevehicleData({{ $key['vehicle']->vehicle_id  }})" class="btn-primary"><i class="fa fa-check"></i></button>
+                            @elseif($key['vehicle']->vehicle_status==3)
+                            <button wire:confirm="Are you sure you want to Restore this Vehicle Data?" wire:click="deletevehicleData({{ $key['vehicle']->vehicle_id  }})" class="btn-primary"><i class="fa fa-check"></i></button>
+                            @endif
                         </td>
                     </tr>
                     @php
@@ -152,3 +167,16 @@
     </div>
 </div>
 </div>
+
+  <!-- /.card -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('.select2-dropdown').select2();
+        $('.select2-dropdown').on('change', function (e) {
+            var data = $('.select2-dropdown').select2("val");
+            @this.set('ottPlatform', data);
+        });
+    });
+</script>
+  <!-- /.row -->
