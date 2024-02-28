@@ -114,13 +114,7 @@
            
               </div>
             </div>
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-              <div class="form-group">
-                <label for="vehicle_rc_no">Vehicle RC No.</label>
-                <input wire:model="vehicle_rc_no" type="text"  {{ $isPartner ? 'disabled' : '' }} oninput="this.value = this.value.toUpperCase()" @if($isStep1FormSubmitted) disabled @endif class="rounded-0 form-control form-control-sm" id="vehicle_rc_no" placeholder="Enter Vehicle RC No.">
-                @error('vehicle_rc_no') <span class="text-danger">{{ $message }}</span> @enderror
-              </div>
-            </div>
+          
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
               <div class="form-group">
                 <label for="driver_profile_image">Profile Image</label>

@@ -158,7 +158,7 @@ public function step1Form(){
                 'numeric',
                 'digits:10',
             ],
-            'vehicle_rc_no' => $this->create_for == 0 ? 'required' : 'nullable',
+            // 'vehicle_rc_no' => $this->create_for == 0 ? 'required' : 'nullable',
             'partner_id' => $this->create_for == 1 ? 'required' : 'nullable',
             'driver_dob' => 'required',
             'driver_gender' => 'required',
@@ -213,7 +213,7 @@ public function step1Form(){
                 if($this->create_for == 0){
                     $vehicle_id = DB::table('vehicle')->insertGetId(['vehicle_added_type' => $this->create_for, 
                                                     'vehicle_added_by' => $insertedId,
-                                                    'vehicle_rc_number' => $this->vehicle_rc_no,
+                                                    // 'vehicle_rc_number' => $this->vehicle_rc_no,
                                                     'created_at' => Carbon::now(),
                                                     'updated_at' => Carbon::now()]);
                     $this->vehicle_id = $vehicle_id;
