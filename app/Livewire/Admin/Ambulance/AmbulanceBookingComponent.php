@@ -65,8 +65,6 @@ class AmbulanceBookingComponent extends Component
             $this->activeTab=$value;
         }elseif($value=='driverAutosearch'){
             $this->activeTab=$value;
-        }elseif($value=='') {
-            
         }
        
 }
@@ -258,8 +256,7 @@ class AmbulanceBookingComponent extends Component
             ]);
 
 
-        }elseif($this->activeTab =='driverAutosearch') {
-            dd("driverAutosearch");
+       
         }elseif($this->activeTab =='DriverEmergency') {
 
         $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
