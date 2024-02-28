@@ -143,31 +143,7 @@
     </div>
 
       <!-- /.card -->
-      @asset 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-      @endasset
-      @script
-      <script>
-        $("#submitRemark").click(function(e) {
-            alert("Please enter");
-            e.preventDefault();
-            $.ajax({
-                type: "POST",
-                url: "/save/ConsumerEmergency",
-                data: { 
-                    id: $('#remarkTest').val(), // < note use of 'this' here
-                    access_token: $("#access_token").val() 
-                },
-                success: function(result) {
-                    alert('ok');
-                },
-                error: function(result) {
-                    alert('error');
-                }
-            });
-        });
-      </script>
-      @endscript
+   
 
     @endif 
 
