@@ -46,7 +46,6 @@
                         <th>Division</th>
                         <th>State</th>
                         <th>Total Hospital</th>
-                        <th>Action</th>
                     </tr>  
 
                     @php
@@ -58,14 +57,7 @@
                         <td class="table-plus"><?php echo $srno; ?></td>
                         <td>{{$list->division_name}}</td>
                         <td>{{$list->state_name}}</td>
-                        <td>{{$list->hospital_count}} </td>
-            
-                    <td class="action__btn lbtn-group">
-                        <button class="btn-primary"><i class="fa fa-edit"></i></button>
-                            <button class="btn-success"><i class="fa fa-eye"></i></button>
-                            <!-- <button wire:confirm="Are you sure you want to delete this Booking?" wire:click="#" class="btn-danger"><i class="fa fa-trash"></i></button> -->
-                        </td>
-                        
+                        <td>{{$list->hospital_count}} </td>     
                        </tr>
                              @php
                                 $srno++
@@ -81,7 +73,7 @@
         </div>
 
         <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,filterCondition,Offduty">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
@@ -150,7 +142,6 @@
                         <th>City</th>
                         <th>State</th>
                         <th>Total Hospital</th>
-                        <th>Action</th>
                     </tr>  
 
                     @php
@@ -162,15 +153,8 @@
                         <td class="table-plus"><?php echo $srno; ?></td>
                         <td>{{$list->city_name}}</td>
                         <td>{{$list->state_name}}</td>
-                        <td>{{$list->hospital_count}} </td>
-            
-                    <td class="action__btn lbtn-group">
-                        <button class="btn-primary"><i class="fa fa-edit"></i></button>
-                            <button class="btn-success"><i class="fa fa-eye"></i></button>
-                            <!-- <button wire:confirm="Are you sure you want to delete this Booking?" wire:click="#" class="btn-danger"><i class="fa fa-trash"></i></button> -->
-                        </td>
-                        
-                       </tr>
+                        <td>{{$list->hospital_count}} </td>    
+                    </tr>
                              @php
                                 $srno++
                                 @endphp
@@ -185,7 +169,7 @@
         </div>
 
         <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,filterCondition,Offduty">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
@@ -249,8 +233,6 @@
             <div wire:loading.remove wire:target="filterCondition" class="card-body p-2 overflow-auto">
                 <table class="table custom__table table-bordered table-sm ">
                  
-
-                  
                 </table>
                 <!-- <span wire:loadingf wire:target="filterCondition">Loading...</span> -->
                 <div class="custom__pagination mt-2 text-right pt-1 card-footer__ clearfix">
@@ -259,7 +241,7 @@
         </div>
 
         <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,filterCondition,Offduty">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">

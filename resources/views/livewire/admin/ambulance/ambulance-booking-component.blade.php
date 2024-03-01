@@ -203,7 +203,7 @@
 
         </div>
         <div class="container">
-            <div class="row" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+        <div class="row" wire:loading wire:target="selectedDate,fromDate,toDate,selectedbookingStatus,selectedBookingType,search" wire:key="selectedDate,fromDate,toDate,selectedbookingStatus,selectedBookingType,search">                <div class="col">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
@@ -221,6 +221,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
     @endif 
@@ -373,8 +374,7 @@
             </div>
 
         </div>
-        <div class="container">
-            <div class="row" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+        <div class="row" wire:loading wire:target="selectedDate,fromDate,toDate,selectedbookingStatus,selectedBookingType,search" wire:key="selectedDate,fromDate,toDate,selectedbookingStatus,selectedBookingType,search">                <div class="col">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
