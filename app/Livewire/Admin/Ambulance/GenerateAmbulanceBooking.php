@@ -126,7 +126,8 @@ public function updated(){
        
 
             $generateBookingStep2FormData = [
-                            'booking_source' => $validatedData['booking_source'],
+                            'booking_generate_source' => $validatedData['booking_source'],
+                            'booking_source' => 'Medcab Admin or Telecaller',
                             'booking_pickup' => $this->pickup__address['formatted_address'],
                             'booking_drop' => $this->drop__address['formatted_address'],
                             'booking_pick_lat' => $this->p_latitude,
@@ -288,7 +289,7 @@ public function updated(){
                                 }else{
                                 $bookingId = DB::table('booking_view')->insertGetId($generateBookingStep2FormData);
                                 $this->booking_id = $bookingId;
-                                $remarkId = DB::table('remark_data')->insertGetId(['remark_booking_id'=> $bookingId, 'remark_text' => $this->support_remark,'created_at' => Carbon::now(),'updated_at' => Carbon::now(),'remark_add_unix_time'=>Carbon::now()->timestamp]);
+                                $remarkId = DB::table('remark_data')->insertGetId(['remark_booking_id'=> $bookingId, 'remark_type'=> auth('admin')->id(),'remark_text' => $this->support_remark,'created_at' => Carbon::now(),'updated_at' => Carbon::now(),'remark_add_unix_time'=>Carbon::now()->timestamp]);
                                 session()->flash('message', 'generateBookingStep2 bookinfo form inserted successfully  !!');
                             }
                                 DB::commit();
@@ -375,7 +376,7 @@ public function updated(){
             'booking_category' => $validatedData['selectedRow']['category_type'],
             'booking_view_category_name' => $validatedData['selectedRow']['category_name'],
             'booking_view_category_icon' => $validatedData['selectedRow']['category_icon'],
-            
+            'booking_view_otp' => rand(0, 9999),
             'booking_status' => $validatedData['select_booking_status'],
             'booking_payment_method' => $validatedData['booking_payment_method'],
             'booking_type' => '0'
