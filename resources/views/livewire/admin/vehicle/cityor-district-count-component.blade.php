@@ -94,7 +94,7 @@
       </div>
     </div>
     <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,city_state,filterCondition" wire:key="selectedDate,city_state,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
@@ -207,7 +207,7 @@
       </div>
     </div>
     <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,district_state,filterCondition" wire:key="selectedDate,district_state,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
@@ -443,7 +443,7 @@
       </div>
     </div>
     <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,bookingState,filterCondition" wire:key="selectedDate,bookingState,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">

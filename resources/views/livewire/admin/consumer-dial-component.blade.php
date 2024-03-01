@@ -299,7 +299,7 @@
         </div>
 
         <div class="container">
-            <div class="row" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row" wire:loading wire:target="selectedDate,dialrecordFiter,filterCondition" wire:key="selectedDate,dialrecordFiter,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">

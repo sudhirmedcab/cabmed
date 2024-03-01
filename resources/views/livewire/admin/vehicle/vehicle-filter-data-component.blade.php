@@ -88,7 +88,7 @@
       </div>
     </div>
     <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,districtWise_state,filterCondition" wire:key="selectedDate,districtWise_state,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
@@ -191,7 +191,7 @@
       </div>
     </div>
     <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,division_state,filterCondition" wire:key="selectedDate,division_state,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
@@ -325,7 +325,7 @@
                         {!! $selfdriverData->links() !!}
                         </div>
                     <div class="container h-100 w-100">
-                <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+                <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,filterCondition,vehicleCreated,division_state" wire:key="selectedDate,division_state,vehicleCreated,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
@@ -464,7 +464,7 @@
         </div>
 
         <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,division_state,filterCondition" wire:key="selectedDate,division_state,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">

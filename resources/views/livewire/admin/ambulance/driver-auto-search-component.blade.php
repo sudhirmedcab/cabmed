@@ -20,142 +20,132 @@
       </div>
       <!-- /.card-header -->
       @if (session()->has('message'))
-            <div class="alert alert-success">{{ session('message') }}</div>
-        @endif
-      <div class="card-body py-1 pb-">
-        <form wire:submit.prevent="generateBookingStep1Form" class="mb-5">
-          <div class="row ">
-           
-            <div class="col-6 col-sm-4 col-md-12">
-              <div class="form-group d-flex w-100 justify-content-between align-items-center">
-                <div class="col-2"><label for="driver_mobile w-25">Enter Your Address</label></div>
-                <div class="col-10 mt-2">
-                  <input wire:model="customer_mobile" type="text" class="rounded-0 form-control form-control-sm" id="driver_mobile" placeholder="Enter Your Search Location...........">
-                  @error('customer_mobile') <span class="text-danger">{{ $message }}</span> @enderror
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-md-12 mt-3">
-              <div class="form-group d-flex align-items-center w-100">
-                <div class="col-2">
-                <label for="name">Select Duty Status</label>
-                </div>
+      <div class="alert alert-success alert-dismissible" role="alert">
+        <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
+        <strong>{{ session('message') }}!</strong>
+       </div>
+            @endif
 
-                    <div class="col-10 mt-2">
-                      <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="onDuty" value="ON">
-                      <label class="form-check-label mt-1" for="onDuty">On Duty Driver</label>
-                        </div>
-                      <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="offDuty" value="OFF">
-                      <label class="form-check-label mt-1" for="offDuty">OFF Duty Driver</label>
-                        </div>
-                      <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="AllDuty" value="All">
-                      <label class="form-check-label mt-1" for="AllDuty">All Driver </label>
-                                        </div>
+            <div class="card ">
+        <div class="card-header custom__filter__select ">
+          <form wire:submit.prevent="autoSearchBookingStep1Form" class="mb-5">
+            <div class="row">
+                <div class="col-6 col-sm-auto col-md-4">
+                    <div class="form-group">
+                        <label class="custom__label" for="fromDate">Enter Address </label>
+                        <input wire:model="pickup_address" autocomplete type="text" class="custom__input__field rounded-0 form-control form-control-sm" id="pickup_address" placeholder="Enter the Pick Up Address">
+                        <input type="hidden" wire:model="pickup__address" id="p_latitude" wire:ignore>
+                        <input type="hidden" wire:model="p_latitude" id="p_latitude" wire:ignore>
+                        <input type="hidden" wire:model="p_longitude" id="p_longitude" wire:ignore>
+                     @error('pickup__address') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                @error('customer_name') <span class="text-danger">{{ $message }}</span> @enderror
-              </div>
-            </div>
-            <div class="col-6 col-sm-4 col-md-12 pl-3 mt-3">
-              <div class="form-group row align-items-start">
-                    <div class="col-2"><label for="name">Select Category Name</label></div>
-                    <div class="col-10 d-flex flex-column">
-                      <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="onDuty" value="ON">
-                      <label class="form-check-label" for="onDuty">On Duty Driver</label>
-                        </div>
-                      <div class="form-check form-check-inline ">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="offDuty" value="OFF">
-                      <label class="form-check-label" for="offDuty">OFF Duty Driver</label>
-                        </div>
-                      <div class="form-check form-check-inline ">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="AllDuty" value="All">
-                      <label class="form-check-label" for="AllDuty">All Driver </label>
-                                        </div>
-                      <div class="form-check form-check-inline ">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="onDuty" value="ON">
-                      <label class="form-check-label" for="onDuty">On Duty Driver</label>
-                        </div>
-                        <div class="form-check form-check-inline ">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="offDuty" value="OFF">
-                      <label class="form-check-label" for="offDuty">OFF Duty Driver</label>
-                        </div>
-                        <div class="form-check form-check-inline ">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="AllDuty" value="All">
-                      <label class="form-check-label" for="AllDuty">All Driver </label>
-                                        </div>
-                                        <div class="form-check form-check-inline ">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="onDuty" value="ON">
-                      <label class="form-check-label" for="onDuty">On Duty Driver</label>
-                        </div>
-                        <div class="form-check form-check-inline ">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="offDuty" value="OFF">
-                      <label class="form-check-label" for="offDuty">OFF Duty Driver</label>
-                        </div>
-                        <div class="form-check form-check-inline ">
-                      <input class="form-check-input" type="radio" name="driver_duty_status" id="AllDuty" value="All">
-                      <label class="form-check-label" for="AllDuty">All Driver </label>
-                                        </div>
+                </div>
+                <div class="col-6 col-sm-auto col-md-2">
+                    <div class="form-group">
+                        <label class="custom__label">Select Duty</label>
+                        <select  wire:model="driver_duty_status"  class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="driver_duty_status">
+                            <option  value="">Choose Driver</option>
+                            <option selected value="All">All Driver</option>
+                            <option value="ON">ON Duty Driver</option>
+                            <option value="OFF">OFF Duty Driver</option>
+                        </select>
+                        @error('driver_duty_status') <span class="text-danger">{{ $message }}</span> @enderror
+                     </div>
+                </div>
+                <div class="col-6 col-sm-auto col-md-2">
+                    <div class="form-group">
+                        <label class="custom__label">Select Category Name</label>
+                        <select  wire:model="ambulance_category_id"  class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+                           <option  value="">Choose Category</option>
+                           <option  value="All">All Category</option>
+                          @foreach ($ambulanceCategory as $category)
+                              <option  value="{{$category->ambulance_category_id}}">{{$category->ambulance_category_name}}</option>
+                        @endforeach
+                        </select>
+                        @error('ambulance_category_id') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                @error('customer_name') <span class="text-danger">{{ $message }}</span> @enderror
-              </div>
-           
-            </div>
-            <div class="col-6 col-sm-auto col-md-12 ">
-                <div class="row">
-                  <div class="col-2">
-                    <label for="name">Select Vehicle name</label>
-                  </div>
-                      <div class="form-group col-6 mt-2">
-                          <select wire:model.live.debounce.150ms="selectedDate" wire:model="check_for" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
-                              <option selected value="all">All</option>
-                              <option value="today">Today</option>
-                              <option value="yesterday">Yesterday</option>
-                              <option value="thisWeek">This Week</option>
-                              <option value="custom">Custom Date</option>
-                              <option value="thisMonth">This Month</option>
-                          </select>
-                      </div>
-                      <div class="col-6 col-sm-4 mt-2">
-                        <div class="form-group w-50 ml-auto">
+                </div>
+                <div class="col-6 col-sm-auto col-md-2">
+                    <div class="form-group">
+                        <label class="custom__label">Select Vehicle name</label>
+                            <select wire:model="vehicleId" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="vehicleId">
+                               <option  value="">Choose Vehicle Name</option>
+                              @foreach ($ambulanceVehicle as $vehicle)
+                              <option  value="{{$vehicle->ambulance_category_vehicle_id }}">{{$vehicle->ambulance_category_vehicle_name}}</option>
+                              @endforeach
+                        </select>
+                        @error('vehicleId') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+              
+                <div class="col-6 col-sm-auto col-md-2" style="margin-top: 20px;">
                         <button type="submit"
                                  wire:loading.attr="disabled" 
                                  class="rounded-0 form-control form-control-sm btn-primary">
-                                 <i wire:loading wire:target="step1Form" class="fa fa-spinner fa-spin mt-2 ml-2"></i> Submit
+                                 <i wire:loading wire:target="autoSearchBookingStep1Form" class="fa fa-spinner fa-spin mt-2 ml-2"></i> Submit
                         </button>    
-                        </div>
-                      </div>
-                    </div>
                 </div>
-          </div>
-        </form>
+            </div>
+            </form>
+            </div>
+            </div>
+
+
             <div wire:loading.remove wire:target="filterCondition" class="card-body p-2 overflow-auto">
                 <table class="table custom__table table-bordered table-sm ">
                 <tr>
                         <th>Sr.</th>
                         <th>Id</th>
-                        <th>Added</th>
-                        <th>Consumer</th>
-                        <th>Category</th>
-                        <th>Source</th>
-                        <th>Pickup</th>
-                        <th>Drop</th>
-                        <th>Driver</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Distance</th>
+                        <th>Update Time</th>
                         <th>Status</th>
-                        <th>Remark</th>
+                        <th>Vehicle</th>
+                        <th>Category</th>
+                        <th>Vehicle Name</th>
                         <th>Action</th>
                     </tr>
+                    @php
+                    $srno = 1;
+
+                    $statusMapper['0'] = "New";
+                    $statusMapper['1'] = "Active";
+                    $statusMapper['2'] = "Inactive";
+                 
+                    @endphp
+
+                    @if(!empty($this->driverDetails))
+
+                    @foreach ($this->driverDetails as $list)
+
+                    <tr>
+                        <td>{{ $srno }}</td>
+                        <td>{{$list->driver_id }}</td>
+                        <td>{{$list->driver_name}}</td>
+                        <td>{{$list->driver_mobile}}</td>
+                        <td>{{number_format($list->distance, 2, '.', ',')}}.Km</td>
+                        <td>{{$list->last_updated_diff_formatted}}</td>
+                        <td>{{$statusMapper[$list->driver_status]}}</td>
+                        <td>{{$list->vehicle_rc_number}}</td>
+                        <td>{{$list->ambulance_category_name}}</td>
+                        <td>{{$list->v_vehicle_name}}</td>
+                        <td> <button  wire:navigate href="{{route('admin.driver-details-component',['driverId' => Crypt::encrypt($list->driver_id)])}}" class="btn-success"><i class="fa fa-eye" style="width:50px;"></i></button></td>
+                       
+                    </tr>
+                    @php
+                    $srno++
+                    @endphp
+                    @endforeach
+                    @endif
               
                 </table>
                 <div class="custom__pagination mt-2 text-right pt-1 card-footer__ clearfix">
-                </div>
             </div>
 
         </div>
         <div class="container">
-            <div class="row" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row" wire:loading wire:target="ambulance_category_id,driver_duty_status,filterCondition,vehicleId" wire:key="ambulance_category_id,driver_duty_status,filterCondition,vehicleId">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">
@@ -174,6 +164,25 @@
                 </div>
             </div>
         </div>
+        @php $googleMap = DB::table('aa_setting')->where('a_setting_id','9')->first();
+        @endphp
+        <script type="text/javascript"
+        src="https://maps.google.com/maps/api/js?key={{$googleMap->a_setting_value}}&libraries=places" ></script>
+    <script>
+        window.addEventListener('load', initialize)
+  
+        function initialize() {
+          var pickup_address = new google.maps.places.Autocomplete(document.getElementById('pickup_address'));
+            pickup_address.addListener('place_changed', function () {
+            var pickup_place = pickup_address.getPlace();
+            @this.set('pickup__address', pickup_place);
+            @this.set('p_latitude', pickup_place.geometry.location.lat());
+            @this.set('p_longitude', pickup_place.geometry.location.lng());
+            });
+
+        }
+    </script>
+
     </div>
     </div>
     </div>

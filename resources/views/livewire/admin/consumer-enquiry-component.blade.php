@@ -302,7 +302,7 @@
         </div>
 
         <div class="container">
-            <div class="row" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row" wire:loading wire:target="selectedDate,mainServiceFiter,filterCondition" wire:key="selectedDate,mainServiceFiter,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">

@@ -144,7 +144,7 @@
         </div>
 
         <div class="container h-100 w-100">
-            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row w-100 h-100 align-items-center justify-content-center" wire:loading wire:target="selectedDate,vehicleStatusFilter,filterCondition" wire:key="selectedDate,vehicleStatusFilter,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">

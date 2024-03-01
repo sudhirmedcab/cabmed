@@ -13,7 +13,7 @@ class DriverAutoSearchComponent extends Component
     public $selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$checkbookingEmergency,$check_for,$selectedbookingStatus,$selectedBookingType,
-    $activeTab;
+    $activeTab,$driver_duty_status,$ambulance_category_id,$vehicleId,$p_latitude,$p_longitude,$pickup_address,$pickup__address,$driverData;
 
     public $isOpen = 0;
     use WithPagination;
@@ -337,6 +337,89 @@ class DriverAutoSearchComponent extends Component
 
 }
 
-        return view('livewire.admin.ambulance.driver-auto-search-component');
+        $ambulanceCategory = DB::table('ambulance_category')->where('ambulance_category_status',0)->get();
+
+        $ambulanceVehicle = DB::table('ambulance_category_vehicle')->where('ambulance_category_vehicle_status',0)->get();
+
+        return view('livewire.admin.ambulance.driver-auto-search-component',compact('ambulanceCategory','ambulanceVehicle'));
     }
-}
+
+    public function autoSearchBookingStep1Form(){
+        
+        $validatedData = $this->validate([
+            'pickup__address' => 'required', // Changed from 'pickup__address' to 'pickup_address'
+            'driver_duty_status' => 'required',
+            'ambulance_category_id' => 'required',
+            'vehicleId' => 'required',
+        ],[
+            'driver_duty_status.required' => 'Please Choose The Driver Duty Status',
+            'pickup__address.required' => 'Pickup address required', // Changed from 'pickup__address.required'
+            'ambulance_category_id.required' => 'Ambulance Category is required',
+            'vehicleId.required' => 'Please Choose The Vehicle Name required',
+        ]);
+        
+         try{
+
+            $pickup__address =  $this->pickup__address['formatted_address'];
+            $latitude = $this->p_latitude;
+            $longitude = $this->p_longitude;
+            $dutyStatus = $validatedData['driver_duty_status'];
+            $categoryId= $validatedData['ambulance_category_id'];
+            $vehicleCategories = $validatedData['vehicleId'];
+        
+            // Perform the database query
+            $driverData = DB::table('driver')
+                ->leftJoin('driver_live_location', 'driver.driver_id', '=', 'driver_live_location.driver_live_location_d_id')
+                ->leftJoin('vehicle', 'vehicle.vehicle_id', '=', 'driver.driver_assigned_vehicle_id')
+                ->leftJoin('ambulance_category', 'ambulance_category.ambulance_category_type', '=', 'vehicle.vehicle_category_type')
+                ->selectRaw('vehicle.*, driver_live_location.*, ambulance_category.*, driver.*, 
+                    (6371 * 2 * ASIN(SQRT(POWER(SIN((? - driver_live_location_lat) * pi()/180 / 2), 2) + COS(? * pi()/180) * COS(driver_live_location_lat * pi()/180) * POWER(SIN((? - driver_live_location_long) * pi()/180 / 2), 2) ))) as distance,
+                    ROUND((UNIX_TIMESTAMP()-driver_live_location.driver_live_location_updated_time) / 60, 0) as last_updated_diff,
+                    ROUND((UNIX_TIMESTAMP()-driver.driver_last_booking_notified_time) / 60, 0) as last_booking', 
+                    [$latitude, $latitude, $longitude])
+                    ->where('driver.driver_on_booking_status', 0)
+                    ->when($dutyStatus !== 'All', function ($query) use ($dutyStatus) {
+                        return $query->where('driver.driver_duty_status', $dutyStatus);
+                    })
+                    ->when($categoryId !== 'All', function ($query) use ($categoryId) {
+                        return $query->where('ambulance_category.ambulance_category_id', $categoryId);
+                    })
+                    ->when($vehicleCategories !== null, function ($query) use ($vehicleCategories) {
+                        return $query->where('vehicle.v_vehicle_name_id', $vehicleCategories);
+                    })
+                    ->having('distance', '<=', 400)
+                    ->having('last_booking', '>=', 0.500)
+                    ->orderBy('last_updated_diff')
+                    ->orderBy('distance')
+                    ->get();
+            
+            // Format and modify driver data
+            if ($driverData === null || $driverData->isEmpty()) {
+                // Handle the case where no data is found
+                session()->flash('message', 'No drivers found.');
+                // Redirect or return a response as appropriate
+                return redirect()->back();
+            }
+
+            foreach ($driverData as $driver) {
+                $lastUpdatedDiffFormatted = Carbon::now()->subMinutes($driver->last_updated_diff)->diffForHumans();
+                $driver->last_updated_diff_formatted = $lastUpdatedDiffFormatted;
+            }
+        
+            // Format and modify driver data
+            $this->driverDetails = $driverData->toArray();
+                    
+        } catch (Exception $e) {
+            // Log or handle the exception appropriately
+            Log::error('Error occurred: ' . $e->getMessage());
+            session()->flash('message', 'Something went wrong!! Please try again later.');
+            return redirect()->back(); // or redirect to some error page
+        }
+
+        }
+
+
+    }
+
+
+
