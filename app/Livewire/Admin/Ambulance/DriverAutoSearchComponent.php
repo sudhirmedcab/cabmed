@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Carbon\Carbon;
 use Livewire\WithPagination;
+use App\Models\AmbulanceCategory;
+use App\Models\AmbulanceVehicleCategory;
 use Illuminate\Validation\Rule;
 use Livewire\WithFileUploads;
 
@@ -13,7 +15,7 @@ class DriverAutoSearchComponent extends Component
     public $selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$checkbookingEmergency,$check_for,$selectedbookingStatus,$selectedBookingType,
-    $activeTab,$driver_duty_status,$ambulance_category_id,$vehicleId,$p_latitude,$p_longitude,$pickup_address,$pickup__address,$driverData;
+    $activeTab,$driver_duty_status,$ambulance_category_type,$vehicleId,$p_latitude,$p_longitude,$pickup_address,$pickup__address,$driverData,$executiveId;
 
     public $isOpen = 0;
     use WithPagination;
@@ -24,11 +26,13 @@ class DriverAutoSearchComponent extends Component
     public $search = '';
     public $sortBy = 'name';
     public $sortDirection = 'asc';
-    public $partner_filter = '';
- 
+
+    public $ambulanceCategory;
+    public $ambulanceVehicle;
+    public $SelecetdCategory = NULL;
+   
     #[Layout('livewire.admin.layouts.base')]    //......... add the layout dynamically for the all ...........//
     
-
     public function resetFilters(){
           
         $this->consumer_status=null;
@@ -56,11 +60,18 @@ class DriverAutoSearchComponent extends Component
             $this->activeTab=$value;
         }elseif($value=='driverAutosearch'){
             $this->activeTab=$value;
-        }elseif($value=='') {
-            
+        }elseif($value=='bookingDashboard'){
+            $this->activeTab=$value;
         }
        
 }
+
+public function mount()
+{    
+    $this->ambulanceCategory = AmbulanceCategory::where('ambulance_category_status',0)->get();
+    $this->ambulanceVehicle = collect();
+}
+
     public function render()
     {
         if($this->activeTab =='ConsumerEmergency'){
@@ -302,7 +313,6 @@ class DriverAutoSearchComponent extends Component
     ->orderByDesc('driver_emergency.driver_emergency_id')
     ->paginate(10);
 
-    // dd($driver_list);
     $buket_map_data = [];
 
     foreach($driver_list as $location_data){
@@ -335,27 +345,24 @@ class DriverAutoSearchComponent extends Component
         'isCustom' => false
     ],compact('buket_map_data', 'driver_list'));
 
-}
-
-        $ambulanceCategory = DB::table('ambulance_category')->where('ambulance_category_status',0)->get();
-
-        $ambulanceVehicle = DB::table('ambulance_category_vehicle')->where('ambulance_category_vehicle_status',0)->get();
-
-        return view('livewire.admin.ambulance.driver-auto-search-component',compact('ambulanceCategory','ambulanceVehicle'));
     }
+
+        return view('livewire.admin.ambulance.driver-auto-search-component');
+    }
+
+    public function updatedSelecetdCategory($category)
+   {   
+     if(!is_null($category)) {
+        $this->ambulanceVehicle = AmbulanceVehicleCategory::where('ambulance_category_vehicle_cat_type',$category)->get();
+     }
+   }
 
     public function autoSearchBookingStep1Form(){
         
         $validatedData = $this->validate([
-            'pickup__address' => 'required', // Changed from 'pickup__address' to 'pickup_address'
-            'driver_duty_status' => 'required',
-            'ambulance_category_id' => 'required',
-            'vehicleId' => 'required',
+            'pickup__address' => 'required', 
         ],[
-            'driver_duty_status.required' => 'Please Choose The Driver Duty Status',
-            'pickup__address.required' => 'Pickup address required', // Changed from 'pickup__address.required'
-            'ambulance_category_id.required' => 'Ambulance Category is required',
-            'vehicleId.required' => 'Please Choose The Vehicle Name required',
+            'pickup__address.required' => 'Pickup address required',
         ]);
         
          try{
@@ -363,10 +370,9 @@ class DriverAutoSearchComponent extends Component
             $pickup__address =  $this->pickup__address['formatted_address'];
             $latitude = $this->p_latitude;
             $longitude = $this->p_longitude;
-            $dutyStatus = $validatedData['driver_duty_status'];
-            $categoryId= $validatedData['ambulance_category_id'];
-            $vehicleCategories = $validatedData['vehicleId'];
-        
+            $dutyStatus = $this->driver_duty_status ? $this->driver_duty_status : NULL;
+            $categoryId = $this->SelecetdCategory ? $this->SelecetdCategory : NULL;
+            $vehicleCategories = $this->vehicleId ? $this->vehicleId : NULL;
             // Perform the database query
             $driverData = DB::table('driver')
                 ->leftJoin('driver_live_location', 'driver.driver_id', '=', 'driver_live_location.driver_live_location_d_id')
@@ -378,13 +384,13 @@ class DriverAutoSearchComponent extends Component
                     ROUND((UNIX_TIMESTAMP()-driver.driver_last_booking_notified_time) / 60, 0) as last_booking', 
                     [$latitude, $latitude, $longitude])
                     ->where('driver.driver_on_booking_status', 0)
-                    ->when($dutyStatus !== 'All', function ($query) use ($dutyStatus) {
+                    ->when($dutyStatus != NULL, function ($query) use ($dutyStatus) {
                         return $query->where('driver.driver_duty_status', $dutyStatus);
                     })
-                    ->when($categoryId !== 'All', function ($query) use ($categoryId) {
-                        return $query->where('ambulance_category.ambulance_category_id', $categoryId);
+                    ->when($categoryId != NULL, function ($query) use ($categoryId) {
+                        return $query->where('vehicle.vehicle_category_type', $categoryId);
                     })
-                    ->when($vehicleCategories !== null, function ($query) use ($vehicleCategories) {
+                    ->when($vehicleCategories != NULL, function ($query) use ($vehicleCategories) {
                         return $query->where('vehicle.v_vehicle_name_id', $vehicleCategories);
                     })
                     ->having('distance', '<=', 400)
