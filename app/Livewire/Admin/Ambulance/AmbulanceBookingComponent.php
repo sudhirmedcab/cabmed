@@ -13,7 +13,7 @@ class AmbulanceBookingComponent extends Component
 {
     public $selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
-    $toDate=null,$fromdate, $todate,$selectedBookingType,$check_for,$selectedbookingStatus,$checkEmergencyStatus,$checkbookingEmergency,
+    $toDate=null,$fromdate, $todate,$selectedBookingType,$check_for,$selectedbookingStatus,$checkEmergencyStatus,$checkbookingEmergency,$executiveId,
     $activeTab,$events = [];
 
     public $remarkText = [];
@@ -64,6 +64,9 @@ class AmbulanceBookingComponent extends Component
         elseif($value=='airAmbulance'){
             $this->activeTab=$value;
         }elseif($value=='driverAutosearch'){
+            $this->activeTab=$value;
+        
+        }elseif($value=='bookingDashboard'){
             $this->activeTab=$value;
         }
        
@@ -387,7 +390,6 @@ class AmbulanceBookingComponent extends Component
                 $toDate = $toDate;
                 break;
         }
-       
 
         $data['bookingData'] = DB::table('booking_view')
         ->leftJoin('driver', 'driver.driver_id', '=', 'booking_view.booking_acpt_driver_id')
@@ -467,6 +469,8 @@ class AmbulanceBookingComponent extends Component
         return view('livewire.admin.ambulance.ambulance-booking-component',$data,[
             'isCustom' => false
         ]);
+
+        
 
     }
     public function create()

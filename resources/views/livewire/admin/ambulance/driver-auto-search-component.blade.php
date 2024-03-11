@@ -1,5 +1,4 @@
 <div class="container-fluid">
-@include('livewire.admin.ambulance.booking-nav-component')
     <!-- Add driver -->
     <div class="card card-default add__driver__form">
       <!-- .......1....... -->
@@ -44,7 +43,7 @@
                     <div class="form-group">
                         <label class="custom__label">Select Duty</label>
                         <select  wire:model="driver_duty_status"  class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="driver_duty_status">
-                            <option  value="">Choose Driver</option>
+                            <!-- <option  value="">Choose Driver</option> -->
                             <option selected value="All">All Driver</option>
                             <option value="ON">ON Duty Driver</option>
                             <option value="OFF">OFF Duty Driver</option>
@@ -55,21 +54,22 @@
                 <div class="col-6 col-sm-auto col-md-2">
                     <div class="form-group">
                         <label class="custom__label">Select Category Name</label>
-                        <select  wire:model="ambulance_category_id"  class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
-                           <option  value="">Choose Category</option>
-                           <option  value="All">All Category</option>
+                        <select  wire:model="SelecetdCategory" class="custom__input__field custom-select rounded-0 form-control form-control-sm">
+                           <option  value="" selected>All Category</option>
                           @foreach ($ambulanceCategory as $category)
-                              <option  value="{{$category->ambulance_category_id}}">{{$category->ambulance_category_name}}</option>
-                        @endforeach
+                              <option  value="{{$category->ambulance_category_type}}">{{$category->ambulance_category_name}}</option>
+                          @endforeach
                         </select>
-                        @error('ambulance_category_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('SelecetdCategory') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
+
+                @if (!is_null($SelecetdCategory))
                 <div class="col-6 col-sm-auto col-md-2">
                     <div class="form-group">
                         <label class="custom__label">Select Vehicle name</label>
                             <select wire:model="vehicleId" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="vehicleId">
-                               <option  value="">Choose Vehicle Name</option>
+                               <option  value="">All Vehicle</option>
                               @foreach ($ambulanceVehicle as $vehicle)
                               <option  value="{{$vehicle->ambulance_category_vehicle_id }}">{{$vehicle->ambulance_category_vehicle_name}}</option>
                               @endforeach
@@ -77,7 +77,7 @@
                         @error('vehicleId') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
-              
+                @endif
                 <div class="col-6 col-sm-auto col-md-2" style="margin-top: 20px;">
                         <button type="submit"
                                  wire:loading.attr="disabled" 
