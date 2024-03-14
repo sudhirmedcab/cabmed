@@ -1,11 +1,26 @@
 <div class="content">
     @if(!empty($hospital_list))
-    <div class="container-fluid">
-        @if (session()->has('message') && session()->has('type') == 'delete')
-        <div class="alert alert-danger">{{ session('message') }}</div>
-        @elseif (session()->has('message') && session()->has('type') == 'store')
-        <div class="alert alert-success">{{ session('message') }}</div>
+
+    @if ($isOpen)
+    @include('livewire.admin.hospital.hospital_edit_form')
         @endif
+
+    <div class="container-fluid">
+
+    @if (session()->has('inactiveMessage'))
+
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
+        <strong>{{ session('inactiveMessage') }}!</strong>
+    </div>
+
+    @elseif (session()->has('activeMessage'))
+
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
+        <strong>{{ session('activeMessage') }}!</strong>
+    </div>
+    @endif
 
         @include('livewire.admin.hospital.hospital_nav_bar')
 
@@ -14,12 +29,12 @@
 
                 <div class="row">
                     
-                <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
+                <dizv class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                             <label class="custom__label" for="fromDate">From </label>
                             <input wire:model.live="selectedFromDate" {{ !$isCustom ? 'disabled' : '' }} type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
                         </div>
-                    </div>
+                    </dizv>
                     <div class="col __col-{{$this->activeTab == 'UnderVerificationBySelf' || $this->activeTab == 'walletBalance' ? 2:3}}">
                         <div class="form-group">
                             <label class="custom__label" for="toDate">To</label>
@@ -156,8 +171,8 @@
                             @endif
                             <td>{{$list->city_name}}</td>
                             <td class="action__btn lbtn-group">
-                        <button class="btn-primary"><i class="fa fa-edit"></i></button>
-                            <button class="btn-success"><i class="fa fa-eye"></i></button>
+                        <button class="btn-primary" wire:click="editHospitalData({{ $list->hospital_id }})"><i class="fa fa-edit"></i></button>
+                            <button class="btn-success"  wire:navigate href="{{route('hospital-details',['hospitalId' => Crypt::encrypt($list->hospital_id),'Details'=>'details'])}}"><i class="fa fa-eye"></i></button>
                             <!-- <button wire:confirm="Are you sure you want to delete this Booking?" wire:click="#" class="btn-danger"><i class="fa fa-trash"></i></button> -->
                         </td>
                         
@@ -203,11 +218,26 @@
 
     @if(($this->activeTab =='HospitalOwner'))       
     <div class="container-fluid">
-        @if (session()->has('message') && session()->has('type') == 'delete')
-        <div class="alert alert-danger">{{ session('message') }}</div>
-        @elseif (session()->has('message') && session()->has('type') == 'store')
-        <div class="alert alert-success">{{ session('message') }}</div>
+    @if ($isOpen)
+    @include('livewire.admin.hospital.hospital_owner_edit_form')
         @endif
+
+        @if (session()->has('inactiveMessage'))
+
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
+        <strong>{{ session('inactiveMessage') }}!</strong>
+    </div>
+
+    @elseif (session()->has('activeMessage'))
+
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>
+        <strong>{{ session('activeMessage') }}!</strong>
+    </div>
+    @endif
+
+
         @include('livewire.admin.hospital.hospital_nav_bar')
 
         <div class="card custom__filter__responsive">
@@ -315,8 +345,8 @@
                             @endif
                             <td>{{$list->city_name}}</td>
                             <td class="action__btn lbtn-group">
-                        <button class="btn-primary"><i class="fa fa-edit"></i></button>
-                            <button class="btn-success"><i class="fa fa-eye"></i></button>
+                            <button class="btn-primary"  wire:click="editHospitalOwnerData({{ $list->hospital_users_id  }})"><i class="fa fa-edit"></i></button>
+                            <button class="btn-success"  wire:navigate href="{{route('hospital-details',['hospitalId' => Crypt::encrypt($list->hospital_id),'Details'=>'details'])}}"><i class="fa fa-eye"></i></button>
                             <!-- <button wire:confirm="Are you sure you want to delete this Booking?" wire:click="#" class="btn-danger"><i class="fa fa-trash"></i></button> -->
                         </td>
                         
@@ -467,15 +497,3 @@
 </div>
 </div>
 
-  <!-- /.card -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script>
-    $(document).ready(function () {
-        $('.select2-dropdown').select2();
-        $('.select2-dropdown').on('change', function (e) {
-            var data = $('.select2-dropdown').select2("val");
-            @this.set('ottPlatform', data);
-        });
-    });
-</script>
-  <!-- /.row -->

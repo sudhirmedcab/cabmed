@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Hospital;
 use Illuminate\Support\Facades\DB; 
 use Livewire\Component;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
 use Livewire\WithoutUrlPagination;
 
@@ -12,7 +13,7 @@ class HospitalListComponent extends Component
     public $selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$fromdate, $todate,$check_for,$HospitalStatusFilter,$cityId,$StateId,$remarkText,$hospitalId,$HospitalId,
-    $activeTab;
+    $activeTab,$hospital_id,$hospital_name,$hospital_address,$hospital_city_name,$hospital_lat,$hospital_long,$hospital_pincode,$hospital_users_id,$hospital_users_name,$hospital_users_mobile,$hospital_users_email,$hospital_users_password,$hospital_users_aadhar_no,$verify_by,$citydata,$hospital_verify_status;
 
     public $isOpen = 0;
     use WithPagination;
@@ -282,7 +283,6 @@ class HospitalListComponent extends Component
   
       }
   
-          
       $cities = DB::table('hospital_lists')
           ->leftJoin('city', 'city.city_id', '=', 'hospital_lists.hospital_city_name')
           ->select('hospital_lists.hospital_city_name', 'city.city_name', DB::raw('count(*) as total_hospital'))
@@ -296,6 +296,145 @@ class HospitalListComponent extends Component
                return view('livewire.admin.hospital.hospital-list-component',['isCustom'=>false],compact('hospital_list','cities','buckethlist'));
            } 
   }
+
+  public function openModal()
+  {
+      $this->isOpen = true;
+  }
+  public function closeModal()
+  {
+      $this->isOpen = false;
+  }
+
+  public function editHospitalData($hospitalId){
+
+    $hospitalData = DB::table('hospital_lists')->where('hospital_id',$hospitalId)
+    ->leftjoin('city','city.city_id','=','hospital_lists.hospital_city_name')
+    ->first();
+
+    $this->citydata = DB::table('city')->get();
+
+    $this->hospital_id = $hospitalData->hospital_id;
+    $this->hospital_name = $hospitalData->hospital_name;
+    $this->hospital_address = $hospitalData->hospital_address;
+    $this->hospital_city_name = $hospitalData->city_id;
+    $this->hospital_lat = $hospitalData->hospital_lat;
+    $this->hospital_long = $hospitalData->hospital_long;
+    $this->hospital_pincode = $hospitalData->hospital_pincode;
+    $this->verify_by = $hospitalData->verify_by;
+    $this->hospital_verify_status = $hospitalData->hospital_verify_status;
+
+
+    $this->openModal();
+}
+  public function editHospitalOwnerData($hospitalUserId){
+
+    $hospitalData = DB::table('hospital_users')->where('hospital_users_id',$hospitalUserId)
+    ->first();
+
+    $this->hospital_users_id  = $hospitalData->hospital_users_id;
+    $this->hospital_users_name = $hospitalData->hospital_users_name;
+    $this->hospital_users_mobile = $hospitalData->hospital_users_mobile;
+    $this->hospital_users_email = $hospitalData->hospital_users_email;
+    $this->hospital_users_password = $hospitalData->hospital_users_password;
+    $this->hospital_users_password = $hospitalData->hospital_users_password;
+
+    $this->openModal();
+}
   
+public function UpdateHospitalData(){
+
+    $validatedData = $this->validate([
+        'hospital_name' => 'required',
+        'hospital_address' => 'required',
+        'hospital_city_name' => 'required',
+        'hospital_pincode' => 'required',
+        'verify_by' => 'required', // Corrected typo here
+        'hospital_lat' => 'required', // Corrected typo here
+        'hospital_long' => 'required', // Corrected typo here
+        'hospital_verify_status' => 'required', // Corrected typo here
+    ], [
+        'hospital_name.required' => 'Please Add The Hospital Name',
+        'hospital_address.required' => 'Please Add The Hospital Address',
+        'hospital_city_name.required' => 'Please Add The Hospital City ', // Corrected message
+        'hospital_pincode.required' => 'Please Add The Hospital Pincode',
+        'hospital_verify_status.required' => 'Please Add The Hospital Verification Status',
+        'hospital_lat.required' => 'Please Add The Hospital Lattitude', // Corrected typo here
+        'hospital_long.required' => 'Please Add The Hospital Longitude', // Corrected typo here
+    ]);
+    
+    try {
+        DB::beginTransaction();
+
+        $LoggeduserId = "1";
+        
+        $data = [
+            'hospital_name' => $this->hospital_name,
+            'hospital_address' => $this->hospital_address,
+            'hospital_city_name' => $this->hospital_city_name,
+            'hospital_pincode' => $this->hospital_pincode,
+            'hospital_verify_status' => $this->hospital_verify_status, // Corrected typo here
+            'hospital_lat' => $this->hospital_lat,
+            'hospital_long' => $this->hospital_long,
+            'verify_by'=>$LoggeduserId,
+            'verify_date'=>now()->timestamp
+        ];
+    
+        if ($this->hospital_id) {
+            
+            DB::table('hospital_lists')->where('hospital_id', $this->hospital_id)->update($data);
+            session()->flash('activeMessage', 'Hospital updated successfully !!' . $this->hospital_id);
+        } 
+    
+        DB::commit();
+    } catch (\Exception $e) {
+        session()->flash('inactiveMessage', 'Something went wrong : ' . $e->getMessage());
+        DB::rollback();
+        \Log::error('Error occurred while processing Hospital Update operation: ' . $e->getMessage());
+    }
+    
+}
+
+public function updateHospitalOwner(){
+    $validatedData = $this->validate([
+        'hospital_users_name' => 'required',
+        'hospital_users_mobile' => 'required',
+        'hospital_users_email' => 'required',
+        'hospital_users_password' => 'required',
+        'hospital_users_aadhar_no' => 'required', // Corrected typo here
+    ], [
+        'hospital_users_name.required' => 'Please Add The Hospital Owner Name',
+        'hospital_users_mobile.required' => 'Please Add The Hospital Mobile',
+        'hospital_users_email.required' => 'Please Add The Hospital Email ', // Corrected message
+        'hospital_users_password.required' => 'Please Add The Hospital Password',
+        'hospital_users_aadhar_no.required' => 'Please Add The Hospital Verification Status',
+    ]);
+    
+    try {
+        DB::beginTransaction();
+
+        $LoggeduserId = "1";
+        
+        $data = [
+            'hospital_users_name' => $this->hospital_users_name,
+            'hospital_users_mobile' => $this->hospital_users_mobile,
+            'hospital_users_email' => $this->hospital_users_email,
+            'hospital_users_password' => $this->hospital_users_password,
+            'hospital_users_aadhar_no' => $this->hospital_users_aadhar_no
+        ];
+    
+        if ($this->hospital_users_id) {
+            
+            DB::table('hospital_users')->where('hospital_users_id', $this->hospital_users_id)->update($data);
+            session()->flash('activeMessage', 'Hospital Owner updated successfully !!' . $this->hospital_users_id);
+        } 
+    
+        DB::commit();
+    } catch (\Exception $e) {
+        session()->flash('inactiveMessage', 'Something went wrong : ' . $e->getMessage());
+        DB::rollback();
+        \Log::error('Error occurred while processing Hospital Update operation: ' . $e->getMessage());
+    }
+}
   
 }

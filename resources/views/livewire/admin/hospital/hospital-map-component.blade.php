@@ -32,7 +32,7 @@
                 <table class="table custom__table table-bordered table-sm ">
                </div>
                                     <div class="container mt-5">
-									<div id="map" style="width: 100%; height: 400px;"></div>
+                                    <div wire:ignore id="map" style="height: 400px; width: 100%;"></div>
 							</div>
                   
                 </table>
