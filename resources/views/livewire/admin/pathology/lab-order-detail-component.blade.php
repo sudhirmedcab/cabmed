@@ -169,6 +169,14 @@ $relationMapper['5'] = "Other";
                                 <td>Collection Boy Mobile</td>
                                 <td>{{($labtestData->clo_sample_collection_by_mobile) ? $labtestData->clo_sample_collection_by_mobile : "Not Availabe"}}</td>
                             </tr>
+                            <tr>
+                                <td>Otp</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Otp Status</td>
+                                <td></td>
+                            </tr>
                         </table>
                     </div>
                 </div>
