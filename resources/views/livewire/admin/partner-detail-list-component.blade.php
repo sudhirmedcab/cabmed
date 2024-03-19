@@ -414,39 +414,41 @@
                 </div>
             </div>
             @elseif(!empty($assigndrivers))
-            <form wire:submit.prevent="AssignDriver">
-            <div class="row align-items-end">
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="vehicleId">Select Vehicle</label>
-                        <select wire:model="vehicleId" class="custom-select rounded-0 form-control form-control-sm" id="vehicleId">
-                            <option value="">Choose Your Vehicle</option>
-                            @foreach ($assignvehicles as $list)
-                                <option value="{{ $list->vehicle_id }}">{{ $list->vehicle_rc_number . ' (' . $list->ambulance_category_name . ')' }}</option>
-                            @endforeach
-                        </select>
-                        @error('vehicleId') <span class="text-danger">{{ $message }}</span> @enderror
+            <div class="card-header custom__filter__select">
+                <form wire:submit.prevent="AssignDriver">
+                <div class="row align-items-end">
+                    <div class="col-5">
+                        <div class="form-group">
+                            <label class="custom__label" for="vehicleId">Select Vehicle</label>
+                            <select wire:model="vehicleId" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="vehicleId">
+                                <option value="">Choose Your Vehicle</option>
+                                @foreach ($assignvehicles as $list)
+                                    <option value="{{ $list->vehicle_id }}">{{ $list->vehicle_rc_number . ' (' . $list->ambulance_category_name . ')' }}</option>
+                                @endforeach
+                            </select>
+                            @error('vehicleId') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="form-group">
+                            <label class="custom__label" for="driverId">Select Driver</label>
+                            <select wire:model="driverId" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="driverId">
+                                <option value="">Choose Your Driver</option>
+                                @foreach ($assigndrivers as $list)
+                                    <option value="{{ $list->driver_id }}">{{ $list->driver_name . ' ' . $list->driver_last_name . ' (' . $list->driver_mobile . ')' }}</option>
+                                @endforeach
+                            </select>
+                            @error('driverId') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <button wire:loading.attr="disabled" class="rounded h-100 custom__label text-white form-control form-control-sm btn-primary">Save</button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="driverId">Select Driver</label>
-                        <select wire:model="driverId" class="custom-select rounded-0 form-control form-control-sm" id="driverId">
-                            <option value="">Choose Your Driver</option>
-                            @foreach ($assigndrivers as $list)
-                                <option value="{{ $list->driver_id }}">{{ $list->driver_name . ' ' . $list->driver_last_name . ' (' . $list->driver_mobile . ')' }}</option>
-                            @endforeach
-                        </select>
-                        @error('driverId') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <button wire:loading.attr="disabled" class="rounded-0 form-control form-control-sm btn-primary">Save</button>
-                    </div>
-                </div>
+                        </form>
             </div>
-        </form>
         <div wire:loading.remove wire:target="filterCondition" class="card-body p-2 overflow-auto">
                 <table class="table custom__table table-bordered table-sm">
                     <tr>

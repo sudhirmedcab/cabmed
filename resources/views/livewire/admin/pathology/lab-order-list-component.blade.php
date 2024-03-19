@@ -6,7 +6,7 @@
         <div class="alert alert-success">{{ session('message') }}</div>
         @endif
 
-        <div class="card custom__filter__responsive">
+        <div class="card mt-2 custom__filter__responsive">
             <div class="card-header custom__filter__select ">
 
                 <div class="row">
@@ -69,23 +69,23 @@
                         <th>Sr.</th>
                         <th>Id</th>
                         <th>Created</th>
-                        <th>Consumer Name</th>
-                        <th>Consumer Mobile</th>
+                        <th>Consumer</th>
                         <th>Lab Address</th>
                         <th>Lab Test City</th>
                         <th>Test Name</th>
-                        <th>No. Of Test</th>
-                        <th>No. Of Patient</th>
-                        <th>Lab order Status</th>
+                        <th>Tests</th>
+                        <th>Patient</th>
+                        <th>Lab Status</th>
                         <th>Payment type</th>
                         <th>Final Price</th>
-                        <th>Payment Status</th>
+                        <th>Payment</th>
                         <th>Action</th>
                     </tr>
                     @php
                     $srno = 1
                     @endphp
                     @if (!empty($lab_order))
+
                     @foreach ($lab_order as $key)
                     <tr>
                         <td>{{ $srno }}</td>
@@ -93,10 +93,10 @@
                         <td>
                             {{ date("j F, Y h:i A",($key->clo_order_time)) }}
                          </td>
-                         <td>{{ $key->clo_customer_name }} </td>
-                        <td>{{ $key->clo_contact_no }}</td>
+                         <td>{{ $key->clo_customer_name }} <br/> {{ $key->clo_contact_no }} </td>
                         <td>{!! wordwrap($key->clo_address, 25, "<br>\n") !!} , {{$key->clo_address_pincode}}</td>
-                        <td>{{ $key->city_name }}, {{ $key->state_name }}</td>
+                        <td>{{ $key->city_name }}<br/> {{ $key->state_name }}</td>
+
                         <td>
 							@isset($lab_test_data[$key->customer_lab_order_id])
 							@foreach ($lab_test_data[$key->customer_lab_order_id] as $index => $test)
@@ -109,15 +109,15 @@
 							<td>{{ $key->clo_no_of_patient }}</td>
 							<td>
 									@if ($key->clo_status == '1')
-										New Booking 
+										New 
 									@elseif ($key->clo_status == '2')
-											Ongoing Booking 
+											Ongoing 
 									@elseif ($key->clo_status == '3')
-											Cancel Booking 
+											Cancel 
 									@elseif ($key->clo_status == '4')
-											Complete Booking 
+											Complete 
 									@elseif ($key->clo_status == '0')
-											Enquiry Booking 
+											Enquiry 
 									@else
 												<!-- Handle the "else" case here -->
 									@endif 

@@ -220,8 +220,8 @@
                         <th>Number</th>
 						<th>Gender</th>
 						<th>Address</th>
-						<th>Subscription No</th>
-						<th>Subscription Duration</th>
+						<th>Card No</th>
+						<th>Duration</th>
 						<th>Remark Details</th>
 						<th>Subscription Status</th>
 						<th>Action</th>
@@ -232,7 +232,7 @@
                            @foreach($healthcardData as $key)
                                  <tr>
                                      <td class="table-plus"><?php echo $sr++; ?></td>
-                                     <td>Subscription ID :{{$key->health_card_subscription_id}}</td>
+                                     <td>{{$key->health_card_subscription_id}}</td>
 									 <td>{{date('j F Y,h:i A',$key->health_card_subscription_added_time_unx)}} </td>
                                      <td>{{$key->consumer_name}}</td>
                                      <td>{{$key->consumer_mobile_no}}</td>
@@ -240,7 +240,7 @@
                                       <td>{{$key->health_card_subscription_mobile_no}}</td>
                                      <td>{{$key->health_card_subscription_gender}}</td>
                                      <td>{{$key->ua_address}}</td>
-                                     <td> Card No. {{$key->health_card_subscription_card_no}}</td>
+                                     <td>{{$key->health_card_subscription_card_no}}</td>
                                      <td>{{$key->health_card_plan_duration}}</td>
 									<td>
                                     @if(($key->remark_id))
