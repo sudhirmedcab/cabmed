@@ -39,6 +39,7 @@ class VehicleComponent extends Component
          $this->vehicle_status=null;
          $this->selectedDate=null;
          $this->search ='';
+         $this->resetPage();
 
             }
 
@@ -800,4 +801,522 @@ class VehicleComponent extends Component
     }
 
     }
+
+    
+    public function cityWiseDataDownload(){
+        
+        $districtWise_state_id = ($this->districtWise_state ) ? $this->districtWise_state : 27;
+
+        $stateData = DB::table('state')
+        ->leftJoin('district_list', 'state.state_id', '=', 'district_list.d_state_id')
+        ->leftJoin('city', 'district_list.district_id', '=', 'city.city_district')
+        ->where('state.state_id',$districtWise_state_id)
+        ->first();
+                
+        $driverQuery = DB::table('district_list')
+            ->leftJoin('city', 'city.city_district', '=', 'district_list.district_id')
+            ->leftJoin('state', 'state.state_id', '=', 'district_list.d_state_id')
+            ->leftJoin('driver', 'driver.driver_city_id', '=', 'city.city_id')
+            ->where('district_list.district_name', 'like', '%' . $this->search . '%')       
+            ->leftJoin('vehicle', 'vehicle.vehicle_id', '=', 'driver.driver_assigned_vehicle_id')
+            ->when($districtWise_state_id !== null, function ($query) use ($districtWise_state_id) {
+                return $query->where('state.state_id', $districtWise_state_id);
+            })                 
+            ->where('vehicle.vehicle_added_type', '=', '0')
+            ->groupBy('state.state_name', 'district_list.district_name')
+            ->selectRaw('state.state_name, district_list.district_name, 
+                        COALESCE(COUNT(vehicle.vehicle_id), 0) as vehicle_count, 
+                        COUNT(CASE WHEN driver.driver_duty_status = "ON" THEN 1 ELSE null END) as on_duty_count,
+                        COUNT(CASE WHEN driver.driver_duty_status = "OFF" THEN 1 ELSE null END) as off_duty_count');
+    
+        $partnerQuery = DB::table('district_list')
+            ->leftJoin('city', 'city.city_district', '=', 'district_list.district_id')
+            ->leftJoin('state', 'state.state_id', '=', 'district_list.d_state_id')
+            ->leftJoin('partner', 'partner.partner_city_id', '=', 'city.city_id')
+            ->where('district_list.district_name', 'like', '%' . $this->search . '%')       
+            ->leftJoin('vehicle', 'vehicle.vehicle_added_by', '=', 'partner.partner_id')
+            ->leftJoin('driver', 'driver.driver_created_partner_id', '=', 'partner.partner_id')
+            ->when($districtWise_state_id !== null, function ($query) use ($districtWise_state_id) {
+                return $query->where('state.state_id', $districtWise_state_id);
+            })   
+            ->where('vehicle.vehicle_added_type', '=', '1')
+            ->where('driver.driver_created_by', '=', '1')
+            ->groupBy('state.state_name', 'district_list.district_name')
+            ->selectRaw('state.state_name, district_list.district_name, 
+                        COALESCE(COUNT(vehicle.vehicle_id), 0) as vehicle_count, 
+                        COUNT(CASE WHEN driver.driver_duty_status = "ON" THEN 1 ELSE null END) as on_duty_count,
+                        COUNT(CASE WHEN driver.driver_duty_status = "OFF" THEN 1 ELSE null END) as off_duty_count');
+    
+        $driverResults = $driverQuery->paginate(10);
+        $partnerResults = $partnerQuery->paginate(10);
+    
+        $results = $driverResults->concat($partnerResults);
+    
+        $responseData = [];
+    
+        foreach ($results as $result) {
+            $responseData[] = [
+                'StateName' => $result->state_name,
+                'districtName' => $result->district_name,
+                'vehicleCount' => $result->vehicle_count,
+                'ondutyCount' => $result->on_duty_count,
+                'offdutyCount' => $result->off_duty_count,
+            ];
+        }
+
+    // Assuming $stateData might be an array or collection, and we want the first item's state_name
+            $stateName = is_array($stateData) ? $stateData[0]->state_name : $stateData->state_name;
+
+            // Replace spaces and any other undesirable characters for a filename
+            $cleanStateName = str_replace([' ', '/', '\\', ':', '*','?','"','<','>','|'], '_', $stateName);
+
+            $filename = "{$cleanStateName}_district_wise_VehicleData.csv";
+
+            $headers = [
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=\"{$filename}\"",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            ];
+    
+        $callback = function() use ($responseData) {
+            $file = fopen('php://output', 'w');
+            // Column headers
+            fputcsv($file, ['StateName', 'DistrictName', 'VehicleCount', 'OnDutyCount', 'OffDutyCount']);
+            
+            // Data rows
+            foreach ($responseData as $row) {
+                fputcsv($file, $row);
+            }
+            
+            fclose($file);
+        };
+    
+        return response()->stream($callback, 200, $headers);
+    }
+    public function divisionWiseDataDownload(){
+        
+        $division_state_id = ($this->division_state ) ? $this->division_state : 27;
+
+        $stateData = DB::table('state')
+        ->leftJoin('division', 'state.state_id', '=', 'division.division_state_id')
+        ->leftJoin('city', 'division.division_id', '=', 'city.city_division')
+        ->where('state.state_id',$division_state_id)
+        ->first();
+
+    $driverQuery = DB::table('division')
+        ->leftJoin('city', 'city.city_division', '=', 'division.division_id')
+        ->leftJoin('state', 'state.state_id', '=', 'division.division_state_id')
+        ->leftJoin('driver', 'driver.driver_city_id', '=', 'city.city_id')
+        ->leftJoin('vehicle', 'vehicle.vehicle_id', '=', 'driver.driver_assigned_vehicle_id')
+        ->where('division.division_name', 'like', '%' . $this->search . '%')       
+        ->where('state.state_id', $division_state_id)
+        ->where('vehicle.vehicle_added_type', '=', '0')
+        ->groupBy('state.state_name', 'division.division_name')
+        ->selectRaw('state.state_name, division.division_name, COALESCE(COUNT(vehicle.vehicle_id), 0) as vehicle_count');
+
+    $partnerQuery = DB::table('division')
+        ->leftJoin('city', 'city.city_division', '=', 'division.division_id')
+        ->leftJoin('state', 'state.state_id', '=', 'division.division_state_id')
+        ->leftJoin('partner', 'partner.partner_city_id', '=', 'city.city_id')
+        ->leftJoin('vehicle', 'vehicle.vehicle_added_by', '=', 'partner.partner_id')
+        ->where('state.state_id', $division_state_id)
+        ->where('division.division_name', 'like', '%' . $this->search . '%')       
+        ->where('vehicle.vehicle_added_type', '=', '1')
+        ->groupBy('state.state_name', 'division.division_name')
+        ->selectRaw('state.state_name, division.division_name, COALESCE(COUNT(vehicle.vehicle_id), 0) as vehicle_count');
+
+    $results = DB::query()
+        ->fromSub($driverQuery, 'driver_counts')
+        ->unionAll(DB::query()->fromSub($partnerQuery, 'partner_counts'))
+        ->get();
+
+    $responseData = [];
+
+    foreach ($results as $result) {
+        $responseData[] = [
+            'state_name' => $result->state_name,
+            'division_name' => $result->division_name,
+            'vehicle_count' => $result->vehicle_count,
+        ];
+    }
+
+    // Assuming $stateData might be an array or collection, and we want the first item's state_name
+            $stateName = is_array($stateData) ? $stateData[0]->state_name : $stateData->state_name;
+
+            // Replace spaces and any other undesirable characters for a filename
+            $cleanStateName = str_replace([' ', '/', '\\', ':', '*','?','"','<','>','|'], '_', $stateName);
+
+            $filename = "{$cleanStateName}_division_wise_VehicleData.csv";
+
+            $headers = [
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=\"{$filename}\"",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            ];
+    
+        $callback = function() use ($responseData) {
+            $file = fopen('php://output', 'w');
+            // Column headers
+            fputcsv($file, ['StateName', 'DivisionName', 'VehicleCount']);
+            
+            // Data rows
+            foreach ($responseData as $row) {
+                fputcsv($file, $row);
+            }
+            
+            fclose($file);
+        };
+    
+        return response()->stream($callback, 200, $headers);
+    }
+    public function districtWiseDataDownload(){
+        
+        $districtWise_state_id = ($this->districtWise_state ) ? $this->districtWise_state : 27;
+
+        $stateData = DB::table('state')
+        ->leftJoin('district_list', 'state.state_id', '=', 'district_list.d_state_id')
+        ->leftJoin('city', 'district_list.district_id', '=', 'city.city_district')
+        ->where('state.state_id',$districtWise_state_id)
+        ->first();
+                
+        $driverQuery = DB::table('district_list')
+            ->leftJoin('city', 'city.city_district', '=', 'district_list.district_id')
+            ->leftJoin('state', 'state.state_id', '=', 'district_list.d_state_id')
+            ->leftJoin('driver', 'driver.driver_city_id', '=', 'city.city_id')
+            ->where('district_list.district_name', 'like', '%' . $this->search . '%')       
+            ->leftJoin('vehicle', 'vehicle.vehicle_id', '=', 'driver.driver_assigned_vehicle_id')
+            ->when($districtWise_state_id !== null, function ($query) use ($districtWise_state_id) {
+                return $query->where('state.state_id', $districtWise_state_id);
+            })                 
+            ->where('vehicle.vehicle_added_type', '=', '0')
+            ->groupBy('state.state_name', 'district_list.district_name')
+            ->selectRaw('state.state_name, district_list.district_name, 
+                        COALESCE(COUNT(vehicle.vehicle_id), 0) as vehicle_count, 
+                        COUNT(CASE WHEN driver.driver_duty_status = "ON" THEN 1 ELSE null END) as on_duty_count,
+                        COUNT(CASE WHEN driver.driver_duty_status = "OFF" THEN 1 ELSE null END) as off_duty_count');
+    
+        $partnerQuery = DB::table('district_list')
+            ->leftJoin('city', 'city.city_district', '=', 'district_list.district_id')
+            ->leftJoin('state', 'state.state_id', '=', 'district_list.d_state_id')
+            ->leftJoin('partner', 'partner.partner_city_id', '=', 'city.city_id')
+            ->where('district_list.district_name', 'like', '%' . $this->search . '%')       
+            ->leftJoin('vehicle', 'vehicle.vehicle_added_by', '=', 'partner.partner_id')
+            ->leftJoin('driver', 'driver.driver_created_partner_id', '=', 'partner.partner_id')
+            ->when($districtWise_state_id !== null, function ($query) use ($districtWise_state_id) {
+                return $query->where('state.state_id', $districtWise_state_id);
+            })   
+            ->where('vehicle.vehicle_added_type', '=', '1')
+            ->where('driver.driver_created_by', '=', '1')
+            ->groupBy('state.state_name', 'district_list.district_name')
+            ->selectRaw('state.state_name, district_list.district_name, 
+                        COALESCE(COUNT(vehicle.vehicle_id), 0) as vehicle_count, 
+                        COUNT(CASE WHEN driver.driver_duty_status = "ON" THEN 1 ELSE null END) as on_duty_count,
+                        COUNT(CASE WHEN driver.driver_duty_status = "OFF" THEN 1 ELSE null END) as off_duty_count');
+    
+        $driverResults = $driverQuery->paginate(10);
+        $partnerResults = $partnerQuery->paginate(10);
+    
+        $results = $driverResults->concat($partnerResults);
+    
+        $responseData = [];
+    
+        foreach ($results as $result) {
+            $responseData[] = [
+                'StateName' => $result->state_name,
+                'districtName' => $result->district_name,
+                'vehicleCount' => $result->vehicle_count,
+                'ondutyCount' => $result->on_duty_count,
+                'offdutyCount' => $result->off_duty_count,
+            ];
+        }
+
+    // Assuming $stateData might be an array or collection, and we want the first item's state_name
+            $stateName = is_array($stateData) ? $stateData[0]->state_name : $stateData->state_name;
+
+            // Replace spaces and any other undesirable characters for a filename
+            $cleanStateName = str_replace([' ', '/', '\\', ':', '*','?','"','<','>','|'], '_', $stateName);
+
+            $filename = "{$cleanStateName}_district_wise_VehicleData.csv";
+
+            $headers = [
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=\"{$filename}\"",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            ];
+    
+        $callback = function() use ($responseData) {
+            $file = fopen('php://output', 'w');
+            // Column headers
+            fputcsv($file, ['StateName', 'DistrictName', 'VehicleCount', 'OnDutyCount', 'OffDutyCount']);
+            
+            // Data rows
+            foreach ($responseData as $row) {
+                fputcsv($file, $row);
+            }
+            
+            fclose($file);
+        };
+    
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function cityCountDataDownlaod(){
+        $city_state_id = ($this->city_state ) ? $this->city_state : 27;
+
+            $stateData = DB::table('state')
+            ->leftJoin('city', 'city.city_state', '=', 'state.state_id')
+            ->where('state.state_id',$city_state_id)
+            ->first();
+
+            $cityCountData = DB::table('city')
+            ->leftJoin('driver', 'city.city_id', '=', 'driver.driver_city_id')
+            ->leftJoin('state', 'state.state_id', '=', 'city.city_state')
+            ->leftJoin('vehicle', 'vehicle.vehicle_id', '=', 'driver.driver_assigned_vehicle_id')
+            ->leftJoin('ambulance_category', 'ambulance_category.ambulance_category_type', '=', 'vehicle.vehicle_category_type')
+            ->when($city_state_id !== null, function ($query) use ($city_state_id) {
+                return $query->where('state.state_id', $city_state_id);
+            })    
+            ->where('city.city_name', 'like', '%' . $this->search . '%')       
+            ->selectRaw('
+                state.state_name,
+                city.city_name,
+                COUNT(vehicle.vehicle_id) as total_vehicle,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "A" THEN 1 END) as medical_first_responder,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "B" THEN 1 END) as patient_transfer_ambulances,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "C" THEN 1 END) as basic_life_support,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "D" THEN 1 END) as advance_life_support,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H" THEN 1 END) as dead_body_small,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "J" THEN 1 END) as train_ambulances,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H1" THEN 1 END) as dead_body_medium,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H2" THEN 1 END) as dead_body_big,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "B_AC_DLT" THEN 1 END) as patience_ransafer_ac,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "C_AC" THEN 1 END) as basic_life_support_ac,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H1_AC" THEN 1 END) as dead_body_medium_fridge,
+                COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H2_AC" THEN 1 END) as dead_body_big_fridge
+            ')
+            ->orderBy('total_vehicle','DESC')
+            ->groupBy('state.state_name', 'city.city_name') // Group by both state and city
+            ->get();
+
+            $cityCountArray = $cityCountData->toArray();
+             // Assuming $stateData might be an array or collection, and we want the first item's state_name
+             $stateName = is_array($stateData) ? $stateData[0]->state_name : $stateData->state_name;
+
+             // Replace spaces and any other undesirable characters for a filename
+             $cleanStateName = str_replace([' ', '/', '\\', ':', '*','?','"','<','>','|'], '_', $stateName);
+ 
+             $filename = "{$cleanStateName}_cityCount_wise_VehicleData.csv";
+ 
+             $headers = [
+                 "Content-type" => "text/csv",
+                 "Content-Disposition" => "attachment; filename=\"{$filename}\"",
+                 "Pragma" => "no-cache",
+                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                 "Expires" => "0"
+             ];
+     
+         $callback = function() use ($cityCountArray) {
+             $file = fopen('php://output', 'w');
+             // Column headers
+             fputcsv($file, ['StateName', 'CityName', 'TotalVehicles', 'MedicalFirstResponder', 'PatientTransferAmbulances', 'BasicLifeSupport', 'AdvanceLifeSupport', 'DeadBodySmall', 'TrainAmbulances', 'DeadBodyMedium', 'DeadBodyBig', 'PatienceRansafersAC', 'BasicLifeSupportAC', 'DeadBodyMediumFridge', 'DeadBodyBigFridge']);             
+             // Data rows
+             foreach ($cityCountArray as $data) {
+                // Convert stdClass object to array
+                $dataArray = (array) $data;
+        
+                // Write array to CSV file
+                fputcsv($file, $dataArray);
+            }
+             
+             fclose($file);
+         };
+     
+         return response()->stream($callback, 200, $headers);
+    }
+
+    public function districtCountDataDownlaod(){
+        $district_state_id = ($this->district_state ) ? $this->district_state : 27; 
+
+            $stateData = DB::table('state')
+            ->leftJoin('city', 'city.city_state', '=', 'state.state_id')
+            ->where('state.state_id',$district_state_id)
+            ->first();
+
+            $districtCountData = DB::table('district_list')
+                           ->leftJoin('city', 'city.city_district', '=', 'district_list.district_id')
+                           ->leftJoin('driver', 'driver.driver_city_id', '=', 'city.city_id')
+                           ->leftJoin('state', 'state.state_id', '=', 'district_list.d_state_id')
+                           ->where('district_list.district_name', 'like', '%' . $this->search . '%')       
+                           ->leftJoin('vehicle', 'vehicle.vehicle_id', '=', 'driver.driver_assigned_vehicle_id')
+                           ->leftJoin('ambulance_category', 'ambulance_category.ambulance_category_type', '=', 'vehicle.vehicle_category_type')
+                           ->when($district_state_id !== null, function ($query) use ($district_state_id) {
+                               return $query->where('state.state_id', $district_state_id);
+                           })  
+                           ->selectRaw('
+                               state.state_name,
+                               district_list.district_name,
+                               COUNT(vehicle.vehicle_id) as total_vehicle,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "A" THEN 1 END) as medical_first_responder,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "B" THEN 1 END) as patient_transfer_ambulances,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "C" THEN 1 END) as basic_life_support,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "D" THEN 1 END) as advance_life_support,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H" THEN 1 END) as dead_body_small,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "J" THEN 1 END) as train_ambulances,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H1" THEN 1 END) as dead_body_medium,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H2" THEN 1 END) as dead_body_big,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "B_AC_DLT" THEN 1 END) as patience_ransafer_ac,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "C_AC" THEN 1 END) as basic_life_support_ac,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H1_AC" THEN 1 END) as dead_body_medium_fridge,
+                               COUNT(CASE WHEN ambulance_category.ambulance_category_type = "H2_AC" THEN 1 END) as dead_body_big_fridge
+                           ')
+                           ->orderBy('total_vehicle','DESC')
+                           ->groupBy('state.state_name', 'district_list.district_name') // Group by both state and city
+                           ->get();
+
+            $districtCountArray = $districtCountData->toArray();
+             // Assuming $stateData might be an array or collection, and we want the first item's state_name
+             $stateName = is_array($stateData) ? $stateData[0]->state_name : $stateData->state_name;
+
+             // Replace spaces and any other undesirable characters for a filename
+             $cleanStateName = str_replace([' ', '/', '\\', ':', '*','?','"','<','>','|'], '_', $stateName);
+ 
+             $filename = "{$cleanStateName}_districtCount_wise_VehicleData.csv";
+ 
+             $headers = [
+                 "Content-type" => "text/csv",
+                 "Content-Disposition" => "attachment; filename=\"{$filename}\"",
+                 "Pragma" => "no-cache",
+                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                 "Expires" => "0"
+             ];
+     
+         $callback = function() use ($districtCountArray) {
+             $file = fopen('php://output', 'w');
+             // Column headers
+             fputcsv($file, ['StateName', 'DistrictName', 'TotalVehicles', 'MedicalFirstResponder', 'PatientTransferAmbulances', 'BasicLifeSupport', 'AdvanceLifeSupport', 'DeadBodySmall', 'TrainAmbulances', 'DeadBodyMedium', 'DeadBodyBig', 'PatienceRansafersAC', 'BasicLifeSupportAC', 'DeadBodyMediumFridge', 'DeadBodyBigFridge']);             
+             // Data rows
+             foreach ($districtCountArray as $data) {
+                // Convert stdClass object to array
+                $dataArray = (array) $data;
+        
+                // Write array to CSV file
+                fputcsv($file, $dataArray);
+            }
+             
+             fclose($file);
+         };
+     
+         return response()->stream($callback, 200, $headers);
+    }
+
+    public function cityWiseBookingDataDownlaod(){
+
+        $division_state_id = ($this->division_state ) ? $this->division_state : 27;
+        $fromDate = $this->selectedFromDate ? Carbon::createFromFormat('Y-m-d', $this->selectedFromDate)->startOfDay() : null;
+        $toDate = $this->selectedToDate ? Carbon::createFromFormat('Y-m-d', $this->selectedToDate)->endOfDay() : null;
+
+            $stateData = DB::table('state')
+            ->leftJoin('city', 'city.city_state', '=', 'state.state_id')
+            ->where('state.state_id',$division_state_id)
+            ->first();
+  
+            if($this->selectedDate == 'custom'){
+              $this->selectedFromDate;
+              $this->selectedToDate;
+              }else{
+                  $this->selectedFromDate ='';
+                  $this->selectedToDate =''; 
+              }
+           
+            switch ($this->selectedDate) {
+                case 'all':
+                    $fromDate = null;
+                    $toDate = null;
+                    break;
+                case 'today':
+                    $fromDate = Carbon::today();
+                    $toDate = Carbon::today()->endOfDay();
+                    break;
+                case 'yesterday':
+                    $fromDate = Carbon::yesterday();
+                    $toDate = Carbon::yesterday()->endOfDay();
+                    break;
+                case 'thisWeek':
+                    $fromDate = Carbon::now()->subDays(7)->startOfDay();
+                    $toDate = Carbon::now();
+                    break;
+                case 'thisMonth':
+                    $fromDate = Carbon::now()->startOfMonth();
+                    $toDate = Carbon::now()->endOfMonth();
+                    break;
+                default:
+                    $fromDate = $fromDate;
+                    $toDate = $toDate;
+                    break;
+            }
+
+            $cityWisebookingData = DB::table('city')
+            ->leftJoin('booking_view', 'booking_view.booking_pickup_city', '=', 'city.city_name') 
+            ->where('city.city_state', $division_state_id)
+            ->selectRaw('
+                city.city_name,
+                COUNT(CASE WHEN booking_view.booking_id !="0" THEN 1 END ) as total_booking, 
+                COUNT(CASE WHEN booking_view.booking_status = "0" THEN 1 END) as enquiry_booking,
+                COUNT(CASE WHEN booking_view.booking_status = "1" THEN 1 END) as new_booking,
+                COUNT(CASE WHEN booking_view.booking_status = "2" THEN 1 END) as ongoing_booking,
+                COUNT(CASE WHEN booking_view.booking_status = "3" THEN 1 END) as invoice_booking,
+                COUNT(CASE WHEN booking_view.booking_status = "4" THEN 1 END) as complete_booking,
+                COUNT(CASE WHEN booking_view.booking_status = "5" THEN 1 END) as cancel_booking,
+                COUNT(CASE WHEN booking_view.booking_status = "6" THEN 1 END) as future_booking') 
+                ->where('booking_view.booking_status','<>','7')
+                ->where('city.city_name', 'like', '%' . $this->search . '%')       
+                ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                    return $query->whereBetween('booking_view.created_at', [$fromDate, $toDate]);
+                })
+                ->orderBy('total_booking','DESC')
+                ->groupBy('city.city_name') // Group by both state and city
+                ->get();  
+
+            $cityWisebookingDataArray = $cityWisebookingData->toArray();
+             // Assuming $stateData might be an array or collection, and we want the first item's state_name
+             $stateName = is_array($stateData) ? $stateData[0]->state_name : $stateData->state_name;
+
+             // Replace spaces and any other undesirable characters for a filename
+             $cleanStateName = str_replace([' ', '/', '\\', ':', '*','?','"','<','>','|'], '_', $stateName);
+ 
+             $filename = "{$cleanStateName}_citywise_BookingData.csv";
+ 
+             $headers = [
+                 "Content-type" => "text/csv",
+                 "Content-Disposition" => "attachment; filename=\"{$filename}\"",
+                 "Pragma" => "no-cache",
+                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                 "Expires" => "0"
+             ];
+     
+         $callback = function() use ($cityWisebookingDataArray) {
+             $file = fopen('php://output', 'w');
+             // Column headers
+             fputcsv($file, ['cityName', 'TotalBooking', 'Enquiry', 'New', 'Ongoing', 'Invoice', 'Completed', 'Cancelled', 'Future']);             
+             // Data rows
+             foreach ($cityWisebookingDataArray as $data) {
+                // Convert stdClass object to array
+                $dataArray = (array) $data;
+        
+                // Write array to CSV file
+                fputcsv($file, $dataArray);
+            }
+             
+             fclose($file);
+         };
+     
+         return response()->stream($callback, 200, $headers);
+    }
+
 }
