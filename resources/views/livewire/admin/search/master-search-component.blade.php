@@ -219,7 +219,13 @@
             $hospitalOwnerStatusMapper['1'] = "Unverified";
             $hospitalOwnerStatusMapper['0'] = "verified";
 
+            $pathologyStatusMapper['3'] = "New Lab Owner";
+            $pathologyStatusMapper['6'] = "Active Lab Owner";
+            $pathologyStatusMapper['5'] = "Inactive Lab Owner";
+            $pathologyStatusMapper['4'] = "New Lab Owner";
 
+            $CollectionStatusMapper['1'] = "Inactive";
+            $CollectionStatusMapper['0'] = "Active";
 
             @endphp
 
@@ -346,6 +352,43 @@
                     $srno++
                     @endphp
                     @endforeach
+
+                    @foreach($allData['PathologyData'] as $pathology)
+                    <tr>
+                        <td>{{ $srno }}</td>
+                        <td>{{ $pathology->lab_owner_id }}</td>
+                        <td>{{$pathology->lab_owner_name}}</td>
+                        <td>{{$pathology->lab_owner_mobile_number}}</td>
+                        <td>Pathology Owner</td>
+                        <td>{{ ($pathology->lab_owner_status == '4' || $pathology->lab_owner_status == '3') ? 'New Lab Owner' : ($pathology->lab_owner_status == '5' ? 'Inactive' : 'Active') }}</td>      
+                         <td class="action__btn lbtn-group">
+                            @if(!empty($pathology->lab_owner_id))
+                           <button  wire:navigate href="{{route('lab_details',['LabOwnerId' => Crypt::encrypt($pathology->lab_owner_id),'Details'=>'Details'])}}"  class="btn-success"><i class="fa fa-eye"></i></button>
+                           @else N/A @endif
+                        </td>
+                    </tr>
+                    @php
+                    $srno++
+                    @endphp
+                    @endforeach
+
+                    @foreach($allData['collectionBoyData'] as $collection)
+                    <tr>
+                        <td>{{ $srno }}</td>
+                        <td>{{ $collection->collection_boy_id }}</td>
+                        <td>{{$collection->collection_boy_name}}</td>
+                        <td>{{$collection->collection_boy_number}}</td>
+                        <td>Collection Boy</td>
+                        <td>{{$CollectionStatusMapper[$collection->collection_boy_status]}}</td>       
+                         <td class="action__btn lbtn-group">
+                           <button  wire:navigate class="btn-success"><i class="fa fa-eye"></i></button>
+                        </td>
+                    </tr>
+                    @php
+                    $srno++
+                    @endphp
+                    @endforeach
+
                     @endif
 
                 </table>

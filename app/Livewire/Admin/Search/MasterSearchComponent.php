@@ -37,6 +37,8 @@ class MasterSearchComponent extends Component
         $HospitalData = [];
         $HospitalUserData = [];
         $VehicleData = [];
+        $PathologyData = [];
+        $collectionBoyData = [];
         
         if (!empty($this->candidateName)) {
             $driverData = DB::table('driver')
@@ -65,6 +67,16 @@ class MasterSearchComponent extends Component
                 ->orderBy('hospital_users_id','desc')
                 ->get();
 
+            $collectionBoyData = DB::table('collection_boy')
+                ->where('collection_boy_name', 'like', '%' . $this->candidateName . '%')
+                ->orderBy('collection_boy_id','desc')
+                ->get();
+
+            $PathologyData = DB::table('lab_owner')
+                ->where('lab_owner_name', 'like', '%' . $this->candidateName . '%')
+                ->orderBy('lab_owner_id','desc')
+                ->get();
+
         } elseif (!empty($this->candidateNumber)) {
             $driverData = DB::table('driver')
                 ->orWhere('driver_mobile', 'like', '%' . $this->candidateNumber . '%')
@@ -90,6 +102,16 @@ class MasterSearchComponent extends Component
             ->leftjoin('hospital_lists','hospital_lists.hospital_user_id','=','hospital_users.hospital_users_id')
             ->orWhere('hospital_users_mobile', 'like', '%' . $this->candidateNumber . '%')
                 ->orderBy('hospital_users_id','desc')
+                ->get();
+
+           $collectionBoyData = DB::table('collection_boy')
+                ->where('collection_boy_number', 'like', '%' . $this->candidateNumber . '%')
+                ->orderBy('collection_boy_id','desc')
+                ->get();
+
+            $PathologyData = DB::table('lab_owner')
+                ->where('lab_owner_mobile_number', 'like', '%' . $this->candidateNumber . '%')
+                ->orderBy('lab_owner_id','desc')
                 ->get();
    
         }
@@ -126,6 +148,16 @@ class MasterSearchComponent extends Component
                 ->orWhere('vehicle_rc_number', 'like', '%' . $this->vehiclercNumber . '%')
                 ->orderBy('vehicle_id','desc')
                 ->get();
+
+             $collectionBoyData = DB::table('collection_boy')
+                ->where('collection_boy_number', 'like', '%' . $this->vehiclercNumber . '%')
+                ->orderBy('collection_boy_id','desc')
+                ->get();
+
+            $PathologyData = DB::table('lab_owner')
+                ->where('lab_owner_mobile_number', 'like', '%' . $this->vehiclercNumber . '%')
+                ->orderBy('lab_owner_id','desc')
+                ->get();
         }
         
         $allData = [
@@ -135,6 +167,8 @@ class MasterSearchComponent extends Component
             'HospitalData' => $HospitalData,
             'HospitalUserData' => $HospitalUserData,
             'VehicleData' => $VehicleData,
+            'PathologyData' => $PathologyData,
+            'collectionBoyData' => $collectionBoyData
         ];
       
     return view('livewire.admin.search.master-search-component',['allData' => $allData]);
