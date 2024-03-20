@@ -9,7 +9,7 @@
           <div class="col-6 col-md-2">
             <div class="form-group">
               <label class="custom__label " for="vehicle_rc_no">Export Data</label>
-              <button style="line-height:0" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
+              <button style="line-height:0" wire:click = "cityWiseDataDownload" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
                 <p class="m-0 p-0">Export &nbsp; <i class="fa fa-download" aria-hidden="true"></i></p>
               </button>
             </div>
@@ -51,11 +51,11 @@
         <table class="table custom__table table-bordered table-sm">
           <tr>
             <th>Sr. No.</th>
-			<th>District Name</th>
-			<th>Total Vehicle </th>
-			<th>Total On Duty </th>
-			<th>Total OFF Duty </th>
-			 <th>State Name</th>
+            <th>District Name</th>
+            <th>Total Vehicle </th>
+            <th>Total On Duty </th>
+            <th>Total OFF Duty </th>
+            <th>State Name</th>
           </tr>
 
           @if (!empty($responseData))
@@ -115,8 +115,8 @@
         <div class="row">
           <div class="col-6 col-md-2">
             <div class="form-group">
-              <label class="custom__label " for="vehicle_rc_no">Export Data</label>
-              <button style="line-height:0" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
+              <label class="custom__label" for="vehicle_rc_no">Export Data</label>
+              <button style="line-height:0" wire:click = "divisionWiseDataDownload" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
                 <p class="m-0 p-0">Export &nbsp; <i class="fa fa-download" aria-hidden="true"></i></p>
               </button>
             </div>
@@ -157,10 +157,10 @@
       <div class="card-body p-2 overflow-auto">
         <table class="table custom__table table-bordered table-sm">
           <tr>
-            <th>Sr. No.</th>
-			<th>Division Name</th>
-			<th>Total Vehicle </th>
-			 <th>State Name</th>
+              <th>Sr. No.</th>
+              <th>Division Name</th>
+              <th>Total Vehicle </th>
+              <th>State Name</th>
           </tr>
 
           @if (!empty($divisionData))
@@ -362,8 +362,8 @@
 
                 <div class="col- col-2">
                   <div class="form-group">
-                  <label class="custom__label " for="vehicle_rc_no">Export Data</label>
-                  <button style="line-height:0" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
+                  <label class="custom__label" for="vehicle_rc_no">Export Data</label>
+                  <button style="line-height:0" wire:click="cityWiseBookingDataDownlaod" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
                     <p class="m-0 p-0">Export &nbsp; <i class="fa fa-download" aria-hidden="true"></i></p>
                   </button>
                 </div>

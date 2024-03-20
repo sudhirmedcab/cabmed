@@ -9,7 +9,7 @@
           <div class="col-6 col-md-2">
             <div class="form-group">
               <label class="custom__label " for="vehicle_rc_no">Export Data</label>
-              <button style="line-height:0" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
+              <button style="line-height:0" wire:click="cityCountDataDownlaod"  class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
                 <p class="m-0 p-0">Export &nbsp; <i class="fa fa-download" aria-hidden="true"></i></p>
               </button>
             </div>
@@ -120,7 +120,7 @@
           <div class="col-6 col-md-2">
             <div class="form-group">
               <label class="custom__label " for="vehicle_rc_no">Export Data</label>
-              <button style="line-height:0" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
+              <button style="line-height:0" wire:click="districtCountDataDownlaod" class="custom__input__field form-control btn-primary text-white rounded-0 form-control-sm">
                 <p class="m-0 p-0">Export &nbsp; <i class="fa fa-download" aria-hidden="true"></i></p>
               </button>
             </div>
