@@ -8,6 +8,15 @@ class DashboardComponent extends Component
 {
     public function render()
     {
-        return view('livewire.admin.dashboard.dashboard-component');
+        $data1 = [
+            'labels' => ['New Consumer', 'Active Consumer'],
+            'data' => [25, 30],
+        ];
+        $data2 = [
+            'labels' => ['New Consumer', 'Active Consumer'],
+            'data' => [25, 30],
+        ];
+
+        return view('livewire.admin.dashboard.dashboard-component', compact('data1', 'data2'));
     }
 }
