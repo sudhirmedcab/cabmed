@@ -38,6 +38,26 @@ class GenerateAmbulanceBooking extends Component
          return view('livewire.admin.ambulance.generate-ambulance-booking');
     }
 public function updated(){
+    // dd('hj');
+
+    $this->booking_for = '';
+    $this->customer_name = '';
+    $this->booking_by_cid = '';
+    $this->booking_con_mobile = '';
+
+    $consumer_data = DB::table('consumer')
+    ->where('consumer_mobile_no', '=', $this->customer_mobile)
+    ->first();
+    if($consumer_data){
+        $this->booking_for = $consumer_data->consumer_name;
+        $this->customer_name = $consumer_data->consumer_name;
+        $this->booking_by_cid = $consumer_data->consumer_id;
+        $this->booking_con_mobile = $consumer_data->consumer_mobile_no;
+        }
+// $this->generateBookingStep1Form();
+
+}
+public function updatedold(){
     $this->validate([
         'selectedRow.base_rate' => 'numeric|required',
         'selectedRow.per_km_rate' => 'numeric|required',
@@ -61,10 +81,10 @@ public function updated(){
  
     public function generateBookingStep1Form(){
           $validatedData = $this->validate([
-            'customer_name' => 'required',
+            // 'customer_name' => 'required',
             'customer_mobile' => 'required',
          ],[
-            'customer_name.required' => 'Customer name required',
+            // 'customer_name.required' => 'Customer name required',
             'customer_mobile.required' => 'Customer mobile required',
          ]);
         try{
@@ -74,6 +94,7 @@ public function updated(){
                     ->first();
                     if($consumer_data){
                         $this->booking_for = $consumer_data->consumer_name;
+                        $this->customer_name = $consumer_data->consumer_name;
                         $this->booking_by_cid = $consumer_data->consumer_id;
                         $this->booking_con_mobile = $consumer_data->consumer_mobile_no;
                         session()->flash('message', 'consumer exist !!');
