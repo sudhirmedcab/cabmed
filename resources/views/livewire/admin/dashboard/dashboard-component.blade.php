@@ -11,6 +11,9 @@
         .custom__table__list div:nth-child(even){
             background: #F4F6F9;
         }
+        .custom__table__list > div p:last-child{
+            font-weight: bold;
+        }
     </style>
     <!--  -->
     <div class="row custom__dashboard__data mb-2">
@@ -55,6 +58,10 @@
                             <p class="m-0">Total No of Future Booking </p>
                             <p class="m-0">{{($dashboardData['bookings']->future_booking)?$dashboardData['bookings']->future_booking:"0"}}</p>
                         </div>
+                        <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
+                            <p class="m-0">Total No of Blocked Booking</p>
+                            <p class="m-0">{{"$#$"}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,6 +104,10 @@
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Unverified Hospital Owner</p>
                             <p class="m-0">{{$dashboardData['hospitalOwnerdata']->unverify_owner}}</p>
+                        </div>
+                        <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
+                            <p class="m-0">Total No of Blocked Hospital</p>
+                            <p class="m-0">{{"$#$"}}</p>
                         </div>
                     </div>
                 </div>
@@ -155,21 +166,6 @@
                 </div>
             </div>
         </div>
-        {{--<div class="col-12 col-sm-6 col-md-4">
-            <div class="container-fluid h-100">
-                <div class="card mt-2 p-2 h-100">
-                    <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
-                        <h2 class="">Consumer</h2>
-                        <div class="ml-auto">
-                            <input wire:model.live="selectedconsumereDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
-                    </div>
-                    <div class="p-4" style="width: 80%; margin: auto;">
-                        <canvas id="doughnutChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>--}}
     </div>
 
     <div class="row custom__dashboard__data mb-3">
@@ -299,25 +295,14 @@
                             <p class="m-0">Total No of Expired HealthCard </p>
                             <p class="m-0">{{$dashboardData['driverData']->driver_created_partner ?? "0"}}</p>
                         </div>
+                        <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
+                            <p class="m-0">Total No of Blocked HealthCard</p>
+                            <p class="m-0">{{"$#$"}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-       {{-- <div class="col-12 col-sm-6 col-md-4">
-            <div class="container-fluid h-100">
-                <div class="card mt-2 p-2 h-100">
-                    <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
-                        <h2 class="">Partner</h2>
-                        <div class="ml-auto">
-                            <input wire:model.live="selectedpartnerDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
-                    </div>
-                    <div class="p-4" style="width: 80%; margin: auto;">
-                        <canvas id="doughnutChart2"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>--}}
     </div>
     <div class="row custom__dashboard__data mb-3">
         <div class="col-12 col-sm-6 col-md-4 p-0 mb-2 mb-md-0">
@@ -354,6 +339,7 @@
                             <p class="m-0">Total No of Applied Vehicle</p>
                             <p class="m-0">{{$dashboardData['vehicleData']->applied_vehicle ?? "0"}}</p>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -395,6 +381,10 @@
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Future Booking </p>
                             <p class="m-0">{{($dashboardData['bookings']->future_booking)?$dashboardData['bookings']->future_booking:"0"}}</p>
+                        </div>
+                        <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
+                            <p class="m-0">Total No of Blocked Vehicle</p>
+                            <p class="m-0">{{"$#$"}}</p>
                         </div>
                     </div>
                 </div>
