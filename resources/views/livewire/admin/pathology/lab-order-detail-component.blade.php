@@ -364,7 +364,7 @@ $relationMapper['5'] = "Other";
                     <td>{{$key->city_name.','.$key->state_name}}</td>
                     <td>@if($key->lab_status=='0') Active @elseif($key->lab_status=='1') Inactive @else @endif</td>
                 </tr>
-                @else No Any Records Found @endif
+                @else  @endif
 
                 @endforeach
 

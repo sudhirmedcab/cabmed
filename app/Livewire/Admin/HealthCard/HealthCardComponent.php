@@ -11,7 +11,7 @@ class HealthCardComponent extends Component
     public $selectedDate,$filterConditionl, 
     $selectedFromDate,$selectedToDate, $fromDate=null, 
     $toDate=null,$fromdate, $todate,$check_for,$healthCardVerificationStatus,
-    $activeTab;
+    $activeTab,$health_card_subscription_exp_date,$health_card_subscription_id,$health_card_subscription_cid,$health_card_subscription_plan_id,$health_card_subscription_card_no,$health_card_subscription_name,$health_card_subscription_last_name,$health_card_subscription_mobile_no,$health_card_subscription_gender,$health_card_subscription_address_id,$health_card_subscription_issue_date,$health_card_subscription_added_time_unx,$health_card_subscription_status,$ua_address_pincode,$ua_land_mark,$ua_address,$ua__address,$ua_latitude,$ua_longitude;
     
     public $isOpen = 0;
     use WithPagination;
@@ -136,6 +136,57 @@ class HealthCardComponent extends Component
 
     }
 
+    public function openModal()
+    {
+        $this->isOpen = true;
+    }
+    public function closeModal()
+    {
+        $this->isOpen = false;
+    }
+
+    public function createHealthCard()
+    {
+        $this->openModal();
+    }
+    public function addorUpdateHelathCard(){
+
+        $validatedData = $this->validate([
+            'language_partner_page_name_sku' => 'required',
+            'language_partner_page_name_txt' => 'required',
+        ], [
+             'language_partner_page_name_sku.required' => 'Please Add The Partner Page Sku Name',
+             'language_partner_page_name_txt.required' => 'Please Add The Partner Page Text Data',
+         ]);
+
+         try {
+            DB::beginTransaction();
+        
+            $data = [
+                'language_partner_page_name_sku' => $this->language_partner_page_name_sku,
+                'language_partner_page_name_txt' => $this->language_partner_page_name_txt,
+            ];
+        
+            if ($this->language_partner_page_id) {
+        
+                DB::table('language_partner_page')->where('language_partner_page_id', $this->language_partner_page_id)->update($data);
+                session()->flash('activeMessage', 'Partner Language Page Sku updated successfully !!' . $this->language_partner_page_id);
+            } else {
+
+                $data['language_partner_page_status'] = 0; // Add 'added_date' only when inserting
+                $insertGetId = DB::table('language_partner_page')->insertGetId($data);
+                session()->flash('activeMessage', 'Partner Language Page Sku successfully added !!'.$insertGetId);
+            }
+        
+            DB::commit();
+            $this->closeModal();
+
+        } catch (\Exception $e) {
+            session()->flash('inactiveMessage', 'Something went wrong with the Partner Language Page Sku operation: ' . $e->getMessage());
+            DB::rollback();
+            \Log::error('Error occurred while processing Partner Language Page Sku operation: ' . $e->getMessage());
+        }
+    }
 
 
 }

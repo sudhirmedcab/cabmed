@@ -21,6 +21,8 @@ class LabDetailsComponent extends Component
           
         $this->booking_status=null;
         $this->selectedDate=null;
+        $this->resetPage();
+
     }
 
     public function render()
