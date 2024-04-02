@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use Livewire\WithPagination;
 use Livewire\WithoutUrlPagination;
 
-
 class LabListComponent extends Component
 {
 
