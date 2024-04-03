@@ -86,7 +86,7 @@
         <div class='testDetails_top bg-white'>
             <div class="testDetails_card">
                 <div class="title d-flex flex-column flex-sm-row mb-3">
-                <h1>{{ $var['testDetails']->testName }}</h1>
+                    <h1>{{ $var['testDetails']->testName }}</h1>
                     <div class="ml-sm-auto">
                         <div class="d-flex gap-3 align-items-center">
                             <h1 class="m-0">₹{{ $var['testDetails']->currentPrice }}</h1>
@@ -115,17 +115,19 @@
                 </div>
 
                 @foreach($var['testList'] as $list)
-                <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-4 " data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-4 " data-toggle="collapse" data-target="#collapseExample{{$list->datatestId}}" aria-expanded="false" aria-controls="collapseExample{{$list->datatestId}}">
                     <div class="d-flex align-items-center">
                         <h2 class="">{{$list->testName}}</h2>
-                        <h2 class="m-0 ml-2 red__clr">{{$list->testDescription}}</h2>
                     </div>
                     <div>
                         <i class="fa fa-angle-down"></i>
                     </div>
                 </div>
+                <div class="show" id="collapseExample{{$list->datatestId}}">
+                    <p class="m-0 mt-2 ml-2 red__clr">{{$list->testDescription}}</p>
+                </div>
                 @endforeach
-            
+
                 <div class="bg-white mt-3 border-top pt-4">
                     <div class="row my-3 justify-content-around">
                         <div class="col-12 col-sm-auto mb-2">
@@ -141,10 +143,10 @@
                             <h2 class="text-secondary">All age group</h2>
                         </div>
                     </div>
-                    <p class="text-secondary">What is the {{$var['testDetails']->testName}}  {{$var['testDetails']->testType=='1' ? 'individual':'Package'}} ?
+                    <p class="text-secondary">What is the {{$var['testDetails']->testName}} {{$var['testDetails']->testType=='1' ? 'individual':'Package'}} ?
 
-                    {!! $var['testDetails']->precaution !!}
-                        
+                        {!! $var['testDetails']->precaution !!}
+
                 </div>
             </div>
         </div>
