@@ -1,3 +1,4 @@
+
 <div class="content">
 
     <style>
@@ -17,25 +18,16 @@
             font-weight: bold;
         }
     </style>
+
     <!--  -->
+
     <div class="card mt-2">
         <div class="card-header custom__filter__select ">
+
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label class="custom__label" for="fromDate">From </label>
-                        <input type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label class="custom__label" for="toDate">To</label>
-                        <input type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label class="custom__label">Select</label>
+                        <label class="custom__label">Select Agent Name</label>
                         <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
                             <option selected value="admin">Admin</option>
                             <option value="telecaller">Telecaller</option>
@@ -53,12 +45,22 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Ambulance Booking</h2>
-                        <!-- <div class="ml-auto">
-                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm">
+                        <div class="mx-2 align-items-center {{ $isCustom ? 'd-flex' : 'd-none' }}  ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
                         </div>
-                        <div class="ml-2 bg-light px-2 border text-center">
-                            <i class="fas fa-ellipsis-h text-secondary"></i>
-                        </div> -->
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
+
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -91,7 +93,7 @@
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Blocked Booking</p>
-                            <p class="m-0">{{"$#$"}}</p>
+                            <p class="m-0">{{($dashboardData['bookings']->blocked_booking)?$dashboardData['bookings']->blocked_booking:"0"}}</p>
                         </div>
                     </div>
                 </div>
@@ -102,9 +104,21 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Hospital</h2>
-                        <!-- <div class="ml-auto">
-                            <input wire:model.live="selectedHospitalDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div> -->
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
+                        </div>
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -138,7 +152,7 @@
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Blocked Hospital</p>
-                            <p class="m-0">{{"$#$"}}</p>
+                            <p class="m-0">{{$dashboardData['hospitalOwnerdata']->blocked_hospital}}</p>
                         </div>
                     </div>
                 </div>
@@ -149,12 +163,21 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Wallets</h2>
-                        <!-- <div class="ml-auto">
-                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm">
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
                         </div>
-                        <div class="ml-2 bg-light px-2 border text-center">
-                            <i class="fas fa-ellipsis-h text-secondary"></i>
-                        </div> -->
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -205,9 +228,21 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Vehicle</h2>
-                        <!-- <div class="ml-auto">
-                            <input wire:model.live="selectedvehicleDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div> -->
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
+                        </div>
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -240,7 +275,7 @@
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Blocked Vehicle</p>
-                            <p class="m-0">{{"$#$"}}</p>
+                            <p class="m-0">{{$dashboardData['vehicleData']->deleted_vehicle ?? "0"}}</p>
                         </div>
                     </div>
                 </div>
@@ -251,9 +286,21 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Driver</h2>
-                        <!-- <div class="ml-auto">
-                            <input wire:model.live="selecteddriverDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div> -->
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
+                        </div>
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -282,7 +329,7 @@
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Ongoing Booking Driver </p>
-                            <p class="m-0">{{"$#$"}}</p>
+                            <p class="m-0">{{$dashboardData['driverData']->ongoing_driver ?? "0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Expired Documents </p>
@@ -290,7 +337,7 @@
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Blocked Driver </p>
-                            <p class="m-0">{{"$#$"}}</p>
+                            <p class="m-0">{{$dashboardData['driverData']->blocked_driver ?? "0"}}</p>
                         </div>
                     </div>
                 </div>
@@ -301,22 +348,42 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">HealthCard</h2>
-                        <!-- <div class="ml-auto">
-                            <input wire:model.live="selecteddriverDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div> -->
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
+                        </div>
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
+                            <p class="m-0">Total No of All HealthCard </p>
+                            <p class="m-0">{{$dashboardData['healthcardData']->total_healthcard ?? "0"}}</p>
+                        </div>
+                        <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Active HealthCard </p>
-                            <p class="m-0">{{$dashboardData['driverData']->total_driver ?? "0"}}</p>
+                            <p class="m-0">{{$dashboardData['healthcardData']->active_healthcard ?? "0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of New HealthCard </p>
-                            <p class="m-0">{{$dashboardData['driverData']->new_driver ?? "0"}}</p>
+                            <p class="m-0">{{$dashboardData['healthcardData']->new_healthcard ?? "0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of InActive HealthCard </p>
-                            <p class="m-0">{{$dashboardData['driverData']->active_driver ??"0"}}</p>
+                            <p class="m-0">{{$dashboardData['healthcardData']->inactive_healthcard ?? "0"}}</p>
+                        </div>
+                        <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
+                            <p class="m-0">Total No of Applied HealthCard </p>
+                            <p class="m-0">{{$dashboardData['healthcardData']->apply_healthcard ?? "0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of InCart HealthCard </p>
@@ -328,7 +395,7 @@
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Blocked HealthCard</p>
-                            <p class="m-0">{{"$#$"}}</p>
+                            <p class="m-0">{{$dashboardData['driverData']->blocked_healthcard ?? "0"}}</p>
                         </div>
                     </div>
                 </div>
@@ -341,9 +408,21 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Pathology</h2>
-                        <!-- <div class="ml-auto">
-                            <input wire:model.live="selectedvehicleDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div> -->
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
+                        </div>
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -380,42 +459,51 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Pathology Booking</h2>
-                        <!-- <div class="ml-auto">
-                            <input wire:model.live="selecteddriverDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div> -->
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
+                        </div>
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Enquiry Booking </p>
-                            <p class="m-0">{{($dashboardData['bookings']->enquiry_booking)?$dashboardData['bookings']->enquiry_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['pathologyData']->enquiry_booking)?$dashboardData['pathologyData']->enquiry_booking:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of New Booking </p>
-                            <p class="m-0">{{($dashboardData['bookings']->new_booking)?$dashboardData['bookings']->new_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['pathologyData']->new_booking)?$dashboardData['pathologyData']->new_booking:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Ongoing Booking </p>
-                            <p class="m-0">{{($dashboardData['bookings']->ongoing_booking)?$dashboardData['bookings']->ongoing_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['pathologyData']->ongoing_booking)?$dashboardData['pathologyData']->ongoing_booking:"0"}}</p>
                         </div>
-                        <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
-                            <p class="m-0">Total No of Invoice Booking </p>
-                            <p class="m-0">{{($dashboardData['bookings']->invoice_booking)?$dashboardData['bookings']->invoice_booking:"0"}}</p>
-                        </div>
+
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Completed Booking </p>
-                            <p class="m-0">{{($dashboardData['bookings']->complete_booking)?$dashboardData['bookings']->complete_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['pathologyData']->complete_booking)?$dashboardData['pathologyData']->complete_booking:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Cancelled Booking </p>
-                            <p class="m-0">{{($dashboardData['bookings']->cancel_booking)?$dashboardData['bookings']->cancel_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['pathologyData']->cancel_booking)?$dashboardData['pathologyData']->cancel_booking:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Future Booking </p>
-                            <p class="m-0">{{($dashboardData['bookings']->future_booking)?$dashboardData['bookings']->future_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['pathologyData']->future_booking)?$dashboardData['pathologyData']->future_booking:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
-                            <p class="m-0">Total No of Blocked Vehicle</p>
-                            <p class="m-0">{{"$#$"}}</p>
+                            <p class="m-0">Total No of Blocked Booking</p>
+                            <p class="m-0">{{($dashboardData['pathologyData']->blocked_booking)?$dashboardData['pathologyData']->blocked_booking:"0"}}</p>
                         </div>
                     </div>
                 </div>
@@ -427,47 +515,43 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Transaction</h2>
-                        <!-- <div class="ml-auto">
-                            <input wire:model.live="selectedvehicleDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div> -->
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
+                        </div>
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Consumer Transaction</p>
-                            <p class="m-0">{{$dashboardData['vehicleData']->total_vehicle ?? "0"}}</p>
+                            <p class="m-0">{{$transactionData['consumerTransaction']?? "0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Driver Transaction</p>
-                            <p class="m-0">{{$dashboardData['vehicleData']->new_vehicle ?? "0"}}</p>
+                            <p class="m-0">{{$transactionData['driverTransaction']?? "0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Partner Transaction</p>
-                            <p class="m-0">{{$dashboardData['vehicleData']->active_vehicle ?? "0"}}</p>
+                            <p class="m-0">{{$transactionData['consumerTransaction']?? "0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Pathology Transaction</p>
-                            <p class="m-0">{{$dashboardData['vehicleData']->vehicle_created_driver ?? "0"}}</p>
+                            <p class="m-0">{{$transactionData['pathologyTransaction']?? "0"}}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        {{-- <div class="col-12 col-sm-6 col-md-4">
-            <div class="container-fluid h-100">
-                <div class="card mt-2 p-2 h-100">
-                    <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
-                        <h2 class="">Partner</h2>
-                        <div class="ml-auto">
-                            <input wire:model.live="selectedpartnerDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
-                    </div>
-                    <div class="p-4" style="width: 80%; margin: auto;">
-                        <canvas id="doughnutChart2"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>--}}
     </div>
     <div class="row custom__dashboard__data mb-3">
         <div class="col-12 col-sm-6 col-md-4 p-0">
@@ -475,41 +559,47 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Partner</h2>
-                        <!-- <div class="ml-auto">
-                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm">
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
                         </div>
-                        <div class="ml-2 bg-light px-2 border text-center">
-                            <i class="fas fa-ellipsis-h text-secondary"></i>
-                        </div> -->
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Partner </p>
-                            <p class="m-0">{{($dashboardData['bookings']->enquiry_booking)?$dashboardData['bookings']->enquiry_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['partnerCountData']->total_partner)?$dashboardData['partnerCountData']->total_partner:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of New Partner </p>
-                            <p class="m-0">{{($dashboardData['bookings']->new_booking)?$dashboardData['bookings']->new_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['partnerCountData']->new_partner)?$dashboardData['partnerCountData']->new_partner:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Active Partner </p>
-                            <p class="m-0">{{($dashboardData['bookings']->ongoing_booking)?$dashboardData['bookings']->ongoing_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['partnerCountData']->active_partner)?$dashboardData['partnerCountData']->active_partner:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Blocked Partner </p>
-                            <p class="m-0">{{($dashboardData['bookings']->ongoing_booking)?$dashboardData['bookings']->ongoing_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['partnerCountData']->inactive_partner)?$dashboardData['partnerCountData']->inactive_partner:"0"}}</p>
                         </div>
-                        <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
-                            <p class="m-0">Total No of Under Registration Partner </p>
-                            <p class="m-0">{{($dashboardData['bookings']->ongoing_booking)?$dashboardData['bookings']->ongoing_booking:"0"}}</p>
-                        </div>
+
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Vehicle </p>
-                            <p class="m-0">{{($dashboardData['bookings']->ongoing_booking)?$dashboardData['bookings']->ongoing_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['partnerCountData']->total_vehicle)?$dashboardData['partnerCountData']->total_vehicle:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Driver </p>
-                            <p class="m-0">{{($dashboardData['bookings']->ongoing_booking)?$dashboardData['bookings']->ongoing_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['partnerCountData']->total_driver)?$dashboardData['partnerCountData']->total_driver:"0"}}</p>
                         </div>
                     </div>
                 </div>
@@ -520,29 +610,38 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Consumer</h2>
-                        <!-- <div class="ml-auto">
-                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm">
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
                         </div>
-                        <div class="ml-2 bg-light px-2 border text-center">
-                            <i class="fas fa-ellipsis-h text-secondary"></i>
-                        </div> -->
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Consumer </p>
-                            <p class="m-0">{{($dashboardData['bookings']->enquiry_booking)?$dashboardData['bookings']->enquiry_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['consumerData']->total_consumer)?$dashboardData['consumerData']->total_consumer:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of New Consumer </p>
-                            <p class="m-0">{{($dashboardData['bookings']->new_booking)?$dashboardData['bookings']->new_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['consumerData']->new_consumer)?$dashboardData['consumerData']->new_consumer:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Active Consumer </p>
-                            <p class="m-0">{{($dashboardData['bookings']->ongoing_booking)?$dashboardData['bookings']->ongoing_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['consumerData']->active_consumer)?$dashboardData['consumerData']->active_consumer:"0"}}</p>
                         </div>
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
                             <p class="m-0">Total No of Blocked Consumer </p>
-                            <p class="m-0">{{($dashboardData['bookings']->ongoing_booking)?$dashboardData['bookings']->ongoing_booking:"0"}}</p>
+                            <p class="m-0">{{($dashboardData['consumerData']->inactive_driver)?$dashboardData['consumerData']->inactive_driver:"0"}}</p>
                         </div>
                     </div>
                 </div>
@@ -554,10 +653,22 @@
             <div class="container-fluid h-100">
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
-                        <h2 class="">Ambulance Booking</h2>
-                        <!-- <div class="ml-auto">
-                            <input wire:model.live="selectedpartnerDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div> -->
+                        <h2 class="">Consumer</h2>
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
+                        </div>
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="p-4" style="width: 80%; margin: auto;">
                         <canvas id="doughnutChart"></canvas>
@@ -569,10 +680,22 @@
             <div class="container-fluid h-100">
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
-                        <h2 class="">Hospital</h2>
-                        <!-- <div class="ml-auto">
-                            <input wire:model.live="selectedpartnerDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div> -->
+                        <h2 class="">Partner</h2>
+                        <div class="mx-2 align-items-center d-none ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm mr-1 ">
+                            <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm ">
+                        </div>
+
+                        <div class="ml-auto border-none text-center">
+                            <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" wire:model.live.debounce.150ms="selectedBookingDate" wire:model="check_for" wire:mode.live="selectedBookingDate" >
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="p-4" style="width: 80%; margin: auto;">
                         <canvas id="doughnutChart2"></canvas>
