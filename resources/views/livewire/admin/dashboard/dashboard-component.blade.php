@@ -8,26 +8,57 @@
         .custom__dashboard__data p {
             font-size: 12px;
         }
-        .custom__table__list div:nth-child(even){
+
+        .custom__table__list div:nth-child(even) {
             background: #F4F6F9;
         }
-        .custom__table__list > div p:last-child{
+
+        .custom__table__list>div p:last-child {
             font-weight: bold;
         }
     </style>
     <!--  -->
+    <div class="card mt-2">
+        <div class="card-header custom__filter__select ">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="custom__label" for="fromDate">From </label>
+                        <input type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="custom__label" for="toDate">To</label>
+                        <input type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="custom__label">Select</label>
+                        <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+                            <option selected value="admin">Admin</option>
+                            <option value="telecaller">Telecaller</option>
+                            <option value="medcab">Medcab</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
     <div class="row custom__dashboard__data mb-2">
         <div class="col-12 col-sm-6 col-md-4 p-0 mb-2 mb-md-0">
             <div class="container-fluid h-100">
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Ambulance Booking</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm">
                         </div>
                         <div class="ml-2 bg-light px-2 border text-center">
                             <i class="fas fa-ellipsis-h text-secondary"></i>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -71,9 +102,9 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Hospital</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input wire:model.live="selectedHospitalDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -118,12 +149,12 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Wallets</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm">
                         </div>
                         <div class="ml-2 bg-light px-2 border text-center">
                             <i class="fas fa-ellipsis-h text-secondary"></i>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -174,9 +205,9 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Vehicle</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input wire:model.live="selectedvehicleDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -220,9 +251,9 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Driver</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input wire:model.live="selecteddriverDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -270,9 +301,9 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">HealthCard</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input wire:model.live="selecteddriverDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -310,9 +341,9 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Pathology</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input wire:model.live="selectedvehicleDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -339,7 +370,7 @@
                             <p class="m-0">Total No of Applied Vehicle</p>
                             <p class="m-0">{{$dashboardData['vehicleData']->applied_vehicle ?? "0"}}</p>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -349,9 +380,9 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Pathology Booking</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input wire:model.live="selecteddriverDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -390,15 +421,15 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-sm-6 col-md-4 p-0">
             <div class="container-fluid h-100">
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Transaction</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input wire:model.live="selectedvehicleDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -421,8 +452,8 @@
                 </div>
             </div>
         </div>
-        
-       {{-- <div class="col-12 col-sm-6 col-md-4">
+
+        {{-- <div class="col-12 col-sm-6 col-md-4">
             <div class="container-fluid h-100">
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
@@ -444,12 +475,12 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Partner</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm">
                         </div>
                         <div class="ml-2 bg-light px-2 border text-center">
                             <i class="fas fa-ellipsis-h text-secondary"></i>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -489,12 +520,12 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Consumer</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input type="date" wire:model.live.debounce.250ms="selectedBookingDate" max="{{ date('Y-m-d') }}" class="custom__input__field rounded bg-light form-control form-control-sm">
                         </div>
                         <div class="ml-2 bg-light px-2 border text-center">
                             <i class="fas fa-ellipsis-h text-secondary"></i>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="custom__table__list">
                         <div class="d-flex justify-content-between border  py-1 px-2 rounded ">
@@ -524,9 +555,9 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Ambulance Booking</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input wire:model.live="selectedpartnerDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="p-4" style="width: 80%; margin: auto;">
                         <canvas id="doughnutChart"></canvas>
@@ -539,9 +570,9 @@
                 <div class="card mt-2 p-2 h-100">
                     <div class="d-flex mb-2 border-bottom pb-2 align-items-center">
                         <h2 class="">Hospital</h2>
-                        <div class="ml-auto">
+                        <!-- <div class="ml-auto">
                             <input wire:model.live="selectedpartnerDate" type="date" class="custom__input__field rounded bg-light form-control form-control-sm">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="p-4" style="width: 80%; margin: auto;">
                         <canvas id="doughnutChart2"></canvas>
