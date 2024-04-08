@@ -35,6 +35,16 @@
                         </select>
                     </div>
                 </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="custom__label">Select Time</label>
+                        <select class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+                            <option selected value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
         </div>
