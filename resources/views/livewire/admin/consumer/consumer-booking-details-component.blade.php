@@ -422,6 +422,21 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col -col-3">
+                        <div class="form-group">
+                            <label class="custom__label">Select Booking</label>
+                            <select wire:model.live.debounce.150ms="selectBookingStatus" wire:model="check_for" wire:mode.live="selectBookingStatus" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="selectBookingStatus">
+
+                                <option selected value="New">New</option>
+                                <option value="Enquiry">Enquiry</option>
+                                <option value="Ongoing">Ongoing</option>
+                                <option value="Invoice">Invoice</option>
+                                <option value="Complete">Complete</option>
+                                <option value="Cancel">Cancel</option>
+                                <option value="All">All</option>
+                            </select>
+                        </div>
+                    </div>
                   
 
                     <div class="col __col-3">
@@ -449,6 +464,7 @@
                         <th>Drop</th>
                         <th>Category</th>
                         <th>Amounts</th>
+                        <th>Status</th>
                         <th>Action</th>
 
                     </tr>
@@ -468,7 +484,8 @@
                         <td>{!!wordwrap($list->booking_drop,40,"<br>\n")!!}</td>
                         <td>{{$list->booking_view_category_name}}</td>
                         <td> &#8377;{{$list->booking_view_total_fare}}</td> 
-                 
+                        <td>{{$statusMapper[$list->booking_status]}}</td>
+
                         <td class="action__btn lbtn-group">
                             <!-- <button class="btn-primary"><i class="fa fa-edit"></i></button> -->
                             <button class="btn-success"><i class="fa fa-eye"></i></button>
@@ -489,7 +506,322 @@
         </div>
 
         <div class="container">
-            <div class="row" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty">
+            <div class="row" wire:loading wire:target="selectedDate,selectBookingStatus,filterCondition" wire:key="selectedDate,selectBookingStatus,filterCondition">
+                <div class="col">
+                    <div class="loader">
+                        <div class="loader-inner">
+                            <div class="loading one"></div>
+                        </div>
+                        <div class="loader-inner">
+                            <div class="loading two"></div>
+                        </div>
+                        <div class="loader-inner">
+                            <div class="loading three"></div>
+                        </div>
+                        <div class="loader-inner">
+                            <div class="loading four"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div style="text-align:center !important; display:block !important" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i>Processing..</div> -->
+   @elseif((!empty($pathologybookingDetails)))
+        <div class="card mt-2 custom__filter__responsive">
+            <div class="card-header custom__filter__select">
+
+                <div class="row">
+                    <div class="col __col-3">
+                        <div class="form-group">
+                            <label class="custom__label" for="fromDate">From </label>
+                            <input wire:model.live="selectedFromDate" {{ !$isCustom ? 'disabled' : '' }} type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
+                        </div>
+                    </div>
+                    <div class="col __col-3}}">
+                        <div class="form-group">
+                            <label class="custom__label" for="toDate">To</label>
+                            <input wire:model.live="selectedToDate" type="date" max="<?=date('Y-m-d')?>" {{ !$isCustom ? 'disabled' : '' }} class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+                        </div>
+                    </div>
+                    <div class="col -col-3">
+                        <div class="form-group">
+                            <label class="custom__label">Select</label>
+                            <select wire:model.live.debounce.150ms="selectedDate" wire:model="check_for" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col -col-3">
+                        <div class="form-group">
+                            <label class="custom__label">Select Booking</label>
+                            <select wire:model.live.debounce.150ms="selectPathologyBookingStatus" wire:model.live="selectPathologyBookingStatus" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="selectBookingStatus">
+
+                                <option selected value="New">New</option>
+                                <option value="Ongoing">Ongoing</option>
+                                <option value="Complete">Complete</option>
+                                <option value="Cancel">Cancel</option>
+                                <option value="All">All</option>
+                            </select>
+                        </div>
+                    </div>
+                  
+
+                    <div class="col __col-3">
+                        <div class="form-group">
+                            <label class="custom__label" for="toDate">Search</label>
+                            <input type="search" wire:model.live.debounce.150ms="search" class="custom__input__field form-control rounded-0 form-control-sm float-right" placeholder="Search">
+                        </div>
+                    </div>
+                  
+
+                </div>
+
+            </div>
+
+            <!-- <table class="table table-bordered table-sm table-responsive-sm mt-2"> -->
+            <div wire:loading.remove wire:target="filterCondition" class="card-body p-2 overflow-auto">
+                <table class="table custom__table table-bordered table-sm">
+                    <tr>
+                       <th>Sr.</th>
+                        <th>Id</th>
+                        <th>Created</th>
+                        <th>Consumer</th>
+                        <th>Lab Address</th>
+                        <th>Lab Test City</th>
+                        <th>Tests</th>
+                        <th>Patient</th>
+                        <th>Lab Status</th>
+                        <th>Payment type</th>
+                        <th>Final Price</th>
+                        <th>Payment</th>
+                        <th>Action</th>
+
+                    </tr>
+                    @php
+                    $srno = 1
+                    @endphp
+                    @if (!empty($pathologybookingDetails))
+
+                    @foreach ($pathologybookingDetails as $key)
+                    <tr>
+                        <td>{{ $srno }}</td>
+                        <td>{{ $key->customer_lab_order_id }}</td>
+                        <td>
+                            {{ date("j F, Y h:i A",($key->clo_order_time)) }}
+                         </td>
+                         <td>{{ $key->clo_customer_name }} <br/> {{ $key->clo_contact_no }} </td>
+                        <td>{!! wordwrap($key->clo_address, 25, "<br>\n") !!} , {{$key->clo_address_pincode}}</td>
+                        <td>{{ $key->city_name }}<br/> {{ $key->state_name }}</td>
+
+							<td>{{ $key->clo_no_of_test }}</td>
+							<td>{{ $key->clo_no_of_patient }}</td>
+							<td>
+									@if ($key->clo_status == '1')
+										New 
+									@elseif ($key->clo_status == '2')
+											Ongoing 
+									@elseif ($key->clo_status == '3')
+											Cancel 
+									@elseif ($key->clo_status == '4')
+											Complete 
+									@elseif ($key->clo_status == '0')
+											Enquiry 
+									@else
+												<!-- Handle the "else" case here -->
+									@endif 
+									</p>
+								</td>
+                                <td>{{$key->clo_payment_type}}</td>
+                                <td> &#8377;{{ $key->clo_final_price }}</td>
+                                <td>@if ($key->clo_payment_status == '0')
+								      Pending
+									@elseif ($key->clo_payment_status == '1')
+								    Done
+									@else
+										<!-- Handle the "else" case here -->
+									@endif</td>
+                     
+                        <td class="action__btn lbtn-group">
+                        <button wire:navigate href="{{route('labOrderDetails',['orderId' => Crypt::encrypt($key->customer_lab_order_id),'filterData'=> 'Details'])}}" class="btn-success"><i class="fa fa-eye fa-sm"></i></button>
+                            <button wire:confirm="Are you sure you want to delete this Consumer Enquiry ?" class="btn-danger"><i class="fa fa-trash fa-sm"></i></button>
+                        </td>
+                    </tr>
+                    @php
+                    $srno++
+                    @endphp
+                    @endforeach
+                    @endif
+
+                </table>
+                <!-- <span wire:loadingf wire:target="filterCondition">Loading...</span> -->
+                <div class="custom__pagination mt-2 pt-1 card-footer__ clearfix">
+                {!! $pathologybookingDetails->links() !!}
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row" wire:loading wire:target="selectedDate,selectPathologyBookingStatus,filterCondition" wire:key="selectedDate,selectPathologyBookingStatus,filterCondition">
+                <div class="col">
+                    <div class="loader">
+                        <div class="loader-inner">
+                            <div class="loading one"></div>
+                        </div>
+                        <div class="loader-inner">
+                            <div class="loading two"></div>
+                        </div>
+                        <div class="loader-inner">
+                            <div class="loading three"></div>
+                        </div>
+                        <div class="loader-inner">
+                            <div class="loading four"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div style="text-align:center !important; display:block !important" wire:loading wire:target="selectedDate,driverVerificationStatus,filterCondition" wire:key="selectedDate,Onduty,Offduty"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i>Processing..</div> -->
+
+   @elseif((!empty($healthcardData)))
+        <div class="card mt-2 custom__filter__responsive">
+            <div class="card-header custom__filter__select">
+
+                <div class="row">
+                    <div class="col __col-3">
+                        <div class="form-group">
+                            <label class="custom__label" for="fromDate">From </label>
+                            <input wire:model.live="selectedFromDate" {{ !$isCustom ? 'disabled' : '' }} type="date" class="custom__input__field rounded-0 form-control form-control-sm" id="fromDate" placeholder="Enter from date">
+                        </div>
+                    </div>
+                    <div class="col __col-3}}">
+                        <div class="form-group">
+                            <label class="custom__label" for="toDate">To</label>
+                            <input wire:model.live="selectedToDate" type="date" max="<?=date('Y-m-d')?>" {{ !$isCustom ? 'disabled' : '' }} class="custom__input__field rounded-0 form-control form-control-sm" id="toDate" placeholder="Enter to date">
+                        </div>
+                    </div>
+                    <div class="col -col-3">
+                        <div class="form-group">
+                            <label class="custom__label">Select</label>
+                            <select wire:model.live.debounce.150ms="selectedDate" wire:model="check_for" wire:mode.live="selectedDate" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="exampleSelectRounded0">
+
+                                <option selected value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="thisWeek">This Week</option>
+                                <option value="custom">Custom Date</option>
+                                <option value="thisMonth">This Month</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col __col-3">
+                        <div class="form-group">
+                            <label class="custom__label">HealthCard By Status</label>
+
+                            <select wire:model.live.debounce.150ms="healthCardVerificationStatus" wire:mode.live="healthCardVerificationStatus" class="custom__input__field custom-select rounded-0 form-control form-control-sm" id="SelectUnderVerification">
+                                <option selected value="AllVerification">All HealthCard</option>
+                                <option value="NewVerification">New HealthCard</option>
+                                <option value="ActiveVerification">Active HealthCard</option>
+                                <option value="AppliedVerification">Applied HealthCard</option>
+                                <option value="InactiveVerification">Block HealthCard</option>
+
+                            </select>
+                        </div>
+                    </div>
+                  
+
+                    <div class="col __col-3">
+                        <div class="form-group">
+                            <label class="custom__label" for="toDate">Search</label>
+                            <input type="search" wire:model.live.debounce.150ms="search" class="custom__input__field form-control rounded-0 form-control-sm float-right" placeholder="Search">
+                        </div>
+                    </div>
+                  
+
+                </div>
+
+            </div>
+
+            <!-- <table class="table table-bordered table-sm table-responsive-sm mt-2"> -->
+            <div wire:loading.remove wire:target="filterCondition" class="card-body p-2 overflow-auto">
+                <table class="table custom__table table-bordered table-sm">
+                     <tr>
+						<th>Sr. No.</th>
+						<th>Id</th>
+				        <th>Create At</th>
+					    <th>Consumer</th>
+					    <th>Mobile</th>
+						<th>Subscription</th>
+                        <th>Number</th>
+						<th>Gender</th>
+						<th>Address</th>
+						<th>Card No</th>
+						<th>Duration</th>
+						<th>Remark Details</th>
+						<th>Subscription Status</th>
+						<th>Action</th>
+				</tr>
+                @if(!empty($healthcardData))
+						<?php $sr=1;?>
+                           @foreach($healthcardData as $key)
+                                 <tr>
+                                     <td class="table-plus"><?php echo $sr++; ?></td>
+                                     <td>{{$key->health_card_subscription_id}}</td>
+									 <td>{{date('j F Y,h:i A',$key->health_card_subscription_added_time_unx)}} </td>
+                                     <td>{{$key->consumer_name}}</td>
+                                     <td>{{$key->consumer_mobile_no}}</td>
+                                      <td>{{$key->health_card_subscription_name,' '.$key->health_card_subscription_last_name}}</td>
+                                      <td>{{$key->health_card_subscription_mobile_no}}</td>
+                                     <td>{{$key->health_card_subscription_gender}}</td>
+                                     <td>{{$key->ua_address}}</td>
+                                     <td>{{$key->health_card_subscription_card_no}}</td>
+                                     <td>{{$key->health_card_plan_duration}}</td>
+									<td>
+                                    @if(($key->remark_id))
+                                    <input type="text" value="{{$key->remark_text}}" class="text-center">
+                                    @else
+                                    <input type="text" placeholder="Enter The Remark" class="text-center">
+                                    @endif
+                                    <br />
+                                   
+									</td>
+                                     <td>
+                                       @if($key->health_card_subscription_status == '1')
+										Applied Verification
+                                         @elseif($key->health_card_subscription_status == '2')
+                                          Active
+                                         @elseif($key->health_card_subscription_status == '0')
+                                          New
+                                         @elseif($key->health_card_subscription_status == '#')
+                                          Inactive
+                                          @else
+                                           
+                                      @endif
+                                      </td>
+                                      <td class="action__btn lbtn-group">
+                                            <button class="btn-primary"><i class="fa fa-edit fa-sm"></i></button>
+                                            <button class="btn-success"><i class="fa fa-eye fa-sm"></i></button>
+                                            <!-- <button wire:confirm="Are you sure you want to delete this Consumer?"  class="btn-danger"><i class="fa fa-trash fa-sm"></i></button> -->
+                                        </td>
+									        </tr>
+                                  @endforeach
+                      @endif
+
+                </table>
+                <!-- <span wire:loadingf wire:target="filterCondition">Loading...</span> -->
+                <div class="custom__pagination mt-2 pt-1 card-footer__ clearfix">
+                {!! $healthcardData->links() !!}
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row" wire:loading wire:target="selectedDate,healthCardVerificationStatus,filterCondition" wire:key="selectedDate,healthCardVerificationStatus,filterCondition">
                 <div class="col">
                     <div class="loader">
                         <div class="loader-inner">

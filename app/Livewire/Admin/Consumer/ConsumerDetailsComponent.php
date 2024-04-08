@@ -22,6 +22,8 @@ class ConsumerDetailsComponent extends Component
           
         $this->booking_status=null;
         $this->selectedDate=null;
+        $this->resetPage();
+
     }
 
     public function filterCondition($value){
@@ -35,28 +37,28 @@ class ConsumerDetailsComponent extends Component
             $this->booking_status='0';
             $this->activeTab=$value;
         }
-        if($value=='New'){
-            $this->booking_status = '1';
-            $this->activeTab=$value;
-        }
+        // if($value=='New'){
+        //     $this->booking_status = '1';
+        //     $this->activeTab=$value;
+        // }
     
-        if($value=='Ongoing'){
-            $this->booking_status='2';
-            $this->activeTab=$value;
-        }
-        if($value=='Invoice'){
-            $this->booking_status = '3';
-            $this->activeTab=$value;
-        }
+        // if($value=='Ongoing'){
+        //     $this->booking_status='2';
+        //     $this->activeTab=$value;
+        // }
+        // if($value=='Invoice'){
+        //     $this->booking_status = '3';
+        //     $this->activeTab=$value;
+        // }
     
-        if($value=='Complete'){
-            $this->booking_status='4';
-            $this->activeTab=$value;
-        }
-        if($value=='Cancel'){
-            $this->booking_status = '5';
-            $this->activeTab=$value;
-        }
+        // if($value=='Complete'){
+        //     $this->booking_status='4';
+        //     $this->activeTab=$value;
+        // }
+        // if($value=='Cancel'){
+        //     $this->booking_status = '5';
+        //     $this->activeTab=$value;
+        // }
         if($value=='Transaction'){
             $this->activeTab=$value;
         }
